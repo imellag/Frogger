@@ -6,5 +6,5 @@
 /.sudo_as_admin_successful
 /.vscode-server
 /.wget-hsts
-/*.o
-/*.out
+*.o
+*.out
