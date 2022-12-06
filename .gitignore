@@ -8,3 +8,4 @@
 /.wget-hsts
 *.o
 *.out
+/.bash_history
