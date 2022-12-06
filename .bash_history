@@ -47,3 +47,35 @@ clear
 figlet AZZURRA SEI BELLISSIMA!
 clear
 figlet AZURRA SEI NELISSIMA
+code .
+cd uni/progettoMeme/
+ls
+./main 
+code .
+cd uni/
+cd progettoSO/
+make
+sudo apt install make
+make
+./progetto 
+clean
+clear
+clean
+make cleam
+make clean
+make
+./progetto.out 
+make clean
+make
+make clean
+make
+./progetto.out 
+man cbreak
+make clean
+make
+./progetto.out 
+make
+./progetto.out 
+make
+./progetto.out 
+make clean

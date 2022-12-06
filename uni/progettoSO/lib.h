@@ -5,8 +5,14 @@
 #include <time.h>
 #include <signal.h>
 
+#define COLORE_MARCIAPIEDE 10
+
 typedef struct {
+    int x;
+    int y;
+} Coordinate;
 
+typedef struct {
+    int id;
+    Coordinate coordinate;
 } Oggetto;
-
-
