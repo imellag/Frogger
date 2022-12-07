@@ -1,3 +1,1 @@
-void funzRana(Oggetto rana);
-
-
+void funzRana(Oggetto rana, int inputMovimento);

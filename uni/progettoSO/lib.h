@@ -10,7 +10,9 @@
 #define ALTEZZA_SCHERMO 30
 #define LARGHEZZA_SCHERMO 135
 
-#define COLORE_MARCIAPIEDE 10
+#define COLORE_RANA 10
+#define COLORE_MARCIAPIEDE 20
+#define COLORE_AUTOSTRADA 30
 
 #define char spriteRana[ALTEZZA_RANA][LARGHEZZA_RANA] = {" o.o", "\\-|-/", " _|_"};
 
