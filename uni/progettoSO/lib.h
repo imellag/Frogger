@@ -5,6 +5,11 @@
 #include <time.h>
 #include <signal.h>
 
+#define ALTEZZA_RANA 3
+#define LARGHEZZA_RANA 5
+#define ALTEZZA_SCHERMO 30
+#define LARGHEZZA_SCHERMO 135
+
 #define COLORE_MARCIAPIEDE 10
 
 typedef struct {

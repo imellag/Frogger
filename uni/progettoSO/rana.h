@@ -1,3 +1,3 @@
-void rana();
+void rana(Oggetto rana);
 
 
