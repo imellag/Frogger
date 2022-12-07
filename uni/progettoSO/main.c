@@ -7,6 +7,7 @@
 #include "tane.h"
 
 void colori();
+void dimensioneFinestra(int maxx, int maxy);
 
 int main()
 {
@@ -28,21 +29,7 @@ int main()
         printf("Error\n");
     }
 
-    while (maxy < ALTEZZA_SCHERMO || maxx < LARGHEZZA_SCHERMO)
-    {
-        erase();
-        mvwprintw(stdscr, maxy / 2, maxx / 2 -17, "Ingrandisci lo schermo per giocare!"); // -17 per centrare la scritta
-        getmaxyx(stdscr, maxy, maxx);
-        refresh();
-    }
-
-    clear();
-    mvwprintw(stdscr, ALTEZZA_SCHERMO / 2, LARGHEZZA_SCHERMO / 2 - 32, "Per evitare problemi non diminuire la dimensione della finestra!");
-    mvwprintw(stdscr, ALTEZZA_SCHERMO / 2 + 1, LARGHEZZA_SCHERMO / 2 - 7, "Buona fortuna!");
-    refresh();
-    sleep(5);
-    clear();
-    refresh();
+    dimensioneFinestra(maxx, maxy);
 
     rana.id = 1;
     rana.coordinate.x = (LARGHEZZA_SCHERMO-LARGHEZZA_RANA) / 2;
@@ -79,4 +66,22 @@ void colori() {
     init_pair(1, COLOR_BLACK, COLORE_RANA); 
     init_pair(2, COLOR_BLACK, COLORE_MARCIAPIEDE);
     init_pair(3, COLOR_BLACK, COLORE_AUTOSTRADA);
+}
+
+void dimensioneFinestra(int maxx, int maxy) {
+    while (maxy < ALTEZZA_SCHERMO || maxx < LARGHEZZA_SCHERMO)
+    {
+        erase();
+        mvwprintw(stdscr, maxy / 2, maxx / 2 -17, "Ingrandisci lo schermo per giocare!"); // -17 per centrare la scritta
+        getmaxyx(stdscr, maxy, maxx);
+        refresh();
+    }
+
+    clear();
+    mvwprintw(stdscr, ALTEZZA_SCHERMO / 2, LARGHEZZA_SCHERMO / 2 - 32, "Per evitare problemi non diminuire la dimensione della finestra!");
+    mvwprintw(stdscr, ALTEZZA_SCHERMO / 2 + 1, LARGHEZZA_SCHERMO / 2 - 7, "Buona fortuna!");
+    refresh();
+    sleep(5);
+    clear();
+    refresh();
 }
