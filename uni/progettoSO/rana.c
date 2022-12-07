@@ -1,7 +1,7 @@
 #include "lib.h"
 #include "rana.h"
 
-void rana(Oggetto rana) {
+void funzRana(Oggetto rana) {
     while (true) {
 
     }

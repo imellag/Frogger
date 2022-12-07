@@ -35,8 +35,8 @@ int main()
     refresh();
 
     rana.id = 1;
-    rana.x = (LARGHEZZA_SCHERMO-LARGHEZZA_RANA) / 2;
-    // rana.y = da vedere cosa mettere essendo una matrice (penso che dobbiamo indicare le coordinate del punto in alto a sinistra della rana)
+    rana.coordinate.x = (LARGHEZZA_SCHERMO-LARGHEZZA_RANA) / 2;
+    rana.coordinate.y = 26;
 
     WINDOW *marciapiede = newwin(3, LARGHEZZA_SCHERMO, 26, 0);
     wattron(marciapiede, COLOR_PAIR(1));    
@@ -51,7 +51,7 @@ int main()
         printf("Error");
     }
     else if (pid1 == 0) {
-        rana(rana);
+        funzRana(rana);
     }
     else {
         
