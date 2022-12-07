@@ -12,6 +12,8 @@
 
 #define COLORE_MARCIAPIEDE 10
 
+#define char spriteRana[ALTEZZA_RANA][LARGHEZZA_RANA] = {" o.o", "\\-|-/", " _|_"};
+
 typedef struct {
     int x;
     int y;

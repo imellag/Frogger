@@ -38,11 +38,7 @@ int main()
     rana.coordinate.x = (LARGHEZZA_SCHERMO-LARGHEZZA_RANA) / 2;
     rana.coordinate.y = 26;
 
-    WINDOW *marciapiede = newwin(3, LARGHEZZA_SCHERMO, 26, 0);
-    wattron(marciapiede, COLOR_PAIR(1));    
-    wbkgd(marciapiede, COLOR_PAIR(1));   
-    
-    wrefresh(marciapiede);
+    marciapiede();
 
     pid_t pid1;
     pid1 = fork();
