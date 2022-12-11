@@ -1,1 +1,2 @@
-void funzAutostrada();
+WINDOW* funzAutostrada();
+void funzAuto();

@@ -7,14 +7,15 @@
 
 #define ALTEZZA_RANA 3
 #define LARGHEZZA_RANA 5
-#define ALTEZZA_SCHERMO 30
-#define LARGHEZZA_SCHERMO 135
+#define ALTEZZA_SCHERMO 35
+#define LARGHEZZA_SCHERMO 140
+#define ALTEZZA_TRONCHI 3
+#define LARGHEZZA_TRONCHI 15
 
 #define COLORE_RANA 10
 #define COLORE_MARCIAPIEDE 20
 #define COLORE_AUTOSTRADA 30
-
-#define char spriteRana[ALTEZZA_RANA][LARGHEZZA_RANA] = {" o.o", "\\-|-/", " _|_"};
+#define COLORE_TRONCHI 40
 
 typedef struct {
     int x;

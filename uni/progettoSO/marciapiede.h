@@ -1,1 +1,1 @@
-void funzMarciapiede();
+WINDOW* funzMarciapiede();
