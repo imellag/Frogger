@@ -5,6 +5,7 @@
 #include "prato.h"
 #include "fiume.h"
 #include "tane.h"
+#include "funzioniGenerali.h"
 
 void colori();
 void dimensioneFinestra(int maxx, int maxy);
