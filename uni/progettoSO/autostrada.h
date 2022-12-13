@@ -1,2 +1,2 @@
-WINDOW* funzAutostrada();
+WINDOW* funzAutostrada(WINDOW* finestraAutostrada);
 void funzAuto();

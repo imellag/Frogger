@@ -1,1 +1,1 @@
-WINDOW* funzMarciapiede();
+WINDOW* funzMarciapiede(WINDOW *finestraMarciapiede);

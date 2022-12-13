@@ -1,16 +1,14 @@
 #include "lib.h"
 #include "fiume.h"
 
-WINDOW* funzFiume(Oggetto arrayTronchi[]) {
+WINDOW* funzFiume(WINDOW* finestraFiume,Oggetto arrayTronchi[]) {
     int corsia = 27;
-    WINDOW *finestraFiume = newwin(9, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO - 27, 0);
-    // alto 9
-
+   
     wattron(finestraFiume, COLOR_PAIR(5));
     wbkgd(finestraFiume, COLOR_PAIR(5));
     wattroff(finestraFiume, COLOR_PAIR(5)); 
 
-    wrefresh(finestraFiume);
+    // wrefresh(finestraFiume);
 
     for (int i = 0; i < 3; i++) {
         arrayTronchi[i].id = i+1;

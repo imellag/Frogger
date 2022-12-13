@@ -1,7 +1,8 @@
 #include "lib.h"
 #include "rana.h"
 
-void funzRana(Oggetto rana, int inputMovimento, int p[]) {
+void funzRana(Oggetto rana, int p[]) {
+    int inputMovimento;
     
     while (true) {
         inputMovimento = getch();
@@ -16,11 +17,11 @@ void funzRana(Oggetto rana, int inputMovimento, int p[]) {
             // controllo coordinate
             break;
         case KEY_RIGHT:
-            rana.coordinate.y += LARGHEZZA_RANA;
+            rana.coordinate.x += LARGHEZZA_RANA;
             // controllo coordinate
             break;
         case KEY_LEFT:
-            rana.coordinate.y -= LARGHEZZA_RANA;
+            rana.coordinate.x -= LARGHEZZA_RANA;
             // controllo coordinate
             break;
         default:
