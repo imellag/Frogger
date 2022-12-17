@@ -26,3 +26,5 @@ typedef struct {
     int id;
     Coordinate coordinate;
 } Oggetto;
+
+enum{RANA,PROIETTILE,MACCHINA,TRONCO};

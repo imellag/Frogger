@@ -4,11 +4,12 @@
 WINDOW* funzFiume(WINDOW* finestraFiume,Oggetto arrayTronchi[]) {
     int corsia = 27;
    
+
     wattron(finestraFiume, COLOR_PAIR(5));
     wbkgd(finestraFiume, COLOR_PAIR(5));
     wattroff(finestraFiume, COLOR_PAIR(5)); 
 
-    // wrefresh(finestraFiume);
+    wrefresh(finestraFiume);
 
     for (int i = 0; i < 3; i++) {
         arrayTronchi[i].id = i+1;

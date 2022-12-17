@@ -1,3 +1,4 @@
+
 #include "lib.h"
 #include "marciapiede.h"
 
@@ -7,7 +8,7 @@ WINDOW* funzMarciapiede(WINDOW *finestraMarciapiede) {
     wbkgd(finestraMarciapiede, COLOR_PAIR(2));   
     wattroff(finestraMarciapiede, COLOR_PAIR(2));   
     
-    // wrefresh(finestraMarciapiede);
+     wrefresh(finestraMarciapiede);
 
     return finestraMarciapiede;
 }

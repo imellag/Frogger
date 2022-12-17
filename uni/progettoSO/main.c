@@ -5,22 +5,27 @@
 #include "prato.h"
 #include "fiume.h"
 #include "tane.h"
-#include "funzioniGenerali.h"
 
 void colori();
 void dimensioneFinestra(int maxx, int maxy);
 void stampaRana(Coordinate rana, char spriteRana[][LARGHEZZA_RANA]);
 void stampaVite(char spriteRana[][LARGHEZZA_RANA], int vite);
 
+char spriteProiettile ='^'; 
+char spriteRana[ALTEZZA_RANA][LARGHEZZA_RANA] = {" o.o ", "+-|-+", "\\-|-/"};
+
 int main()
 {
     srand(time(NULL));
-    char spriteRana[ALTEZZA_RANA][LARGHEZZA_RANA] = {" o.o ", "+-|-+", "\\-|-/"};
+    
     int maxx, maxy;
     int tempo = 30, punteggio = 0, vite = 3;
     Oggetto arrayTronchi[3];
     int velocitaTronchi[3];
-    Oggetto rana;
+    Coordinate rana;
+    rana.x = 0;
+    rana.y = ALTEZZA_SCHERMO - 6;
+    
 
     initscr();
     noecho();
@@ -44,17 +49,25 @@ int main()
         exit(-1);
     }
     int ptronchi[2];
-    if (pipe(ptronchi) == -1)
+    /*if (pipe(ptronchi) == -1)
+    {
+        perror("Error\n");
+        exit(-1);
+    }*/
+    int pproiettile[2];
+    if (pipe(pproiettile) == -1)
     {
         perror("Error\n");
         exit(-1);
     }
+    
+
+    clear();
+    refresh();
 
     dimensioneFinestra(maxx, maxy);
 
-    rana.id = 1;
-    rana.coordinate.x = (LARGHEZZA_SCHERMO - LARGHEZZA_RANA) / 2;
-    rana.coordinate.y = ALTEZZA_SCHERMO - 3;
+    
     /* Lascio due righe vuote in basso per scrivere il tempo/punteggio ecc. dopo.
     Quindi dato che l'altezza è il numero totale di "pixel" ma effettivamente poi
     le coordinate partono da 0 tolgo 3 alla rana rispetto all'altezza dello schermo
@@ -64,6 +77,18 @@ int main()
     {
         velocitaTronchi[i] = 2 + rand() % (4 - 2 + 1);
     }
+
+
+     stampaVite(spriteRana, vite);
+             
+            funzMarciapiede(finestraMarciapiede);
+            funzAutostrada(finestraAutostrada);
+            funzPrato(finestraPrato);
+            funzFiume(finestraFiume,arrayTronchi);
+            stampaRana(rana,spriteRana);
+            mvwprintw(stdscr, 1, LARGHEZZA_SCHERMO / 2 - 4, "Score: %d", punteggio);
+            mvwprintw(stdscr, ALTEZZA_SCHERMO - 2, LARGHEZZA_SCHERMO / 2 - 9, "Tempo rimanente: %d", tempo);
+            refresh();
 
     pid_t pidRana, pidMacchine, pidTronchi, pidNemici;
     pidRana = fork();
@@ -75,36 +100,49 @@ int main()
     }
     else if (pidRana == 0)
     {
-        funzRana(rana, p);
+        funzRana(p, pproiettile);
     }
     else
     {
         Oggetto ranocchio;
-        close(p[1]);
+        Oggetto proiettilino;
+       
+        
+       
 
+        
+        
         while (true)
         {
+             close(p[1]);
+             close(pproiettile[0]);
             read(p[0], &ranocchio, sizeof(Oggetto));
+            close(p[0]);
+             close(pproiettile[1]);
 
-            // stampaVite(spriteRana, vite);
-            erase();
+            read(pproiettile[0],&proiettilino, sizeof(Oggetto));
             
+            stampaVite(spriteRana, vite);
+             
             funzMarciapiede(finestraMarciapiede);
             funzAutostrada(finestraAutostrada);
             funzPrato(finestraPrato);
             funzFiume(finestraFiume,arrayTronchi);
 
             stampaRana(ranocchio.coordinate, spriteRana);
+            mvwprintw(stdscr, proiettilino.coordinate.y,proiettilino.coordinate.x,"%c",spriteProiettile);
             mvwprintw(stdscr, 1, LARGHEZZA_SCHERMO / 2 - 4, "Score: %d", punteggio);
             mvwprintw(stdscr, ALTEZZA_SCHERMO - 2, LARGHEZZA_SCHERMO / 2 - 9, "Tempo rimanente: %d", tempo);
             refresh();
 
-            timeout(1);
-            if (getch() == 113)
+           
+            if (ranocchio.id==q)
             {
+                endwin();
                 kill(pidRana, SIGKILL);
                 kill(pidMacchine, SIGKILL);
                 kill(pidTronchi, SIGKILL);
+                
                 return 0;
             }
 
@@ -132,7 +170,10 @@ void colori()
     init_pair(3, COLOR_BLACK, COLORE_AUTOSTRADA);
     init_pair(4, COLOR_BLACK, COLOR_GREEN); // colore prato
     init_pair(5, COLOR_BLACK, COLOR_BLUE);  // colore fiume
-    init_pair(6, COLOR_BLACK, COLORE_TRONCHI);
+    init_pair(6, COLORE_TRONCHI, COLOR_BLUE);
+    init_pair(7,COLORE_RANA,COLORE_MARCIAPIEDE);
+    init_pair(8,COLORE_RANA,COLORE_AUTOSTRADA);
+    init_pair(9,COLORE_RANA,COLOR_BLUE);
 }
 
 void dimensioneFinestra(int maxx, int maxy)
@@ -162,7 +203,7 @@ void stampaRana(Coordinate rana, char spriteRana[][LARGHEZZA_RANA])
     {
         for (int j = 0; j < LARGHEZZA_RANA; j++)
         {
-            mvwprintw(stdscr, rana.y + i, rana.y + j, "%c", spriteRana[i][j]);
+            mvwprintw(stdscr, rana.y + i, rana.x + j, "%c", spriteRana[i][j]);
         }
     }
     attroff(COLOR_PAIR(1));

@@ -7,7 +7,7 @@ WINDOW* funzAutostrada(WINDOW* finestraAutostrada) {
     wbkgd(finestraAutostrada, COLOR_PAIR(3));   
     wattroff(finestraAutostrada, COLOR_PAIR(3));   
     
-    // wrefresh(finestraAutostrada);
+    wrefresh(finestraAutostrada);
 
     return finestraAutostrada;
 }

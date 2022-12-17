@@ -9,7 +9,7 @@ WINDOW* funzPrato(WINDOW* finestraPrato) {
     wbkgd(finestraPrato, COLOR_PAIR(4));
     wattroff(finestraPrato, COLOR_PAIR(4)); 
 
-    // wrefresh(finestraPrato);
+     wrefresh(finestraPrato);
     
     return finestraPrato;
 }
