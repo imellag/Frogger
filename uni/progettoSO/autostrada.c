@@ -90,7 +90,3 @@ void movimentoMacchina(int p[2], int numeroMacchina)
         usleep(100000);
     }
 }
-
-/*Oggetto cambioCorsia(){
-    Oggetto mac
-}*/

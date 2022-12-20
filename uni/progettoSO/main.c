@@ -167,19 +167,17 @@ int main()
 
             stampaVite(vite);
 
-            funzMarciapiede();
-            funzAutostrada();
-            funzPrato();
-            funzFiume();
+            read(pproiettile[0],&proiettilino, sizeof(Oggetto));
             
-            for (i = 0; i < 3; i++){
-                stampaTronco(tronchino[i].coordinate);
-                stampaMacchina(macchinina[i].coordinate);
-            }
-            stampaRana(ranocchio.coordinate);
-            if (!fuorischermo)
-                mvwprintw(stdscr, proiettilino.coordinate.y, proiettilino.coordinate.x, "%c", spriteProiettile);
+            stampaVite(spriteRana, vite);
+             
+            funzMarciapiede(finestraMarciapiede);
+            funzAutostrada(finestraAutostrada);
+            funzPrato(finestraPrato);
+            funzFiume(finestraFiume,arrayTronchi);
 
+            stampaRana(ranocchio.coordinate, spriteRana);
+            mvwprintw(stdscr, proiettilino.coordinate.y,proiettilino.coordinate.x,"%c",spriteProiettile);
             mvwprintw(stdscr, 1, LARGHEZZA_SCHERMO / 2 - 4, "Score: %d", punteggio);
             mvwprintw(stdscr, ALTEZZA_SCHERMO - 2, LARGHEZZA_SCHERMO / 2 - 9, "Tempo rimanente: %d", tempo);
             refresh();

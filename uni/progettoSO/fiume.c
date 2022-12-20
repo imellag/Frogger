@@ -104,6 +104,8 @@ void funzTronco(int p[2], int numeroTronco)
 
 
 /*void funzTronchi(int ptronchi[], int velocitaTronchi[3], Oggetto arrayTronchi[]) {
+
+/*void funzTronchi(int ptronchi[], int velocitaTronchi[3], Oggetto arrayTronchi[]) {
     for (int i = 0; i < 3; i++) {
         if (arrayTronchi[i].coordinate.x + velocitaTronchi[i] + LARGHEZZA_TRONCHI > LARGHEZZA_SCHERMO-1
         || arrayTronchi[i].coordinate.x + velocitaTronchi[i] <= 0)
@@ -113,6 +115,8 @@ void funzTronco(int p[2], int numeroTronco)
         else {
             arrayTronchi[i].coordinate.x += velocitaTronchi[i];
         }
+
+
     }
     close(ptronchi[0]);
     for (int i = 0; i < 3; i++) {
