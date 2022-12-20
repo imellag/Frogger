@@ -13,7 +13,7 @@ void stampaVite(int vite);
 
 char spriteProiettile = '^';
 char spriteRana[ALTEZZA_RANA][LARGHEZZA_RANA + 1] = {" o.o ", "+-|-+", "\\-|-/"};
-char spriteTronchi[ALTEZZA_RANA][LARGHEZZA_TRONCHI + 1] = {"<~~~~~~~~>", "<~~~~~~~~>", "<~~~~~~~~>"};
+char spriteTronchi[ALTEZZA_RANA][LARGHEZZA_TRONCHI + 1] = {"<~~~~~~~~~~~~~>", "<~~~~~~~~~~~~~>", "<~~~~~~~~~~~~~>"};
 char spriteMacchine[ALTEZZA_RANA][LARGHEZZA_MACCHINA]= {" /^\\_","| __ |","o   o"};
 void stampaTronco(Coordinate tronco);
 void stampaMacchina(Coordinate macchina);
@@ -159,25 +159,29 @@ int main()
             default:
                 break;
             }
+
+            // modifica finestra
             maxx_precedente = maxx;
             maxy_precedente = maxy;
             getmaxyx(stdscr, maxy, maxx);
             if (maxx != maxx_precedente || maxy != maxy_precedente)
                 clear();
+            
 
             stampaVite(vite);
 
-            read(pproiettile[0],&proiettilino, sizeof(Oggetto));
-            
-            stampaVite(spriteRana, vite);
-             
-            funzMarciapiede(finestraMarciapiede);
-            funzAutostrada(finestraAutostrada);
-            funzPrato(finestraPrato);
-            funzFiume(finestraFiume,arrayTronchi);
+            funzMarciapiede();
+            funzAutostrada();
+            funzPrato();
+            funzFiume();
+            for (i = 0; i < 3; i++){
+                stampaTronco(tronchino[i].coordinate);
+                stampaMacchina(macchinina[i].coordinate);
+            }
+            stampaRana(ranocchio.coordinate);
+            if (!fuorischermo)
+                mvwprintw(stdscr, proiettilino.coordinate.y, proiettilino.coordinate.x, "%c", spriteProiettile);
 
-            stampaRana(ranocchio.coordinate, spriteRana);
-            mvwprintw(stdscr, proiettilino.coordinate.y,proiettilino.coordinate.x,"%c",spriteProiettile);
             mvwprintw(stdscr, 1, LARGHEZZA_SCHERMO / 2 - 4, "Score: %d", punteggio);
             mvwprintw(stdscr, ALTEZZA_SCHERMO - 2, LARGHEZZA_SCHERMO / 2 - 9, "Tempo rimanente: %d", tempo);
             refresh();

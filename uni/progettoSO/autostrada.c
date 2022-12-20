@@ -60,33 +60,47 @@ void funzAuto(int p[2])
 void movimentoMacchina(int p[2], int numeroMacchina)
 {
     Oggetto macchina;
+    int velocita;
+
+    srand(getpid());
 
     switch (numeroMacchina)
     {
     case 0:
-        macchina.coordinate.x = 10;
+        macchina.coordinate.x = rand()%(LARGHEZZA_SCHERMO-LARGHEZZA_MACCHINA);
         macchina.coordinate.y = 20;
         macchina.id = MACCHINA0;
+        velocita = DUE + rand()%(CINQUE-DUE+UNO);
         break;
     case 1:
-        macchina.coordinate.x = 10;
+        macchina.coordinate.x = rand()%(LARGHEZZA_SCHERMO-LARGHEZZA_MACCHINA);
         macchina.coordinate.y = 23;
         macchina.id = MACCHINA1;
+        velocita = DUE + rand()%(CINQUE-DUE+UNO);
         break;
     case 2:
-        macchina.coordinate.x = 10;
+        macchina.coordinate.x = rand()%(LARGHEZZA_SCHERMO-LARGHEZZA_MACCHINA);
         macchina.coordinate.y = 26;
         macchina.id = MACCHINA2;
+        velocita = DUE + rand()%(CINQUE-DUE+UNO);
         break;
     }
+    
     close(p[0]);
     while (true)
     {
         write(p[1], &macchina, sizeof(Oggetto));
-        macchina.coordinate.x += 2;
+        macchina.coordinate.x += velocita;
         if(controlloLimiti(macchina.coordinate,MACCHINA0))
             macchina.coordinate.x=0;
 
         usleep(100000);
     }
 }
+
+/*Oggetto cambioCorsia(){
+    Oggetto mac
+
+
+
+}*/

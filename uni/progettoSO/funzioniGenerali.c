@@ -21,7 +21,7 @@ bool controlloLimiti(Coordinate entita, int tipo)
     }
     else if (tipo == TRONCO0)
     {
-        if (entita.x < 0 || entita.x >= LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI - 1)
+        if (entita.x < 0 || entita.x >= LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI - 2)
             flag = true;
     }
     else if (tipo == MACCHINA0)
