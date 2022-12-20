@@ -4,13 +4,15 @@
 #include <sys/types.h>
 #include <time.h>
 #include <signal.h>
+#include <fcntl.h>
 
 #define ALTEZZA_RANA 3
 #define LARGHEZZA_RANA 5
 #define ALTEZZA_SCHERMO 35
 #define LARGHEZZA_SCHERMO 140
 #define ALTEZZA_TRONCHI 3
-#define LARGHEZZA_TRONCHI 15
+#define LARGHEZZA_TRONCHI 10
+#define LARGHEZZA_MACCHINA 6
 
 #define COLORE_RANA 10
 #define COLORE_MARCIAPIEDE 20
@@ -27,4 +29,4 @@ typedef struct {
     Coordinate coordinate;
 } Oggetto;
 
-enum{RANA,PROIETTILE,MACCHINA,TRONCO};
+enum{RANA,PROIETTILE,PROIETTILE_OUT,TRONCO0,TRONCO1,TRONCO2,MACCHINA0,MACCHINA1,MACCHINA2};

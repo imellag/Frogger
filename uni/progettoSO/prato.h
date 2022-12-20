@@ -1,1 +1,1 @@
-WINDOW* funzPrato(WINDOW* finestraPrato);
+void funzPrato();

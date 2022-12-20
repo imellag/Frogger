@@ -1,15 +1,17 @@
 #include "lib.h"
 #include "prato.h"
 
-WINDOW* funzPrato(WINDOW* finestraPrato) {
+void funzPrato() {
    
     // alto 3
+    int i,j;
+    attron( COLOR_PAIR(4));
+    for(i=0;i<3;i++){
+        for(j=0;j<LARGHEZZA_SCHERMO;j++){
+            mvprintw(17+i,0+j," ");
+        }
+    }
+    attroff(COLOR_PAIR(4)); 
 
-    wattron(finestraPrato, COLOR_PAIR(4));
-    wbkgd(finestraPrato, COLOR_PAIR(4));
-    wattroff(finestraPrato, COLOR_PAIR(4)); 
-
-     wrefresh(finestraPrato);
     
-    return finestraPrato;
 }
