@@ -9,3 +9,5 @@
 *.o
 *.out
 /.bash_history
+/.codetogether
+/.ctsystem
