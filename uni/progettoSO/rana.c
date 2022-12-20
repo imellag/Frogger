@@ -30,14 +30,14 @@ void funzRana(int p[])
                rana.coordinate.y -= ALTEZZA_RANA;
             break;
         case KEY_RIGHT:
-            rana.coordinate.x += LARGHEZZA_RANA-1;
+            rana.coordinate.x += LARGHEZZA_RANA;
              if (controlloLimiti(rana.coordinate,RANA))
-                   rana.coordinate.x -= LARGHEZZA_RANA-1;
+                   rana.coordinate.x -= LARGHEZZA_RANA;
             break;
         case KEY_LEFT:
-            rana.coordinate.x -= LARGHEZZA_RANA-1;
+            rana.coordinate.x -= LARGHEZZA_RANA;
               if (controlloLimiti(rana.coordinate,RANA))
-               rana.coordinate.x += LARGHEZZA_RANA-1;
+               rana.coordinate.x += LARGHEZZA_RANA;
             break;
 
         case q:

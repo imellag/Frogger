@@ -8,13 +8,15 @@
 
 void colori();
 void dimensioneFinestra(int maxx, int maxy);
-void stampaRana(Coordinate rana, char spriteRana[][LARGHEZZA_RANA]);
-void stampaVite(char spriteRana[][LARGHEZZA_RANA], int vite);
+void stampaRana(Coordinate rana);
+void stampaVite(int vite);
 
 char spriteProiettile = '^';
-char spriteRana[ALTEZZA_RANA][LARGHEZZA_RANA] = {" o.o ", "+-|-+", "\\-|-/"};
-char spriteTronchi[ALTEZZA_RANA][LARGHEZZA_RANA*2-1]={"","",""};
-
+char spriteRana[ALTEZZA_RANA][LARGHEZZA_RANA + 1] = {" o.o ", "+-|-+", "\\-|-/"};
+char spriteTronchi[ALTEZZA_RANA][LARGHEZZA_TRONCHI + 1] = {"<~~~~~~~~>", "<~~~~~~~~>", "<~~~~~~~~>"};
+char spriteMacchine[ALTEZZA_RANA][LARGHEZZA_MACCHINA]= {" /^\\_","| __ |","o   o"};
+void stampaTronco(Coordinate tronco);
+void stampaMacchina(Coordinate macchina);
 int main()
 {
     srand(time(NULL));
@@ -25,6 +27,9 @@ int main()
     Oggetto arrayTronchi[3];
     int velocitaTronchi[3];
     Coordinate rana;
+    Coordinate tronco;
+    tronco.x = -1;
+    tronco.y = -1;
     rana.x = 0;
     rana.y = ALTEZZA_SCHERMO - 6;
 
@@ -35,13 +40,13 @@ int main()
     colori();
     keypad(stdscr, true);
     getmaxyx(stdscr, maxy, maxx);
-    WINDOW *finestraMarciapiede = newwin(3, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO - 6, 0);
+    // WINDOW *finestraMarciapiede = newwin(3, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO - 6, 0);
     /* -6 perché lascio tre righe in basso per le info (tempo ecc) e il marciapiede è alto 3 */
-    WINDOW *finestraAutostrada = newwin(9, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO - 15, 0);
+    // WINDOW *finestraAutostrada = newwin(9, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO - 15, 0);
     /* -14 perché è alto 9 e c'era prima il marciapiede di 5 */
-    WINDOW *finestraPrato = newwin(3, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO - 18, 0);
+    // WINDOW *finestraPrato = newwin(3, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO - 18, 0);
     // alto 3
-    WINDOW *finestraFiume = newwin(9, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO - 27, 0);
+    //  WINDOW *finestraFiume = newwin(9, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO - 27, 0);
     // alto 9
     int p[2];
     if (pipe(p) == -1)
@@ -50,19 +55,6 @@ int main()
         exit(-1);
     }
 
-    int ptronchi[2];
-    /*if (pipe(ptronchi) == -1)
-    {
-        perror("Error\n");
-        exit(-1);
-    }*/
-    /* int pproiettile[2];
-     if (pipe(pproiettile) == -1)
-     {
-         perror("Error\n");
-         exit(-1);
-     }
- */
     clear();
     refresh();
 
@@ -78,16 +70,18 @@ int main()
         velocitaTronchi[i] = 2 + rand() % (4 - 2 + 1);
     }
 
-    stampaVite(spriteRana, vite);
+    stampaVite(vite);
 
-    funzMarciapiede(finestraMarciapiede);
-    funzAutostrada(finestraAutostrada);
-    funzPrato(finestraPrato);
-    funzFiume(finestraFiume, arrayTronchi);
-    stampaRana(rana, spriteRana);
+    funzMarciapiede();
+    funzAutostrada();
+    funzPrato();
+    funzFiume();
+    stampaRana(rana);
     mvwprintw(stdscr, 1, LARGHEZZA_SCHERMO / 2 - 4, "Score: %d", punteggio);
     mvwprintw(stdscr, ALTEZZA_SCHERMO - 2, LARGHEZZA_SCHERMO / 2 - 9, "Tempo rimanente: %d", tempo);
     refresh();
+
+   
 
     pid_t pidRana, pidMacchine, pidTronchi, pidNemici, pidProiettile;
     pidRana = fork();
@@ -103,9 +97,15 @@ int main()
     }
     else
     {
+        funzAuto(p);
+        funzTronchi(p);
+        erase();
         
+        int i;
         Oggetto pacchetto;
         Oggetto proiettilino;
+        Oggetto tronchino[3];
+        Oggetto macchinina[3];
         proiettilino.coordinate.x = -1;
         proiettilino.coordinate.y = -1;
         Oggetto ranocchio;
@@ -125,16 +125,36 @@ int main()
 
             case PROIETTILE:
                 proiettilino = pacchetto;
-                fuorischermo=false;
+                fuorischermo = false;
                 break;
             case PROIETTILE_OUT:
-                fuorischermo=true;
+                fuorischermo = true;
                 break;
+            case TRONCO0:
+                tronchino[0] = pacchetto;
+                break;
+            case TRONCO1:
+                tronchino[1] = pacchetto;
+                break;
+            case TRONCO2:
+                tronchino[2] = pacchetto;
+                break;
+
+            case MACCHINA0:
+                macchinina[0] = pacchetto;
+                break;
+
+            case MACCHINA1:
+                macchinina[1] = pacchetto;
+                break;
+
+            case MACCHINA2:
+                macchinina[2] = pacchetto;
+                break;
+
             case q:
-                ranocchio=pacchetto;
+                ranocchio = pacchetto;
                 break;
-            
-      
 
             default:
                 break;
@@ -145,14 +165,17 @@ int main()
             if (maxx != maxx_precedente || maxy != maxy_precedente)
                 clear();
 
-            stampaVite(spriteRana, vite);
+            stampaVite(vite);
 
-            funzMarciapiede(finestraMarciapiede);
-            funzAutostrada(finestraAutostrada);
-            funzPrato(finestraPrato);
-            funzFiume(finestraFiume, arrayTronchi);
-
-            stampaRana(ranocchio.coordinate, spriteRana);
+            funzMarciapiede();
+            funzAutostrada();
+            funzPrato();
+            funzFiume();
+            for (i = 0; i < 3; i++){
+                stampaTronco(tronchino[i].coordinate);
+                stampaMacchina(macchinina[i].coordinate);
+            }
+            stampaRana(ranocchio.coordinate);
             if (!fuorischermo)
                 mvwprintw(stdscr, proiettilino.coordinate.y, proiettilino.coordinate.x, "%c", spriteProiettile);
 
@@ -173,8 +196,6 @@ int main()
             // per ora
         }
     }
-
-   
 }
 
 void colori()
@@ -184,15 +205,13 @@ void colori()
     init_color(COLORE_MARCIAPIEDE, 388, 270, 102); // 99/69/26
     init_color(COLORE_AUTOSTRADA, 259, 259, 259);  // grigio (per ora), sarebbe 66/66/66 in rgb, convertito
     init_color(COLORE_TRONCHI, 459, 298, 102);     // 117/76/26
-    init_pair(1, COLORE_RANA, COLORE_MARCIAPIEDE);
+    init_pair(1, COLORE_RANA, COLOR_BLACK);
     init_pair(2, COLOR_BLACK, COLORE_MARCIAPIEDE);
     init_pair(3, COLOR_BLACK, COLORE_AUTOSTRADA);
     init_pair(4, COLOR_BLACK, COLOR_GREEN); // colore prato
     init_pair(5, COLOR_BLACK, COLOR_BLUE);  // colore fiume
     init_pair(6, COLORE_TRONCHI, COLOR_BLUE);
     init_pair(7, COLORE_RANA, COLORE_AUTOSTRADA);
-    init_pair(8, COLORE_RANA, COLOR_BLUE);
-    init_pair(9, COLOR_BLACK, COLOR_BLUE);
 }
 
 void dimensioneFinestra(int maxx, int maxy)
@@ -210,25 +229,26 @@ void dimensioneFinestra(int maxx, int maxy)
     mvwprintw(stdscr, ALTEZZA_SCHERMO / 2, LARGHEZZA_SCHERMO / 2 - 32, "Per evitare problemi non diminuire la dimensione della finestra!");
     mvwprintw(stdscr, ALTEZZA_SCHERMO / 2 + 1, LARGHEZZA_SCHERMO / 2 - 7, "Buona fortuna!");
     refresh();
-    sleep(2);
+    // sleep(2);
     clear();
     refresh();
 }
 
-void stampaRana(Coordinate rana, char spriteRana[][LARGHEZZA_RANA])
+void stampaRana(Coordinate rana)
 {
+    int i, j;
     attron(COLOR_PAIR(1));
-    for (int i = 0; i < ALTEZZA_RANA; i++)
+    for (i = 0; i < ALTEZZA_RANA; i++)
     {
-        for (int j = 0; j < LARGHEZZA_RANA; j++)
+        for (j = 0; j < LARGHEZZA_RANA; j++)
         {
-            mvwprintw(stdscr, rana.y + i, rana.x + j, "%c", spriteRana[i][j]);
+            mvaddch(rana.y + i, rana.x + j, spriteRana[i][j]);
         }
     }
     attroff(COLOR_PAIR(1));
 }
 
-void stampaVite(char spriteRana[][LARGHEZZA_RANA], int vite)
+void stampaVite(int vite)
 {
     Coordinate rana;
     rana.x = LARGHEZZA_SCHERMO - LARGHEZZA_RANA;
@@ -237,7 +257,35 @@ void stampaVite(char spriteRana[][LARGHEZZA_RANA], int vite)
     verso sinistra */
     for (int i = 0; i < vite; i++)
     {
-        stampaRana(rana, spriteRana);
+        stampaRana(rana);
         rana.x -= LARGHEZZA_RANA + 1; // lascio 1 di spazio tra le varie vite
     }
+}
+
+void stampaTronco(Coordinate tronco)
+{
+
+    int i, j;
+    attron(COLOR_PAIR(6));
+    for (i = 0; i < ALTEZZA_RANA; i++)
+    {
+        for (j = 0; j < LARGHEZZA_TRONCHI; j++)
+            mvaddch(tronco.y + i, tronco.x + j, spriteTronchi[i][j]);
+    }
+    attroff(COLOR_PAIR(6));
+}
+
+void stampaMacchina(Coordinate macchina)
+{
+
+
+    int i, j;
+    attron(COLOR_PAIR(6));
+    for (i = 0; i < ALTEZZA_RANA; i++)
+    {
+        for (j = 0; j < LARGHEZZA_MACCHINA; j++)
+            mvprintw(macchina.y + i, macchina.x + j,"%c",spriteMacchine[i][j]);
+    }
+    attroff(COLOR_PAIR(6));
+
 }

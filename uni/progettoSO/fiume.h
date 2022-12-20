@@ -1,3 +1,4 @@
-WINDOW* funzFiume(WINDOW* finestraFiume,Oggetto arrayTronchi[]);
+void funzFiume();
 void funzNemici();
-void funzTronchi(int ptronchi[], int velocitaTronchi[], Oggetto arrayTronchi[]);
+int funzTronchi(int p[2]);
+void funzTronco(int p[2],int numeroTronco);
