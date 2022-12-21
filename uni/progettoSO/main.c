@@ -11,7 +11,7 @@ char spriteProiettile = '^';
 char spriteRana[ALTEZZA_RANA][LARGHEZZA_RANA + UNO] = {" o.o ", "+-|-+", "\\-|-/"};
 char spriteTronchi[ALTEZZA_RANA][LARGHEZZA_TRONCHI + UNO] = {"<~~~~~~~~~~~~~>", "<~~~~~~~~~~~~~>", "<~~~~~~~~~~~~~>"};
 char spriteMacchine[ALTEZZA_RANA][LARGHEZZA_MACCHINA] = {" /^\\_", "| __ |", "o   o"};
-char spriteCuore[TRE] = {"<3"};
+char spriteCuore[] = {"<3"};
 
 int main()
 {
@@ -267,7 +267,7 @@ void stampaRana(Coordinate rana)
 void stampaVite(int vite)
 {
     Coordinate vita;
-    vita.x = LARGHEZZA_SCHERMO - LARGHEZZA_RANA;
+    vita.x = LARGHEZZA_SCHERMO - TRE;
     vita.y = ALTEZZA_SCHERMO - ALTEZZA_RANA;
     /* inizio a stamparle da in basso a destra, poi mi sposto
     verso sinistra */
@@ -276,7 +276,8 @@ void stampaVite(int vite)
     {
         for (int j = ZERO; j < DUE; j++)
             mvprintw(vita.y, vita.x, "%c", spriteCuore[j]);
-        vita.x -= TRE; // lascio 1 di spazio tra le varie vite
+            
+        vita.x -= DUE; // lascio 1 di spazio tra le varie vite
     }
     attroff(COLOR_RED);
 }
