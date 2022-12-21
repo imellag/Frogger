@@ -12,15 +12,15 @@ int controlloLimiti(Coordinate entita, int tipo)
         }
         else if(entita.x > LARGHEZZA_SCHERMO){
             flag=2;
-
         }
         else if(entita.y < 6){
-                  flag=3;
+            flag=3;
         }
         else if(entita.y >= ALTEZZA_SCHERMO - 5){
-              flag=4;
+            flag=4;
         }
-        else flag=0;
+        else 
+            flag=0;
     }
 
     else if (tipo == PROIETTILE)

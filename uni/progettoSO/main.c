@@ -44,6 +44,7 @@ int main()
     colori();
     keypad(stdscr, true);
     getmaxyx(stdscr, maxy, maxx);
+
     // WINDOW *finestraMarciapiede = newwin(3, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO - 6, 0);
     /* -6 perché lascio tre righe in basso per le info (tempo ecc) e il marciapiede è alto 3 */
     // WINDOW *finestraAutostrada = newwin(9, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO - 15, 0);
@@ -52,6 +53,7 @@ int main()
     // alto 3
     //  WINDOW *finestraFiume = newwin(9, LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO - 27, 0);
     // alto 9
+    
     int p[2];
     if (pipe(p) == -1)
     {
