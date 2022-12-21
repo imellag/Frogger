@@ -186,7 +186,7 @@ int main()
             funzAutostrada();
             funzPrato();
             funzFiume();
-            for (i = 0; i < 3; i++)
+            for (i = ZERO; i < TRE; i++)
             {
                 stampaTronco(tronchino[i].coordinate);
                 stampaMacchina(macchinina[i].coordinate);
@@ -197,8 +197,8 @@ int main()
             if (!fuorischermo)
                 mvwprintw(stdscr, proiettilino.coordinate.y, proiettilino.coordinate.x, "%c", spriteProiettile);
 
-            mvwprintw(stdscr, 1, LARGHEZZA_SCHERMO / 2 - 4, "Score: %d", punteggio);
-            mvwprintw(stdscr, ALTEZZA_SCHERMO - 2, LARGHEZZA_SCHERMO / 2 - 9, "Tempo rimanente: %d", tempo);
+            mvwprintw(stdscr, UNO, LARGHEZZA_SCHERMO / DUE - QUATTRO, "Score: %d", punteggio);
+            mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %d", tempo);
             refresh();
 
             if (ranocchio.id == q)
@@ -208,9 +208,8 @@ int main()
                 kill(pidMacchine, SIGKILL);
                 kill(pidTronchi, SIGKILL);
 
-                return 0;
+                return EXIT_SUCCESS;
             }
-           
         }
     }
 }
@@ -236,14 +235,14 @@ void dimensioneFinestra(int maxx, int maxy)
     while (maxy < ALTEZZA_SCHERMO || maxx < LARGHEZZA_SCHERMO)
     {
         erase();
-        mvwprintw(stdscr, maxy / 2, maxx / 2 - 17, "Ingrandisci lo schermo per giocare!"); // -17 per centrare la scritta
+        mvwprintw(stdscr, maxy / DUE, maxx / DUE - 17, "Ingrandisci lo schermo per giocare!"); // -17 per centrare la scritta
         getmaxyx(stdscr, maxy, maxx);
         refresh();
     }
 
     clear();
-    mvwprintw(stdscr, ALTEZZA_SCHERMO / 2, LARGHEZZA_SCHERMO / 2 - 32, "Per evitare problemi non diminuire la dimensione della finestra!");
-    mvwprintw(stdscr, ALTEZZA_SCHERMO / 2 + 1, LARGHEZZA_SCHERMO / 2 - 7, "Buona fortuna!");
+    mvwprintw(stdscr, ALTEZZA_SCHERMO / DUE, LARGHEZZA_SCHERMO / DUE - 32, "Per evitare problemi non diminuire la dimensione della finestra!");
+    mvwprintw(stdscr, ALTEZZA_SCHERMO / DUE + UNO, LARGHEZZA_SCHERMO / DUE - SETTE, "Buona fortuna!");
     refresh();
     clear();
     refresh();
@@ -253,11 +252,11 @@ void stampaRana(Coordinate rana)
 {
     int i, j, colorePosizione;
     colorePosizione = controlloPosizione(rana);
-    init_pair(7, COLORE_RANA, colorePosizione);
-    attron(COLOR_PAIR(7));
-    for (i = 0; i < ALTEZZA_RANA; i++)
+    init_pair(SETTE, COLORE_RANA, colorePosizione);
+    attron(COLOR_PAIR(SETTE));
+    for (i = ZERO; i < ALTEZZA_RANA; i++)
     {
-        for (j = 0; j < LARGHEZZA_RANA; j++)
+        for (j = ZERO; j < LARGHEZZA_RANA; j++)
         {
             mvaddch(rana.y + i, rana.x + j, spriteRana[i][j]);
         }
@@ -273,11 +272,11 @@ void stampaVite(int vite)
     /* inizio a stamparle da in basso a destra, poi mi sposto
     verso sinistra */
     attron(COLOR_RED);
-    for (int i = 0; i < vite; i++)
+    for (int i = ZERO; i < vite; i++)
     {
-        for (int j = 0; j < 2; j++)
+        for (int j = ZERO; j < DUE; j++)
             mvprintw(vita.y, vita.x, "%c", spriteCuore[j]);
-        vita.x -= 3; // lascio 1 di spazio tra le varie vite
+        vita.x -= TRE; // lascio 1 di spazio tra le varie vite
     }
     attroff(COLOR_RED);
 }
@@ -286,25 +285,25 @@ void stampaTronco(Coordinate tronco)
 {
 
     int i, j;
-    attron(COLOR_PAIR(6));
-    for (i = 0; i < ALTEZZA_RANA; i++)
+    attron(COLOR_PAIR(SEI));
+    for (i = ZERO; i < ALTEZZA_RANA; i++)
     {
-        for (j = 0; j < LARGHEZZA_TRONCHI; j++)
+        for (j = ZERO; j < LARGHEZZA_TRONCHI; j++)
             mvaddch(tronco.y + i, tronco.x + j, spriteTronchi[i][j]);
     }
-    attroff(COLOR_PAIR(6));
+    attroff(COLOR_PAIR(SEI));
 }
 
 void stampaMacchina(Coordinate macchina)
 {
     int i, j;
-    attron(COLOR_PAIR(1));
-    for (i = 0; i < ALTEZZA_RANA; i++)
+    attron(COLOR_PAIR(UNO));
+    for (i = ZERO; i < ALTEZZA_RANA; i++)
     {
-        for (j = 0; j < LARGHEZZA_MACCHINA; j++)
+        for (j = ZERO; j < LARGHEZZA_MACCHINA; j++)
             mvprintw(macchina.y + i, macchina.x + j, "%c", spriteMacchine[i][j]);
     }
-    attroff(COLOR_PAIR(1));
+    attroff(COLOR_PAIR(UNO));
 }
 
 int controlloPosizione(Coordinate rana)

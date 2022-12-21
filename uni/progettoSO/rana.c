@@ -89,5 +89,5 @@ int funzProiettile(Oggetto rana, int p[DUE])
         usleep(50000);
         proiettile.coordinate.y--;
     }
-    return 5;
+    return CINQUE;
 }

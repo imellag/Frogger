@@ -58,7 +58,7 @@ int funzTronchi(int p[DUE])
     }
 }
 
-void funzTronco(int p[2], int numeroTronco)
+void funzTronco(int p[DUE], int numeroTronco)
 {
     int velocita;
     srand(getpid());
@@ -66,33 +66,33 @@ void funzTronco(int p[2], int numeroTronco)
 
     switch (numeroTronco)
     {
-    case 0:
+    case ZERO:
         tronco.coordinate.y = 8;
         tronco.coordinate.x = LARGHEZZA_TRONCHI;
         tronco.id = TRONCO0;
         velocita = DUE + rand() % (CINQUE - DUE) + UNO;
 
         break;
-    case 1:
+    case UNO:
         tronco.coordinate.y = 11;
         tronco.coordinate.x = ZERO;
         tronco.id = TRONCO1;
         velocita = DUE + rand() % (CINQUE - DUE) + UNO;
         break;
-    case 2:
+    case DUE:
         tronco.coordinate.y = 14;
         tronco.coordinate.x = LARGHEZZA_TRONCHI*DUE;
         tronco.id = TRONCO2;
         velocita = DUE + rand() % (CINQUE - DUE) + UNO;
         break;
     }
-    close(p[0]);
+    close(p[READ]);
     while (true)
     {
-        write(p[1], &tronco, sizeof(Oggetto));
+        write(p[WRITE], &tronco, sizeof(Oggetto));
         tronco.coordinate.x += velocita;
         if (controlloLimiti(tronco.coordinate, TRONCO0))
-            velocita = velocita * -1;
+            velocita = velocita * -UNO;
 
         usleep(100000);
     }

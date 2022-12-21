@@ -5,13 +5,11 @@ void funzPrato() {
    
     // alto 3
     int i,j;
-    attron( COLOR_PAIR(4));
-    for(i=0;i<ALTEZZA_PRATO;i++){
-        for(j=0;j<LARGHEZZA_SCHERMO;j++){
-            mvprintw(INIZIO_PRATO+i,0+j," ");
+    attron( COLOR_PAIR(QUATTRO));
+    for(i = ZERO; i < ALTEZZA_PRATO; i++){
+        for(j = ZERO; j < LARGHEZZA_SCHERMO; j++){
+            mvprintw(INIZIO_PRATO + i, ZERO + j, " ");
         }
     }
-    attroff(COLOR_PAIR(4)); 
-
-    
+    attroff(COLOR_PAIR(QUATTRO)); 
 }
