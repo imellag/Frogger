@@ -1,15 +1,26 @@
 #include "lib.h"
 #include "funzioniGenerali.h"
 
-bool controlloLimiti(Coordinate entita, int tipo)
+int controlloLimiti(Coordinate entita, int tipo)
 {
-    bool flag = false;
+    int flag = false;
     if (tipo == RANA)
     {
-        if (entita.x < 0 || entita.x >= LARGHEZZA_SCHERMO || entita.y < 6 || entita.y >= ALTEZZA_SCHERMO - 5)
+        if (entita.x < 0) 
         {
-            flag = true;
+            flag = 1;
         }
+        else if(entita.x > LARGHEZZA_SCHERMO){
+            flag=2;
+
+        }
+        else if(entita.y < 6){
+                  flag=3;
+        }
+        else if(entita.y >= ALTEZZA_SCHERMO - 5){
+              flag=4;
+        }
+        else flag=0;
     }
 
     else if (tipo == PROIETTILE)

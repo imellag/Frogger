@@ -53,6 +53,8 @@ void funzAuto(int p[2])
             {
                 movimentoMacchina(p, 2);
             }
+
+            return;
         }
     }
 }
@@ -100,7 +102,4 @@ void movimentoMacchina(int p[2], int numeroMacchina)
 
 /*Oggetto cambioCorsia(){
     Oggetto mac
-
-
-
 }*/

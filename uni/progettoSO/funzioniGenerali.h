@@ -1,1 +1,1 @@
-bool controlloLimiti(Coordinate entita, int tipo);
+int controlloLimiti(Coordinate entita, int tipo);

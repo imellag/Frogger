@@ -2,7 +2,7 @@
 #include "rana.h"
 #include "funzioniGenerali.h"
 
-void funzRana(int p[])
+void funzRana(int p[],int pRana[])
 {
     Oggetto rana;
     Oggetto proiettile;
@@ -12,32 +12,35 @@ void funzRana(int p[])
     pid_t pidProiettile;
     int proiettile_sparato = 0;
     int inputMovimento;
+    int lettura;
     close(p[0]);
-
+    close(pRana[1]);
     while (true)
     {
+        
+       
         inputMovimento = getch();
         switch (inputMovimento)
         {
         case KEY_UP:
             rana.coordinate.y -= ALTEZZA_RANA;
-             if (controlloLimiti(rana.coordinate,RANA))
-                 rana.coordinate.y += ALTEZZA_RANA;
+           //  if (controlloLimiti(rana.coordinate,RANA))
+              //  
             break;
         case KEY_DOWN:
             rana.coordinate.y += ALTEZZA_RANA;
-             if (controlloLimiti(rana.coordinate,RANA))
-               rana.coordinate.y -= ALTEZZA_RANA;
+             //if (controlloLimiti(rana.coordinate,RANA))
+               //rana.coordinate.y -= ALTEZZA_RANA;
             break;
         case KEY_RIGHT:
             rana.coordinate.x += LARGHEZZA_RANA;
-             if (controlloLimiti(rana.coordinate,RANA))
-                   rana.coordinate.x -= LARGHEZZA_RANA;
+             //if (controlloLimiti(rana.coordinate,RANA))
+                //   rana.coordinate.x -= LARGHEZZA_RANA;
             break;
         case KEY_LEFT:
             rana.coordinate.x -= LARGHEZZA_RANA;
-              if (controlloLimiti(rana.coordinate,RANA))
-               rana.coordinate.x += LARGHEZZA_RANA;
+              //if (controlloLimiti(rana.coordinate,RANA))
+              // rana.coordinate.x += LARGHEZZA_RANA;
             break;
 
         case q:
@@ -65,9 +68,13 @@ void funzRana(int p[])
         }
         if (proiettile_sparato != 5)
         {
+           
             write(p[1], &rana, sizeof(Oggetto));
             proiettile_sparato = 0;
         }
+      
+      
+        read(pRana[0],&rana,sizeof(Oggetto));
     }
 }
 
