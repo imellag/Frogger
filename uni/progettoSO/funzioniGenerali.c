@@ -6,38 +6,38 @@ int controlloLimiti(Coordinate entita, int tipo)
     int flag = false;
     if (tipo == RANA)
     {
-        if (entita.x < 0) 
+        if (entita.x < ZERO) 
         {
-            flag = 1;
+            flag = UNO;
         }
         else if(entita.x > LARGHEZZA_SCHERMO){
-            flag=2;
+            flag = DUE;
         }
-        else if(entita.y < 6){
-            flag=3;
+        else if(entita.y < SEI){
+            flag = TRE;
         }
-        else if(entita.y >= ALTEZZA_SCHERMO - 5){
-            flag=4;
+        else if(entita.y >= ALTEZZA_SCHERMO - CINQUE){
+            flag = QUATTRO;
         }
         else 
-            flag=0;
+            flag = ZERO;
     }
 
     else if (tipo == PROIETTILE)
     {
-        if (entita.y < 9)
+        if (entita.y <NOVE)
         {
             flag = true;
         }
     }
     else if (tipo == TRONCO0)
     {
-        if (entita.x < 0 || entita.x >= LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI - 2)
+        if (entita.x < ZERO || entita.x >= LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI - DUE)
             flag = true;
     }
     else if (tipo == MACCHINA0)
     {
-        if (entita.x < 0 || entita.x > LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA)
+        if (entita.x < ZERO || entita.x > LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA)
             flag = true;
     }
 

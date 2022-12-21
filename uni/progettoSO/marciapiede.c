@@ -4,10 +4,12 @@
 
 void funzMarciapiede() {
     int i,j;
-    attron( COLOR_PAIR(2));    
-    for(i=0;i<3;i++){
-        for(j=0;j<LARGHEZZA_SCHERMO;j++)
-        mvprintw(29+i,0+j," ");
+    attron( COLOR_PAIR(2));
+
+    /* -6 perché lascio tre righe in basso per le info (tempo ecc) e il marciapiede è alto 3 */    
+    for(i = ZERO; i < ALTEZZA_MARCIAPIEDE; i++){
+        for(j = ZERO; j < LARGHEZZA_SCHERMO; j++)
+        mvprintw(INIZIO_MARCIAPIEDE + i, ZERO + j, " ");
     }
     attroff( COLOR_PAIR(2));   
     

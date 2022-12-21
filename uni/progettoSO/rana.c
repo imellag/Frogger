@@ -7,56 +7,48 @@ void funzRana(int p[],int pRana[])
     Oggetto rana;
     Oggetto proiettile;
     rana.id = RANA;
-    rana.coordinate.x = 0;
-    rana.coordinate.y = ALTEZZA_SCHERMO - 6;
+    rana.coordinate.x = ZERO;
+    rana.coordinate.y = ALTEZZA_SCHERMO - SEI;
     pid_t pidProiettile;
-    int proiettile_sparato = 0;
+    int proiettile_sparato = ZERO;
     int inputMovimento;
     int lettura;
-    close(p[0]);
-    close(pRana[1]);
+    close(p[READ]);
+    close(pRana[WRITE]);
     while (true)
     {
         
-       
+       read(pRana[READ],&rana,sizeof(Oggetto));
         inputMovimento = getch();
         switch (inputMovimento)
         {
         case KEY_UP:
-            rana.coordinate.y -= ALTEZZA_RANA;
-           //  if (controlloLimiti(rana.coordinate,RANA))
-              //  
+            rana.coordinate.y -= ALTEZZA_RANA;  
             break;
         case KEY_DOWN:
             rana.coordinate.y += ALTEZZA_RANA;
-             //if (controlloLimiti(rana.coordinate,RANA))
-               //rana.coordinate.y -= ALTEZZA_RANA;
             break;
         case KEY_RIGHT:
             rana.coordinate.x += LARGHEZZA_RANA;
-             //if (controlloLimiti(rana.coordinate,RANA))
-                //   rana.coordinate.x -= LARGHEZZA_RANA;
             break;
         case KEY_LEFT:
             rana.coordinate.x -= LARGHEZZA_RANA;
-              //if (controlloLimiti(rana.coordinate,RANA))
-              // rana.coordinate.x += LARGHEZZA_RANA;
             break;
 
         case q:
             rana.id = q;
-            write(p[1], &rana, sizeof(Oggetto));
+            write(p[WRITE], &rana, sizeof(Oggetto));
             break;
 
         case SPACEBAR:
 
             pidProiettile = fork();
-            if (pidProiettile < 0)
+            if (pidProiettile < ZERO)
             {
                 perror("error");
                 exit(1);
             }
-            else if (pidProiettile == 0)
+            else if (pidProiettile == ZERO)
             {
                 proiettile_sparato = funzProiettile(rana, p);
                 return;
@@ -66,34 +58,34 @@ void funzRana(int p[],int pRana[])
         default:
             break;
         }
-        if (proiettile_sparato != 5)
+        if (proiettile_sparato != CINQUE)
         {
            
-            write(p[1], &rana, sizeof(Oggetto));
-            proiettile_sparato = 0;
+            write(p[WRITE], &rana, sizeof(Oggetto));
+            proiettile_sparato = ZERO;
         }
       
       
-        read(pRana[0],&rana,sizeof(Oggetto));
+        
     }
 }
 
-int funzProiettile(Oggetto rana, int p[2])
+int funzProiettile(Oggetto rana, int p[DUE])
 {
     Oggetto proiettile;
-    proiettile.id = 1;
-    proiettile.coordinate.x = rana.coordinate.x + 2;
-    proiettile.coordinate.y = rana.coordinate.y - 1;
+    proiettile.id = UNO;
+    proiettile.coordinate.x = rana.coordinate.x + DUE;
+    proiettile.coordinate.y = rana.coordinate.y -UNO;
     while (true)
     {
         if (controlloLimiti(proiettile.coordinate, PROIETTILE))
         {
             proiettile.id=PROIETTILE_OUT;
-            write(p[1], &proiettile, sizeof(Oggetto));
+            write(p[WRITE], &proiettile, sizeof(Oggetto));
             break;
         }
 
-        write(p[1], &proiettile, sizeof(Oggetto));
+        write(p[WRITE], &proiettile, sizeof(Oggetto));
         usleep(50000);
         proiettile.coordinate.y--;
     }

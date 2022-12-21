@@ -5,55 +5,53 @@
 void funzFiume()
 {
     int i, j;
-    int corsia = 27;
 
-    attron(COLOR_PAIR(5));
-    for (i = 0; i < 9; i++)
+
+    attron(COLOR_PAIR(CINQUE));
+
+      // alto 9
+    for (i = ZERO; i < ALTEZZA_FIUME; i++)
     {
-        for (j = 0; j < LARGHEZZA_SCHERMO; j++)
-            mvprintw(8 + i, 0 + j, " ");
+        for (j = ZERO; j < LARGHEZZA_SCHERMO; j++)
+            mvprintw(INIZIO_FIUME + i, ZERO + j, " ");
     }
-    attroff(COLOR_PAIR(5));
+    attroff(COLOR_PAIR(CINQUE));
 }
 
-void funzNemici()
-{
-}
-
-int funzTronchi(int p[2])
+int funzTronchi(int p[DUE])
 {
     pid_t tronco0, tronco1, tronco2;
 
     tronco0 = fork();
-    if (tronco0 < 0)
+    if (tronco0 < ZERO)
     {
         perror("Error");
     }
-    else if (tronco0 == 0)
+    else if (tronco0 == ZERO)
     {
-        funzTronco(p, 0);
+        funzTronco(p, ZERO);
     }
     else
     {
         tronco1 = fork();
-        if (tronco1 < 0)
+        if (tronco1 < ZERO)
         {
             perror("Error");
         }
-        else if (tronco1 == 0)
+        else if (tronco1 == ZERO)
         {
-            funzTronco(p, 1);
+            funzTronco(p, UNO);
         }
         else
         {
             tronco2 = fork();
-            if (tronco2 < 0)
+            if (tronco2 < ZERO)
             {
                 perror("Error");
             }
-            else if (tronco2 == 0)
+            else if (tronco2 == ZERO)
             {
-                funzTronco(p, 2);
+                funzTronco(p, DUE);
             }
             return 1;
         }
@@ -72,20 +70,20 @@ void funzTronco(int p[2], int numeroTronco)
         tronco.coordinate.y = 8;
         tronco.coordinate.x = LARGHEZZA_TRONCHI;
         tronco.id = TRONCO0;
-        velocita = DUE + rand() % (CINQUE - DUE) + 1;
+        velocita = DUE + rand() % (CINQUE - DUE) + UNO;
 
         break;
     case 1:
         tronco.coordinate.y = 11;
         tronco.coordinate.x = ZERO;
         tronco.id = TRONCO1;
-        velocita = DUE + rand() % (CINQUE - DUE) + 1;
+        velocita = DUE + rand() % (CINQUE - DUE) + UNO;
         break;
     case 2:
         tronco.coordinate.y = 14;
         tronco.coordinate.x = LARGHEZZA_TRONCHI*DUE;
         tronco.id = TRONCO2;
-        velocita = DUE + rand() % (CINQUE - DUE) + 1;
+        velocita = DUE + rand() % (CINQUE - DUE) + UNO;
         break;
     }
     close(p[0]);

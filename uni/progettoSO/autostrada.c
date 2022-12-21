@@ -6,11 +6,13 @@ void funzAutostrada()
 {
     int i, j;
     attron(COLOR_PAIR(3));
-    for (i = 0; i < 9; i++)
+
+    /* è alto 9 e c'era prima il marciapiede di 3 */
+    for (i = 0; i < ALTEZZA_AUTOSTRADA; i++)
     {
         for (j = 0; j < LARGHEZZA_SCHERMO; j++)
         {
-            mvprintw(20 + i, 0 + j, " ");
+            mvprintw(INIZIO_AUTOSTRADA + i, 0 + j, " ");
         }
     }
     attroff(COLOR_PAIR(3));
