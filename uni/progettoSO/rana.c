@@ -18,7 +18,6 @@ void funzRana(int p[],int pRana[])
     while (true)
     {
         
-       read(pRana[READ],&rana,sizeof(Oggetto));
         inputMovimento = getch();
         switch (inputMovimento)
         {
@@ -60,7 +59,7 @@ void funzRana(int p[],int pRana[])
         }
         if (proiettile_sparato != CINQUE)
         {
-           
+            read(pRana[READ],&rana,sizeof(Oggetto));
             write(p[WRITE], &rana, sizeof(Oggetto));
             proiettile_sparato = ZERO;
         }

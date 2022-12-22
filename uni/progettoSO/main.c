@@ -267,19 +267,20 @@ void stampaRana(Coordinate rana)
 void stampaVite(int vite)
 {
     Coordinate vita;
-    vita.x = LARGHEZZA_SCHERMO - TRE;
-    vita.y = ALTEZZA_SCHERMO - ALTEZZA_RANA;
+    vita.x = LARGHEZZA_SCHERMO - DUE;
+    vita.y = ALTEZZA_SCHERMO - DUE;
     /* inizio a stamparle da in basso a destra, poi mi sposto
     verso sinistra */
-    attron(COLOR_RED);
+    init_pair(OTTO, COLOR_RED, COLOR_BLACK);
+    attron(COLOR_PAIR(OTTO));
     for (int i = ZERO; i < vite; i++)
     {
         for (int j = ZERO; j < DUE; j++)
-            mvprintw(vita.y, vita.x, "%c", spriteCuore[j]);
+            mvprintw(vita.y, vita.x+j, "%c", spriteCuore[j]);
             
-        vita.x -= DUE; // lascio 1 di spazio tra le varie vite
+        vita.x -= TRE; // lascio 1 di spazio tra le varie vite
     }
-    attroff(COLOR_RED);
+    attroff(COLOR_PAIR(OTTO));
 }
 
 void stampaTronco(Coordinate tronco)
@@ -310,12 +311,12 @@ void stampaMacchina(Coordinate macchina)
 int controlloPosizione(Coordinate rana)
 {
 
-    if (rana.y == 29)
+    if (rana.y == INIZIO_MARCIAPIEDE)
         return COLORE_MARCIAPIEDE;
-    else if (rana.y >= 20 && rana.y < 29)
+    else if (rana.y >= INIZIO_AUTOSTRADA && rana.y < INIZIO_MARCIAPIEDE)
         return COLORE_AUTOSTRADA;
-    else if (rana.y == 17)
+    else if (rana.y == INIZIO_PRATO)
         return COLOR_GREEN;
-    else if (rana.y >= 8 && rana.y < 17)
+    else if (rana.y >= 8 && rana.y < INIZIO_PRATO)
         return COLOR_BLUE;
 }
