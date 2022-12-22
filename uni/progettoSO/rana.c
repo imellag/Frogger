@@ -2,7 +2,9 @@
 #include "rana.h"
 #include "funzioniGenerali.h"
 
-void funzRana(int p[],int pRana[])
+char spriteRana[ALTEZZA_RANA][LARGHEZZA_RANA + UNO] = {" o.o ", "+-|-+", "\\-|-/"};
+
+void funzRana(int p[], int pRana[])
 {
     Oggetto rana;
     Oggetto proiettile;
@@ -15,23 +17,32 @@ void funzRana(int p[],int pRana[])
     int lettura;
     close(p[READ]);
     close(pRana[WRITE]);
+
     while (true)
     {
-        
+           
         inputMovimento = getch();
         switch (inputMovimento)
         {
         case KEY_UP:
-            rana.coordinate.y -= ALTEZZA_RANA;  
+            rana.coordinate.y -= ALTEZZA_RANA;
+            if (controlloLimiti(rana.coordinate, RANA))
+                rana.coordinate.y += ALTEZZA_RANA;
             break;
         case KEY_DOWN:
             rana.coordinate.y += ALTEZZA_RANA;
+            if (controlloLimiti(rana.coordinate, RANA))
+                rana.coordinate.y -= ALTEZZA_RANA;
             break;
         case KEY_RIGHT:
             rana.coordinate.x += LARGHEZZA_RANA;
+            if (controlloLimiti(rana.coordinate, RANA))
+                rana.coordinate.x -= LARGHEZZA_RANA;
             break;
         case KEY_LEFT:
             rana.coordinate.x -= LARGHEZZA_RANA;
+            if (controlloLimiti(rana.coordinate, RANA))
+                rana.coordinate.x += LARGHEZZA_RANA;
             break;
 
         case q:
@@ -57,14 +68,10 @@ void funzRana(int p[],int pRana[])
         default:
             break;
         }
-        if (proiettile_sparato != CINQUE)
-        {
+      
             read(pRana[READ],&rana,sizeof(Oggetto));
             write(p[WRITE], &rana, sizeof(Oggetto));
             proiettile_sparato = ZERO;
-        }
-      
-      
         
     }
 }
@@ -74,12 +81,12 @@ int funzProiettile(Oggetto rana, int p[DUE])
     Oggetto proiettile;
     proiettile.id = UNO;
     proiettile.coordinate.x = rana.coordinate.x + DUE;
-    proiettile.coordinate.y = rana.coordinate.y -UNO;
+    proiettile.coordinate.y = rana.coordinate.y - UNO;
     while (true)
     {
         if (controlloLimiti(proiettile.coordinate, PROIETTILE))
         {
-            proiettile.id=PROIETTILE_OUT;
+            proiettile.id = PROIETTILE_OUT;
             write(p[WRITE], &proiettile, sizeof(Oggetto));
             break;
         }
@@ -89,4 +96,20 @@ int funzProiettile(Oggetto rana, int p[DUE])
         proiettile.coordinate.y--;
     }
     return CINQUE;
+}
+
+void stampaRana(Coordinate rana)
+{
+    int i, j, colorePosizione;
+    colorePosizione = controlloPosizione(rana);
+    init_pair(SETTE, COLORE_RANA, colorePosizione);
+    attron(COLOR_PAIR(SETTE));
+    for (i = ZERO; i < ALTEZZA_RANA; i++)
+    {
+        for (j = ZERO; j < LARGHEZZA_RANA; j++)
+        {
+            mvaddch(rana.y + i, rana.x + j, spriteRana[i][j]);
+        }
+    }
+    attroff(COLOR_PAIR(7));
 }

@@ -54,9 +54,8 @@ enum numeri {ZERO, UNO, DUE, TRE, QUATTRO, CINQUE, SEI, SETTE, OTTO, NOVE, DIECI
 
 void colori();
 void dimensioneFinestra(int maxx, int maxy);
-void stampaRana(Coordinate rana);
 void stampaVite(int vite);
+int controlloRanaTronco(Coordinate rana,Oggetto tronco[]);
 
-void stampaTronco(Coordinate tronco);
-void stampaMacchina(Coordinate macchina);
 int controlloPosizione(Coordinate rana);
+void menu();

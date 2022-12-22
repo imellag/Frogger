@@ -6,21 +6,9 @@ int controlloLimiti(Coordinate entita, int tipo)
     int flag = false;
     if (tipo == RANA)
     {
-        if (entita.x < ZERO) 
-        {
-            flag = UNO;
-        }
-        else if(entita.x > LARGHEZZA_SCHERMO){
-            flag = DUE;
-        }
-        else if(entita.y < SEI){
-            flag = TRE;
-        }
-        else if(entita.y >= ALTEZZA_SCHERMO - CINQUE){
-            flag = QUATTRO;
-        }
-        else 
-            flag = ZERO;
+        if (entita.x < ZERO || entita.x >= LARGHEZZA_SCHERMO || entita.y <= SEI || entita.y >= ALTEZZA_SCHERMO - CINQUE) 
+            flag = true;
+    
     }
 
     else if (tipo == PROIETTILE)
@@ -32,13 +20,17 @@ int controlloLimiti(Coordinate entita, int tipo)
     }
     else if (tipo == TRONCO0)
     {
-        if (entita.x < ZERO || entita.x >= LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI - DUE)
+        if (entita.x < ZERO || entita.x >= LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI - UNO)
             flag = true;
     }
     else if (tipo == MACCHINA0)
     {
-        if (entita.x < ZERO || entita.x > LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA)
-            flag = true;
+        if (entita.x < ZERO) {
+            flag = 1;
+        }
+        else if(entita.x >= LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA) {
+            flag = 2;
+        }
     }
 
     return flag;

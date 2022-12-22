@@ -8,9 +8,6 @@
 #include "tane.h"
 
 char spriteProiettile = '^';
-char spriteRana[ALTEZZA_RANA][LARGHEZZA_RANA + UNO] = {" o.o ", "+-|-+", "\\-|-/"};
-char spriteTronchi[ALTEZZA_RANA][LARGHEZZA_TRONCHI + UNO] = {"<~~~~~~~~~~~~~>", "<~~~~~~~~~~~~~>", "<~~~~~~~~~~~~~>"};
-char spriteMacchine[ALTEZZA_RANA][LARGHEZZA_MACCHINA] = {" /^\\_", "| __ |", "o   o"};
 char spriteCuore[] = {"<3"};
 
 int main()
@@ -41,13 +38,12 @@ int main()
     }
 
     int pRana[DUE];
-
     if (pipe(pRana) == -UNO)
     {
-
-        perror("Error");
+        perror("Error\n");
+        exit(-UNO);
     }
-    fcntl(pRana[ZERO], F_SETFL, fcntl(pRana[ZERO], F_GETFL) | O_NONBLOCK);
+    fcntl(pRana[0], F_SETFL, fcntl(pRana[0], F_GETFL) | O_NONBLOCK);
 
     clear();
     refresh();
@@ -70,7 +66,7 @@ int main()
     mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %d", tempo);
     refresh();
 
-    pid_t pidRana, pidMacchine, pidTronchi, pidNemici, pidProiettile;
+    pid_t pidRana, pidMacchine[3], pidTronchi[3], pidNemici, pidProiettile;
     pidRana = fork();
 
     if (pidRana < ZERO)
@@ -91,16 +87,27 @@ int main()
         Oggetto pacchetto;
         Oggetto proiettilino;
         Oggetto ranocchio;
+        Coordinate nuoveCoordinate;
+        ranocchio.coordinate.x = -4;
+        ranocchio.coordinate.y = -4;
+
         Oggetto tronchino[TRE];
+
+        for (i = 0; i < 3; i++)
+        {
+            tronchino[i].coordinate.x = -CINQUE;
+            tronchino[i].coordinate.y = -CINQUE;
+        }
         Oggetto macchinina[TRE];
         proiettilino.coordinate.x = -UNO;
         proiettilino.coordinate.y = -UNO;
         _Bool fuorischermo = false;
-       
+
         int direzione;
 
         close(p[WRITE]);
         close(pRana[READ]);
+
         while (true)
         {
 
@@ -109,29 +116,6 @@ int main()
             {
             case RANA:
                 ranocchio = pacchetto;
-                direzione = controlloLimiti(ranocchio.coordinate, RANA);
-                switch (direzione)
-                {
-                case ZERO:
-                    break;
-                case UNO:
-                    ranocchio.coordinate.x += LARGHEZZA_RANA;
-                    write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
-                    break;
-
-                case DUE:
-                    ranocchio.coordinate.x -= LARGHEZZA_RANA;
-                    write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
-                    break;
-                case TRE:
-                    ranocchio.coordinate.y += ALTEZZA_RANA;
-                    write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
-                    break;
-                case QUATTRO:
-                    ranocchio.coordinate.y -= ALTEZZA_RANA;
-                    write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
-                    break;
-                }
 
                 break;
 
@@ -179,7 +163,13 @@ int main()
             if (maxx != maxx_precedente || maxy != maxy_precedente)
                 clear();
 
-            //  stampa
+          /*  nuoveCoordinate.x = controlloRanaTronco(ranocchio.coordinate, tronchino);
+            if (!(nuoveCoordinate.x == -1))
+            {
+                ranocchio.coordinate.x = nuoveCoordinate.x;
+                write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
+            }
+*/
             stampaVite(vite);
 
             funzMarciapiede();
@@ -189,7 +179,9 @@ int main()
             for (i = ZERO; i < TRE; i++)
             {
                 stampaTronco(tronchino[i].coordinate);
-                stampaMacchina(macchinina[i].coordinate);
+                stampaMacchina(macchinina[i]);
+                pidMacchine[i]=macchinina[i].pid;
+                pidTronchi[i]=tronchino[i].pid;
             }
 
             stampaRana(ranocchio.coordinate);
@@ -203,30 +195,18 @@ int main()
 
             if (ranocchio.id == q)
             {
+                for (i = 0; i < 3; i++)
+                {
+                    kill(pidMacchine[i], SIGKILL);
+                    kill(pidTronchi[i], SIGKILL);
+                }
                 endwin();
                 kill(pidRana, SIGKILL);
-                kill(pidMacchine, SIGKILL);
-                kill(pidTronchi, SIGKILL);
 
                 return EXIT_SUCCESS;
             }
         }
     }
-}
-
-void colori()
-{
-    start_color();
-    init_color(COLORE_RANA, 75, 890, 20);          // 19/227/5
-    init_color(COLORE_MARCIAPIEDE, 388, 270, 102); // 99/69/26
-    init_color(COLORE_AUTOSTRADA, 150, 150, 150);  // grigio (per ora), sarebbe 66/66/66 in rgb, convertito 259 /259/259
-    init_color(COLORE_TRONCHI, 459, 298, 102);     // 117/76/26
-    init_pair(1, COLOR_BLACK, COLOR_RED);
-    init_pair(2, COLOR_BLACK, COLORE_MARCIAPIEDE);
-    init_pair(3, COLOR_BLACK, COLORE_AUTOSTRADA);
-    init_pair(4, COLOR_BLACK, COLOR_GREEN); // colore prato
-    init_pair(5, COLOR_BLACK, COLOR_BLUE);  // colore fiume
-    init_pair(6, COLOR_BLACK, COLORE_TRONCHI);
 }
 
 void dimensioneFinestra(int maxx, int maxy)
@@ -248,26 +228,10 @@ void dimensioneFinestra(int maxx, int maxy)
     refresh();
 }
 
-void stampaRana(Coordinate rana)
-{
-    int i, j, colorePosizione;
-    colorePosizione = controlloPosizione(rana);
-    init_pair(SETTE, COLORE_RANA, colorePosizione);
-    attron(COLOR_PAIR(SETTE));
-    for (i = ZERO; i < ALTEZZA_RANA; i++)
-    {
-        for (j = ZERO; j < LARGHEZZA_RANA; j++)
-        {
-            mvaddch(rana.y + i, rana.x + j, spriteRana[i][j]);
-        }
-    }
-    attroff(COLOR_PAIR(7));
-}
-
 void stampaVite(int vite)
 {
     Coordinate vita;
-    vita.x = LARGHEZZA_SCHERMO - DUE;
+    vita.x = LARGHEZZA_SCHERMO - TRE;
     vita.y = ALTEZZA_SCHERMO - DUE;
     /* inizio a stamparle da in basso a destra, poi mi sposto
     verso sinistra */
@@ -276,36 +240,11 @@ void stampaVite(int vite)
     for (int i = ZERO; i < vite; i++)
     {
         for (int j = ZERO; j < DUE; j++)
-            mvprintw(vita.y, vita.x+j, "%c", spriteCuore[j]);
-            
+            mvprintw(vita.y, vita.x + j, "%c", spriteCuore[j]);
+
         vita.x -= TRE; // lascio 1 di spazio tra le varie vite
     }
     attroff(COLOR_PAIR(OTTO));
-}
-
-void stampaTronco(Coordinate tronco)
-{
-
-    int i, j;
-    attron(COLOR_PAIR(SEI));
-    for (i = ZERO; i < ALTEZZA_RANA; i++)
-    {
-        for (j = ZERO; j < LARGHEZZA_TRONCHI; j++)
-            mvaddch(tronco.y + i, tronco.x + j, spriteTronchi[i][j]);
-    }
-    attroff(COLOR_PAIR(SEI));
-}
-
-void stampaMacchina(Coordinate macchina)
-{
-    int i, j;
-    attron(COLOR_PAIR(UNO));
-    for (i = ZERO; i < ALTEZZA_RANA; i++)
-    {
-        for (j = ZERO; j < LARGHEZZA_MACCHINA; j++)
-            mvprintw(macchina.y + i, macchina.x + j, "%c", spriteMacchine[i][j]);
-    }
-    attroff(COLOR_PAIR(UNO));
 }
 
 int controlloPosizione(Coordinate rana)
@@ -319,4 +258,87 @@ int controlloPosizione(Coordinate rana)
         return COLOR_GREEN;
     else if (rana.y >= 8 && rana.y < INIZIO_PRATO)
         return COLOR_BLUE;
+}
+
+void menu()
+{
+    curs_set(true);
+    mousemask(BUTTON1_PRESSED, NULL);
+
+    attron(COLOR_PAIR(QUATTRO));
+
+    /*
+    8-13   nuova partita
+    15-20  impostazioni
+    22-27  esci
+    */
+
+    /*
+    40 larghezza
+    */
+
+    attroff(COLOR_PAIR(QUATTRO));
+
+    // printf("\033[?1003h\n"); // Makes the terminal report mouse movement events
+
+    int input = wgetch(stdscr);
+
+    if (input == KEY_MOUSE)
+    {
+
+        MEVENT event;
+        if (getmouse(&event) == OK)
+        {
+            if (event.bstate & BUTTON1_PRESSED)
+            { // click sinistro
+                if (event.x && event.y)
+                { // controllo le coordinate del click
+                }
+            }
+        }
+    }
+
+    // printf("\033[?1003l\n"); // Disable mouse movement events, as l = low
+
+    curs_set(false);
+}
+
+void colori()
+{
+    start_color();
+    init_color(COLORE_RANA, 75, 890, 20);          // 19/227/5
+    init_color(COLORE_MARCIAPIEDE, 388, 270, 102); // 99/69/26
+    init_color(COLORE_AUTOSTRADA, 150, 150, 150);  // grigio (per ora), sarebbe 66/66/66 in rgb, convertito 259 /259/259
+    init_color(COLORE_TRONCHI, 459, 298, 102);     // 117/76/26
+    init_pair(1, COLOR_BLACK, COLOR_RED);
+    init_pair(2, COLOR_BLACK, COLORE_MARCIAPIEDE);
+    init_pair(3, COLOR_BLACK, COLORE_AUTOSTRADA);
+    init_pair(4, COLOR_BLACK, COLOR_GREEN); // colore prato
+    init_pair(5, COLOR_BLACK, COLOR_BLUE);  // colore fiume
+    init_pair(6, COLOR_BLACK, COLORE_TRONCHI);
+}
+
+int controlloRanaTronco(Coordinate rana, Oggetto tronco[3])
+{
+    bool flag = false;
+    int i, j;
+
+    for (i = 0; i < TRE; i++)
+    {
+        flag = false;
+        for (j = 0; j < LARGHEZZA_RANA; j++)
+        {
+            if (rana.x + j == tronco[i].coordinate.x + j && rana.y == tronco[i].coordinate.y)
+            {
+                flag = true;
+            }
+        }
+        if (flag == true)
+        {
+            rana.x += tronco[i].velocita;
+            return rana.x;
+        }
+    }
+    rana.x = -1;
+    return rana.x;
 }
