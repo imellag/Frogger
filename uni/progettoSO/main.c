@@ -263,36 +263,74 @@ int controlloPosizione(Coordinate rana)
 void menu()
 {
     curs_set(true);
-    mousemask(BUTTON1_PRESSED, NULL);
+    mousemask(BUTTON1_PRESSED | REPORT_MOUSE_POSITION, NULL);
+
+    int i, j;
 
     attron(COLOR_PAIR(QUATTRO));
 
     /*
-    8-13   nuova partita
-    15-20  impostazioni
-    22-27  esci
+    12-17   nuova partita
+    19-24  impostazioni
+    26-31  esci
     */
 
     /*
     40 larghezza
     */
 
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 40; j++) {
+            mvprintw(12+i, 50+j, " ");
+        }
+    }
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 40; j++) {
+            mvprintw(19+i, 50+j, " ");
+        }
+    }
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 40; j++) {
+            mvprintw(26+i, 50+j, " ");
+        }
+    }
+
+    mvprintw(14,58,"Inizia una nuova partita");
+    mvprintw(21, 64,"Impostazioni");
+    mvprintw(28, 62, "Esci dal gioco");
+
     attroff(COLOR_PAIR(QUATTRO));
 
-    // printf("\033[?1003h\n"); // Makes the terminal report mouse movement events
+    refresh();
 
-    int input = wgetch(stdscr);
+    // printf("\033[?1003h\n"); // Makes the terminal report mouse movement events (per ora non ci serve)
 
-    if (input == KEY_MOUSE)
-    {
+    while (true) {
+        int input = getch();
 
-        MEVENT event;
-        if (getmouse(&event) == OK)
-        {
-            if (event.bstate & BUTTON1_PRESSED)
-            { // click sinistro
-                if (event.x && event.y)
-                { // controllo le coordinate del click
+        if (input == KEY_MOUSE)
+        {   
+            MEVENT event;
+            if (getmouse(&event) == OK)
+            {
+                if (event.bstate & BUTTON1_PRESSED)
+                { // click sinistro
+
+                    mvprintw(0, 0, "Input ricevuto");
+                    refresh();
+                    
+                    if (event.x > 50 && event.x < 90 && event.y > 26 && event.y < 31){ // USCITA
+                        mvprintw(1, 0, "Uscita in corso");
+                        refresh();
+                        sleep(5);
+                        endwin();
+                    }
+                    if (event.x > 50 && event.x < 90 && event.y > 12 && event.y < 17) { // nuova partita
+                        continue;
+                    }
+                    else if (event.x > 50 && event.x < 90 && event.y > 19 && event.y < 24) { // impostazioni
+                        continue;
+                    }
                 }
             }
         }
@@ -316,29 +354,4 @@ void colori()
     init_pair(4, COLOR_BLACK, COLOR_GREEN); // colore prato
     init_pair(5, COLOR_BLACK, COLOR_BLUE);  // colore fiume
     init_pair(6, COLOR_BLACK, COLORE_TRONCHI);
-}
-
-int controlloRanaTronco(Coordinate rana, Oggetto tronco[3])
-{
-    bool flag = false;
-    int i, j;
-
-    for (i = 0; i < TRE; i++)
-    {
-        flag = false;
-        for (j = 0; j < LARGHEZZA_RANA; j++)
-        {
-            if (rana.x + j == tronco[i].coordinate.x + j && rana.y == tronco[i].coordinate.y)
-            {
-                flag = true;
-            }
-        }
-        if (flag == true)
-        {
-            rana.x += tronco[i].velocita;
-            return rana.x;
-        }
-    }
-    rana.x = -1;
-    return rana.x;
 }

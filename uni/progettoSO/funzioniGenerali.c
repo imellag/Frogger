@@ -35,3 +35,28 @@ int controlloLimiti(Coordinate entita, int tipo)
 
     return flag;
 }
+
+int controlloRanaTronco(Coordinate rana, Oggetto tronco[3])
+{
+    bool flag = false;
+    int i, j;
+
+    for (i = 0; i < TRE; i++)
+    {
+        flag = false;
+        for (j = 0; j < LARGHEZZA_RANA; j++)
+        {
+            if (rana.x + j == tronco[i].coordinate.x + j && rana.y == tronco[i].coordinate.y)
+            {
+                flag = true;
+            }
+        }
+        if (flag == true)
+        {
+            rana.x += tronco[i].velocita;
+            return rana.x;
+        }
+    }
+    rana.x = -1;
+    return rana.x;
+}

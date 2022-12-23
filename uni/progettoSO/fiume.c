@@ -23,7 +23,24 @@ void funzFiume()
 
 int funzTronchi(int p[DUE])
 {
+    int i;
     pid_t tronco0, tronco1, tronco2;
+
+
+     int velocita[3];
+    int spostamento;
+
+    
+    for(i=0;i<3;i++)
+        velocita[i]= (DUE + rand() % (CINQUE - DUE)); 
+
+    spostamento=rand()%2;
+    
+    if(spostamento==0)
+        spostamento=-1;
+        else
+        spostamento=1;
+
 
     tronco0 = fork();
     if (tronco0 < ZERO)
@@ -32,7 +49,7 @@ int funzTronchi(int p[DUE])
     }
     else if (tronco0 == ZERO)
     {
-        funzTronco(p, ZERO);
+        funzTronco(p, ZERO,velocita[ZERO]*spostamento);
     }
     else
     {
@@ -43,7 +60,7 @@ int funzTronchi(int p[DUE])
         }
         else if (tronco1 == ZERO)
         {
-            funzTronco(p, UNO);
+            funzTronco(p, UNO,velocita[UNO]*spostamento*-1);
         }
         else
         {
@@ -54,45 +71,38 @@ int funzTronchi(int p[DUE])
             }
             else if (tronco2 == ZERO)
             {
-                funzTronco(p, DUE);
+                funzTronco(p, DUE,velocita[DUE]*spostamento);
             }
             return 1;
         }
     }
 }
 
-void funzTronco(int p[DUE], int numeroTronco)
+void funzTronco(int p[DUE], int numeroTronco,int velocita)
 {
-    int velocita;
+   Oggetto tronco;
     srand(getpid());
-    Oggetto tronco;
-    int spostamento=rand()%2;
-    if(spostamento==0)
-        spostamento=-1;
-    else 
-        spostamento = 1;
-    
     switch (numeroTronco)
     {
     case ZERO:
         tronco.coordinate.y = 8;
-        tronco.coordinate.x = LARGHEZZA_TRONCHI;
+        tronco.coordinate.x = rand()%(LARGHEZZA_SCHERMO-LARGHEZZA_TRONCHI) ; 
         tronco.id = TRONCO0;
-        tronco.velocita = (DUE + rand() % (CINQUE - DUE))*spostamento;
+        tronco.velocita = velocita;
         tronco.pid=getpid();
         break;
     case UNO:
         tronco.coordinate.y = 11;
-        tronco.coordinate.x = ZERO;
+        tronco.coordinate.x = rand()%(LARGHEZZA_SCHERMO-LARGHEZZA_TRONCHI) ; 
         tronco.id = TRONCO1;
-        tronco.velocita = (DUE + rand() % (CINQUE - DUE))*spostamento*-1;
+          tronco.velocita = velocita;
         tronco.pid=getpid();
         break;
     case DUE:
         tronco.coordinate.y = 14;
-        tronco.coordinate.x = LARGHEZZA_TRONCHI*DUE;
+        tronco.coordinate.x = rand()%(LARGHEZZA_SCHERMO-LARGHEZZA_TRONCHI) ; 
         tronco.id = TRONCO2;
-        tronco.velocita = (DUE + rand() % (CINQUE - DUE) )*spostamento;
+          tronco.velocita = velocita;
         tronco.pid=getpid();
         break;
     }

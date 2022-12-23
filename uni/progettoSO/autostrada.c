@@ -23,16 +23,23 @@ void funzAutostrada()
 
 void funzAuto(int p[2])
 {
+    int i;
     pid_t macchina[3];
+    int velocita[3];
+    int spostamento;
 
-    int pMacchina[DUE];
-    if (pipe(pMacchina) == -UNO)
-    {
-        perror("Error\n");
-        exit(-UNO);
-    }
-    fcntl(pMacchina[0], F_SETFL, fcntl(pMacchina[0], F_GETFL) | O_NONBLOCK);
+    
+    for(i=0;i<3;i++)
+        velocita[i]= (DUE + rand() % (CINQUE - DUE)); 
 
+    spostamento=rand()%2;
+    
+    if(spostamento==0)
+        spostamento=-1;
+        else
+        spostamento=1;
+
+    
     macchina[ZERO] = fork();
     if (macchina[ZERO] < ZERO)
     {
@@ -40,7 +47,7 @@ void funzAuto(int p[2])
     }
     else if (macchina[ZERO] == ZERO)
     {
-        movimentoMacchina(p, ZERO, pMacchina);
+        movimentoMacchina(p, ZERO, velocita[ZERO]*spostamento);
     }
     else
     {
@@ -52,7 +59,7 @@ void funzAuto(int p[2])
         }
         else if (macchina[UNO] == ZERO)
         {
-            movimentoMacchina(p, UNO, pMacchina);
+            movimentoMacchina(p, UNO, velocita[UNO]*spostamento*-1);
         }
         else
         {
@@ -64,7 +71,7 @@ void funzAuto(int p[2])
             }
             else if (macchina[DUE] == ZERO)
             {
-                movimentoMacchina(p, DUE, pMacchina);
+                movimentoMacchina(p, DUE, velocita[DUE]*spostamento);
             }
 
             return;
@@ -72,51 +79,36 @@ void funzAuto(int p[2])
     }
 }
 
-void movimentoMacchina(int p[DUE], int numeroMacchina, int pMacchina[])
+void movimentoMacchina(int p[DUE], int numeroMacchina, int velocita)
 {
     Oggetto macchina;
-    int velocita;
-
-    srand(getpid());
-
-    int spostamento = 1;
-
+   
     switch (numeroMacchina)
     {
     case ZERO:
-    close(pMacchina[READ]);
-        spostamento = rand() % 2;
-        if (spostamento == 0)
-            spostamento = -1;
-        else
-            spostamento = 1;
+   
             
         macchina.coordinate.x = rand() % (LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA);
         macchina.coordinate.y = 20;
         macchina.id = MACCHINA0;
-        macchina.velocita = (DUE + rand() % (CINQUE - DUE)) * spostamento;
+        macchina.velocita = velocita;
         macchina.pid = getpid();
         
-        write(pMacchina[WRITE], &spostamento, sizeof(int));
+        
         break;
     case UNO:
-        close(pMacchina[WRITE]);
-        read(pMacchina[READ], &spostamento, sizeof(int));
+    
         macchina.coordinate.x = rand() % (LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA);
         macchina.coordinate.y = 23;
         macchina.id = MACCHINA1;
-        macchina.velocita = (DUE + rand() % (CINQUE - DUE)) * spostamento * -1;
+        macchina.velocita = velocita;
         macchina.pid = getpid();
-
-        write(pMacchina[WRITE], &spostamento, sizeof(int));
         break;
     case DUE:
-        close(pMacchina[WRITE]);
-        read(pMacchina[READ], &spostamento, sizeof(int));
         macchina.coordinate.x = rand() % (LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA);
         macchina.coordinate.y = 26;
         macchina.id = MACCHINA2;
-        macchina.velocita = (DUE + rand() % (CINQUE - DUE)) * spostamento;
+        macchina.velocita = velocita;
         macchina.pid = getpid();
         break;
     }
