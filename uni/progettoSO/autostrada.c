@@ -7,10 +7,13 @@ char spriteMacchineContrario[ALTEZZA_RANA][LARGHEZZA_MACCHINA] = {" _/^\\", "| _
 
 void funzAutostrada()
 {
+    // contatori
     int i, j;
+
+    // attivo il colore della strada quindi grigio scuro
     attron(COLOR_PAIR(TRE));
 
-    /* è alto 9 e c'era prima il marciapiede di 3 */
+    // è alto 9 e parte da altezza 20 
     for (i = ZERO; i < ALTEZZA_AUTOSTRADA; i++)
     {
         for (j = ZERO; j < LARGHEZZA_SCHERMO; j++)
@@ -18,20 +21,31 @@ void funzAutostrada()
             mvprintw(INIZIO_AUTOSTRADA + i, ZERO + j, " ");
         }
     }
+
+    // spengo il colore
     attroff(COLOR_PAIR(TRE));
 }
 
 void funzAuto(int p[2])
 {
+    // contatore
     int i;
+
+    // pid delle macchine
     pid_t macchina[3];
+
+    // velocità di ciascuna macchina
     int velocita[3];
+
+    // direzione della macchina(se -1 va da destra verso sinistra se 1 il contrario)
     int spostamento;
 
     
+    // randomizzo la velocità
     for(i=0;i<3;i++)
         velocita[i]= (DUE + rand() % (CINQUE - DUE)); 
 
+    // randomizzo anche 
     spostamento=rand()%2;
     
     if(spostamento==0)
@@ -40,6 +54,7 @@ void funzAuto(int p[2])
         spostamento=1;
 
     
+    // genero i processi macchina
     macchina[ZERO] = fork();
     if (macchina[ZERO] < ZERO)
     {
@@ -81,48 +96,24 @@ void funzAuto(int p[2])
 
 void movimentoMacchina(int p[DUE], int numeroMacchina, int velocita)
 {
-    Oggetto macchina;
+    Oggetto macchina[3];
    
-    switch (numeroMacchina)
-    {
-    case ZERO:
-   
-            
-        macchina.coordinate.x = rand() % (LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA);
-        macchina.coordinate.y = 20;
-        macchina.id = MACCHINA0;
-        macchina.velocita = velocita;
-        macchina.pid = getpid();
-        
-        
-        break;
-    case UNO:
-    
-        macchina.coordinate.x = rand() % (LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA);
-        macchina.coordinate.y = 23;
-        macchina.id = MACCHINA1;
-        macchina.velocita = velocita;
-        macchina.pid = getpid();
-        break;
-    case DUE:
-        macchina.coordinate.x = rand() % (LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA);
-        macchina.coordinate.y = 26;
-        macchina.id = MACCHINA2;
-        macchina.velocita = velocita;
-        macchina.pid = getpid();
-        break;
-    }
+    macchina[numeroMacchina].coordinate.x = rand() % (LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA);
+    macchina[numeroMacchina].coordinate.y = 20+numeroMacchina*3;
+    macchina[numeroMacchina].id = MACCHINA0+numeroMacchina;
+    macchina[numeroMacchina].velocita = velocita;
+    macchina[numeroMacchina].pid = getpid();    
 
     close(p[READ]);
     while (true)
     {
-        write(p[WRITE], &macchina, sizeof(Oggetto));
-        macchina.coordinate.x += macchina.velocita;
-        if (controlloLimiti(macchina.coordinate, MACCHINA0) == 2)
-            macchina.coordinate.x = ZERO;
+        write(p[WRITE], &macchina[numeroMacchina], sizeof(Oggetto));
+        macchina[numeroMacchina].coordinate.x += macchina[numeroMacchina].velocita;
+        if (controlloLimiti(macchina[numeroMacchina].coordinate, MACCHINA0) == 2)
+            macchina[numeroMacchina].coordinate.x = ZERO;
 
-        else if (controlloLimiti(macchina.coordinate, MACCHINA0) == 1)
-            macchina.coordinate.x = LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA;
+        else if (controlloLimiti(macchina[numeroMacchina].coordinate, MACCHINA0) == 1)
+            macchina[numeroMacchina].coordinate.x = LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA;
 
         usleep(100000);
     }

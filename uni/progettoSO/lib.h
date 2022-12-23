@@ -82,6 +82,3 @@ void stampaVite(int vite);
 // controllo in che punto è la rana e in base a quello assegna il colore
 // della zona sottostante
 int controlloPosizione(Coordinate rana);
-
-// menu iniziale di gioco
-void menu();

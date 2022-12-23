@@ -6,6 +6,7 @@
 #include "prato.h"
 #include "fiume.h"
 #include "tane.h"
+#include "avvio.h"
 
 char spriteProiettile = '^';
 char spriteCuore[] = {"<3"};
@@ -26,9 +27,18 @@ int main()
     noecho();
     curs_set(false);
     cbreak();
-    colori();
+    start_color();
     keypad(stdscr, true);
     getmaxyx(stdscr, maxy, maxx);
+
+    clear();
+    refresh();
+
+    dimensioneFinestra(maxx, maxy);
+
+    menuIniziale();
+
+    colori();
 
     int p[DUE];
     if (pipe(p) == -UNO)
@@ -44,11 +54,6 @@ int main()
         exit(-UNO);
     }
     fcntl(pRana[0], F_SETFL, fcntl(pRana[0], F_GETFL) | O_NONBLOCK);
-
-    clear();
-    refresh();
-
-    dimensioneFinestra(maxx, maxy);
 
     /* Lascio due righe vuote in basso per scrivere il tempo/punteggio ecc. dopo.
     Quindi dato che l'altezza è il numero totale di "pixel" ma effettivamente poi
@@ -260,90 +265,8 @@ int controlloPosizione(Coordinate rana)
         return COLOR_BLUE;
 }
 
-void menu()
-{
-    curs_set(true);
-    mousemask(BUTTON1_PRESSED | REPORT_MOUSE_POSITION, NULL);
-
-    int i, j;
-
-    attron(COLOR_PAIR(QUATTRO));
-
-    /*
-    12-17   nuova partita
-    19-24  impostazioni
-    26-31  esci
-    */
-
-    /*
-    40 larghezza
-    */
-
-    for (i = 0; i < 5; i++) {
-        for (j = 0; j < 40; j++) {
-            mvprintw(12+i, 50+j, " ");
-        }
-    }
-    for (i = 0; i < 5; i++) {
-        for (j = 0; j < 40; j++) {
-            mvprintw(19+i, 50+j, " ");
-        }
-    }
-    for (i = 0; i < 5; i++) {
-        for (j = 0; j < 40; j++) {
-            mvprintw(26+i, 50+j, " ");
-        }
-    }
-
-    mvprintw(14,58,"Inizia una nuova partita");
-    mvprintw(21, 64,"Impostazioni");
-    mvprintw(28, 62, "Esci dal gioco");
-
-    attroff(COLOR_PAIR(QUATTRO));
-
-    refresh();
-
-    // printf("\033[?1003h\n"); // Makes the terminal report mouse movement events (per ora non ci serve)
-
-    while (true) {
-        int input = getch();
-
-        if (input == KEY_MOUSE)
-        {   
-            MEVENT event;
-            if (getmouse(&event) == OK)
-            {
-                if (event.bstate & BUTTON1_PRESSED)
-                { // click sinistro
-
-                    mvprintw(0, 0, "Input ricevuto");
-                    refresh();
-                    
-                    if (event.x > 50 && event.x < 90 && event.y > 26 && event.y < 31){ // USCITA
-                        mvprintw(1, 0, "Uscita in corso");
-                        refresh();
-                        sleep(5);
-                        endwin();
-                    }
-                    if (event.x > 50 && event.x < 90 && event.y > 12 && event.y < 17) { // nuova partita
-                        continue;
-                    }
-                    else if (event.x > 50 && event.x < 90 && event.y > 19 && event.y < 24) { // impostazioni
-                        continue;
-                    }
-                }
-            }
-        }
-    }
-
-    // printf("\033[?1003l\n"); // Disable mouse movement events, as l = low
-
-    curs_set(false);
-}
-
 void colori()
 {
-    start_color();
     init_color(COLORE_RANA, 75, 890, 20);          // 19/227/5
     init_color(COLORE_MARCIAPIEDE, 388, 270, 102); // 99/69/26
     init_color(COLORE_AUTOSTRADA, 150, 150, 150);  // grigio (per ora), sarebbe 66/66/66 in rgb, convertito 259 /259/259

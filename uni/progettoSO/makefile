@@ -1,5 +1,5 @@
-progetto.out: main.o marciapiede.o rana.o prato.o autostrada.o fiume.o tane.o funzioniGenerali.o 
-	gcc main.o marciapiede.o rana.o prato.o autostrada.o fiume.o tane.o funzioniGenerali.o -lncurses -o progetto.out
+progetto.out: main.o marciapiede.o rana.o prato.o autostrada.o fiume.o tane.o funzioniGenerali.o avvio.o
+	gcc main.o marciapiede.o rana.o prato.o autostrada.o fiume.o tane.o funzioniGenerali.o avvio.o -lncurses -o progetto.out
 marciapiede.o: marciapiede.c marciapiede.h lib.h
 	gcc -c marciapiede.c -lncurses
 main.o: main.c lib.h
@@ -16,6 +16,8 @@ tane.o: tane.c tane.h lib.h
 	gcc -c tane.c -lncurses
 funzioniGenerali.o: funzioniGenerali.c funzioniGenerali.h lib.h
 	gcc -c funzioniGenerali.c -lncurses
+avvio.o: avvio.c avvio.h lib.h
+	gcc -c avvio.c -lncurses
 clean:
 	rm *.o
 	rm *.out 
