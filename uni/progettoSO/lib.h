@@ -69,9 +69,6 @@ enum oggetti {RANA, PROIETTILE, PROIETTILE_OUT, TRONCO0, TRONCO1, TRONCO2, MACCH
 // serve per togliere vari magic numbers
 enum numeri {ZERO, UNO, DUE, TRE, QUATTRO, CINQUE, SEI, SETTE, OTTO, NOVE, DIECI};
 
-//inzializza i colori
-void colori();
-
 // controlla all'inzio le dimensioni della finestra e
 // se è troppo piccola chiede di ingrandire lo schermo
 void dimensioneFinestra(int maxx, int maxy);

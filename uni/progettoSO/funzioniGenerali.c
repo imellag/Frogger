@@ -60,3 +60,18 @@ int controlloRanaTronco(Coordinate rana, Oggetto tronco[3])
     rana.x = -1;
     return rana.x;
 }
+
+void colori()
+{
+    init_color(COLORE_RANA, 75, 890, 20);          // 19/227/5
+    init_color(COLORE_MARCIAPIEDE, 388, 270, 102); // 99/69/26
+    init_color(COLORE_AUTOSTRADA, 150, 150, 150);  // grigio (per ora), sarebbe 66/66/66 in rgb, convertito 259 /259/259
+    init_color(COLORE_TRONCHI, 459, 298, 102);     // 117/76/26
+    init_pair(1, COLOR_BLACK, COLOR_RED);
+    init_pair(2, COLOR_BLACK, COLORE_MARCIAPIEDE);
+    init_pair(3, COLOR_BLACK, COLORE_AUTOSTRADA);
+    init_pair(4, COLOR_BLACK, COLOR_GREEN); // colore prato
+    init_pair(5, COLOR_BLACK, COLOR_BLUE);  // colore fiume
+    init_pair(6, COLOR_BLACK, COLORE_TRONCHI);
+}
+
