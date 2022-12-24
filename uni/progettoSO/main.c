@@ -36,7 +36,7 @@ int main()
 
     dimensioneFinestra(maxx, maxy);
 
-    menuIniziale();
+    //menuIniziale();
 
     colori();
 
@@ -103,7 +103,12 @@ int main()
             tronchino[i].coordinate.x = -CINQUE;
             tronchino[i].coordinate.y = -CINQUE;
         }
-        Oggetto macchinina[TRE];
+        Oggetto macchinina[SETTE];
+          for (i = 0; i < 7; i++)
+        {
+            macchinina[i].coordinate.x = -CINQUE;
+            macchinina[i].coordinate.y = -CINQUE;
+        }
         proiettilino.coordinate.x = -UNO;
         proiettilino.coordinate.y = -UNO;
         _Bool fuorischermo = false;
@@ -153,6 +158,19 @@ int main()
                 macchinina[DUE] = pacchetto;
                 break;
 
+            case MACCHINA3:
+                macchinina[TRE] = pacchetto;
+                break;
+            case MACCHINA4:
+                macchinina[QUATTRO] = pacchetto;
+                break;
+            case MACCHINA5:
+                macchinina[CINQUE] = pacchetto;
+                break;
+            case MACCHINA6:
+                macchinina[SEI] = pacchetto;
+                break;
+
             case q:
                 ranocchio = pacchetto;
                 break;
@@ -168,13 +186,13 @@ int main()
             if (maxx != maxx_precedente || maxy != maxy_precedente)
                 clear();
 
-          /*  nuoveCoordinate.x = controlloRanaTronco(ranocchio.coordinate, tronchino);
-            if (!(nuoveCoordinate.x == -1))
-            {
-                ranocchio.coordinate.x = nuoveCoordinate.x;
-                write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
-            }
-*/
+            /*  nuoveCoordinate.x = controlloRanaTronco(ranocchio.coordinate, tronchino);
+              if (!(nuoveCoordinate.x == -1))
+              {
+                  ranocchio.coordinate.x = nuoveCoordinate.x;
+                  write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
+              }
+  */
             stampaVite(vite);
 
             funzMarciapiede();
@@ -184,9 +202,14 @@ int main()
             for (i = ZERO; i < TRE; i++)
             {
                 stampaTronco(tronchino[i].coordinate);
+
+                pidTronchi[i] = tronchino[i].pid;
+            }
+
+            for (i = 0; i < SETTE; i++)
+            {
                 stampaMacchina(macchinina[i]);
-                pidMacchine[i]=macchinina[i].pid;
-                pidTronchi[i]=tronchino[i].pid;
+                pidMacchine[i] = macchinina[i].pid;
             }
 
             stampaRana(ranocchio.coordinate);
@@ -202,9 +225,12 @@ int main()
             {
                 for (i = 0; i < 3; i++)
                 {
-                    kill(pidMacchine[i], SIGKILL);
+
                     kill(pidTronchi[i], SIGKILL);
                 }
+                for (i = 0; i < 7; i++)
+
+                    kill(pidMacchine[i], SIGKILL);
                 endwin();
                 kill(pidRana, SIGKILL);
 

@@ -5,7 +5,7 @@ void funzAutostrada();
 void funzAuto(int p[]);
 
 // gestisce il movimento della macchina che successivamente viene inviato al main
-void movimentoMacchina(int p[],int numeroMacchina, int velocita);
+void movimentoMacchina(int p[],int numeroMacchina, int velocita[]);
 
 // dopo che la macchina arriva a uno dei due bordi 
 //viene rigenerata in una corsia random
