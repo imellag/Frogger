@@ -23,12 +23,20 @@ int controlloLimiti(Coordinate entita, int tipo)
         if (entita.x < ZERO || entita.x >= LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI - UNO)
             flag = true;
     }
-    else if (tipo == MACCHINA0)
+    else if (tipo == MACCHINA0) // macchina
     {
         if (entita.x < ZERO) {
             flag = 1;
         }
         else if(entita.x >= LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA) {
+            flag = 2;
+        }
+    }
+    else if (tipo == MACCHINA1) { // camion
+        if (entita.x < ZERO) {
+            flag = 1;
+        }
+        else if(entita.x >= LARGHEZZA_SCHERMO - LARGHEZZA_CAMION) {
             flag = 2;
         }
     }

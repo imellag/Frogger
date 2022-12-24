@@ -67,6 +67,7 @@ int main()
     funzPrato();
     funzFiume();
     stampaRana(rana);
+
     mvwprintw(stdscr, UNO, LARGHEZZA_SCHERMO / DUE - QUATTRO, "Score: %d", punteggio);
     mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %d", tempo);
     refresh();
@@ -208,7 +209,7 @@ int main()
 
             for (i = 0; i < SETTE; i++)
             {
-                stampaMacchina(macchinina[i]);
+                stampaMacchina(macchinina[i], i);
                 pidMacchine[i] = macchinina[i].pid;
             }
 

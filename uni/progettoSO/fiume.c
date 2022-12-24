@@ -80,7 +80,7 @@ int funzTronchi(int p[DUE])
 
 void funzTronco(int p[DUE], int numeroTronco,int velocita)
 {
-   Oggetto tronco;
+    Oggetto tronco;
     srand(getpid());
     switch (numeroTronco)
     {

@@ -6,6 +6,11 @@
 #include <signal.h>
 #include <fcntl.h>
 
+// enumerazione utilizzata per gli id dei vari oggetti presenti sullo schermo
+enum oggetti {RANA, PROIETTILE, PROIETTILE_OUT, TRONCO0, TRONCO1, TRONCO2, MACCHINA0, MACCHINA1, MACCHINA2, MACCHINA3, MACCHINA4, MACCHINA5, MACCHINA6};
+
+// serve per togliere vari magic numbers
+enum numeri {ZERO, UNO, DUE, TRE, QUATTRO, CINQUE, SEI, SETTE, OTTO, NOVE, DIECI};
 
 // dimensioni rana
 #define ALTEZZA_RANA 3
@@ -21,6 +26,9 @@
 
 // dimensioni macchina
 #define LARGHEZZA_MACCHINA 6
+
+// dimensioni camion
+#define LARGHEZZA_CAMION 13
 
 // dimensioni autostrada
 #define ALTEZZA_AUTOSTRADA 9
@@ -54,7 +62,6 @@ typedef struct {
     int y;
 } Coordinate;
 
-
 // struttura degli oggetti presenti nello schermo
 typedef struct {
     int id;
@@ -62,12 +69,6 @@ typedef struct {
     int velocita;
     pid_t pid;
 } Oggetto;
-
-// enumerazione utilizzata per gli id dei vari oggetti presenti sullo schermo
-enum oggetti {RANA, PROIETTILE, PROIETTILE_OUT, TRONCO0, TRONCO1, TRONCO2, MACCHINA0, MACCHINA1, MACCHINA2, MACCHINA3, MACCHINA4, MACCHINA5, MACCHINA6};
-
-// serve per togliere vari magic numbers
-enum numeri {ZERO, UNO, DUE, TRE, QUATTRO, CINQUE, SEI, SETTE, OTTO, NOVE, DIECI};
 
 // controlla all'inzio le dimensioni della finestra e
 // se è troppo piccola chiede di ingrandire lo schermo

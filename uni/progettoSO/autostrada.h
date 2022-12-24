@@ -12,4 +12,4 @@ void movimentoMacchina(int p[],int numeroMacchina, int velocita[]);
 Oggetto cambioCorsia();
 
 // funziona per stampare la macchina
-void stampaMacchina(Oggetto macchina);
+void stampaMacchina(Oggetto macchina, int veicolo);
