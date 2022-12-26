@@ -126,11 +126,12 @@ void movimentoMacchina(int p[DUE], int numeroMacchina, int velocita[])
     {
         write(p[WRITE], &macchina[numeroMacchina], sizeof(Oggetto));
         macchina[numeroMacchina].coordinate.x += macchina[numeroMacchina].velocita;
-        if (controlloLimiti(macchina[numeroMacchina].coordinate, MACCHINA0) == 2)
-            macchina[numeroMacchina] = cambioCorsia(velocita, numeroMacchina, MACCHINA0);
+        if (controlloLimiti(macchina[numeroMacchina].coordinate, MACCHINA0) == 2 || controlloLimiti(macchina[numeroMacchina].coordinate, MACCHINA0) == 1 ){
 
-        else if (controlloLimiti(macchina[numeroMacchina].coordinate, MACCHINA0) == 1)
-            macchina[numeroMacchina] = cambioCorsia(velocita, numeroMacchina, MACCHINA0);
+                 macchina[numeroMacchina] = cambioCorsia(velocita, numeroMacchina, MACCHINA0);
+               
+
+        }
 
         usleep(100000);
     }
@@ -154,10 +155,7 @@ void movimentoCamion(int p[DUE], int numeroCamion, int velocita[])
         write(p[WRITE], &camion[numeroCamion], sizeof(Oggetto));
         camion[numeroCamion].coordinate.x += camion[numeroCamion].velocita;
 
-        if (controlloLimiti(camion[numeroCamion].coordinate, CAMION0) == 2)
-            camion[numeroCamion] = cambioCorsia(velocita, numeroCamion, CAMION0);
-
-        else if (controlloLimiti(camion[numeroCamion].coordinate, CAMION0) == 1)
+        if (controlloLimiti(camion[numeroCamion].coordinate, CAMION0) == 2 || controlloLimiti(camion[numeroCamion].coordinate, CAMION0) == 1)
             camion[numeroCamion] = cambioCorsia(velocita, numeroCamion, CAMION0);
 
         usleep(100000);
@@ -221,36 +219,74 @@ Oggetto cambioCorsia(int velocita[], int numeroMacchina, int veicolo)
 {
 
     Oggetto macchina;
-    /* controllo corsia non occupata
-    do {
+    int corsiaCasuale;
 
-    } while();
+    macchina.coordinate.y = 20 + corsiaCasuale * 3;
+
+    // controllo corsia non occupata
+    /*
+    do {
+        corsiaCasuale = rand() % 3;
+    } while(postoOccupato(macchina.coordinate ,corsiaCasuale));
     */
-    int corsiaCasuale = rand() % 3;
+     
+
+    corsiaCasuale = rand() % 3;
+    macchina.coordinate.y = 20 + corsiaCasuale * 3;
+
+    macchina.velocita = velocita[corsiaCasuale];
+    
+    macchina.pid=getpid();
+
     if (veicolo == MACCHINA0)
     {
-
+         
         if (velocita[corsiaCasuale] < 0)
             macchina.coordinate.x = LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA;
         else
             macchina.coordinate.x = ZERO;
 
+        
+
         macchina.id = MACCHINA0 + numeroMacchina;
     }
     else
     {
-
+       
         if (velocita[corsiaCasuale] < 0)
             macchina.coordinate.x = LARGHEZZA_SCHERMO - LARGHEZZA_CAMION;
         else
             macchina.coordinate.x = ZERO;
 
+
+       
+
         macchina.id = CAMION0 + numeroMacchina;
     }
-    macchina.coordinate.y = 20 + corsiaCasuale * 3;
-
-    macchina.velocita = velocita[corsiaCasuale];
-    // macchina.pid=getpid();
 
     return macchina;
 }
+/*
+_Bool postoOccupato(Coordinate veicolo, int corsia){
+    // sappiamo che la prima corsia parte da 20y
+
+    int i; _Bool flag=false;
+
+    for(i=0;i<3;i++){
+        // if direzione == sinistra -> destra
+        if((coordinate 20, 1) != " " && veicolo.y != " ") {
+
+            flag=true;
+
+        }  
+
+
+
+    }
+
+
+
+    return flag;
+
+}
+*/

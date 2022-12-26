@@ -20,3 +20,5 @@ void stampaMacchina(Oggetto macchina);
 
 
 void stampaCamion(Oggetto camion);
+
+_Bool postoOccupato(Coordinate veicolo, int corsia);
