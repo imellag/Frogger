@@ -7,7 +7,8 @@
 #include <fcntl.h>
 
 // enumerazione utilizzata per gli id dei vari oggetti presenti sullo schermo
-enum oggetti {RANA, PROIETTILE, PROIETTILE_OUT, TRONCO0, TRONCO1, TRONCO2, MACCHINA0, MACCHINA1, MACCHINA2, MACCHINA3, MACCHINA4, MACCHINA5, MACCHINA6};
+enum oggetti {RANA, PROIETTILE, PROIETTILE_OUT, TRONCO0, TRONCO1, TRONCO2, MACCHINA0, 
+MACCHINA1, MACCHINA2, MACCHINA3, MACCHINA4, CAMION0, CAMION1,CAMION2};
 
 // serve per togliere vari magic numbers
 enum numeri {ZERO, UNO, DUE, TRE, QUATTRO, CINQUE, SEI, SETTE, OTTO, NOVE, DIECI};

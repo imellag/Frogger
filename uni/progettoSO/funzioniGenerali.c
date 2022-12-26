@@ -32,7 +32,7 @@ int controlloLimiti(Coordinate entita, int tipo)
             flag = 2;
         }
     }
-    else if (tipo == MACCHINA1) { // camion
+    else if (tipo == CAMION0) { // camion
         if (entita.x < ZERO) {
             flag = 1;
         }
@@ -82,4 +82,3 @@ void colori()
     init_pair(5, COLOR_BLACK, COLOR_BLUE);  // colore fiume
     init_pair(6, COLOR_BLACK, COLORE_TRONCHI);
 }
-

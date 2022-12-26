@@ -36,7 +36,7 @@ int main()
 
     dimensioneFinestra(maxx, maxy);
 
-    //menuIniziale();
+    // menuIniziale();
 
     colori();
 
@@ -72,7 +72,7 @@ int main()
     mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %d", tempo);
     refresh();
 
-    pid_t pidRana, pidMacchine[3], pidTronchi[3], pidNemici, pidProiettile;
+    pid_t pidRana, pidMacchine[CINQUE], pidTronchi[TRE], pidNemici, pidProiettile, pidCamion[DUE];
     pidRana = fork();
 
     if (pidRana < ZERO)
@@ -104,12 +104,19 @@ int main()
             tronchino[i].coordinate.x = -CINQUE;
             tronchino[i].coordinate.y = -CINQUE;
         }
-        Oggetto macchinina[SETTE];
-          for (i = 0; i < 7; i++)
+        Oggetto macchinina[CINQUE];
+        for (i = 0; i < 5; i++)
         {
             macchinina[i].coordinate.x = -CINQUE;
             macchinina[i].coordinate.y = -CINQUE;
         }
+        Oggetto camioncino[TRE];
+        for (i = 0; i < 3; i++)
+        {
+            camioncino[i].coordinate.x = -CINQUE;
+            camioncino[i].coordinate.y = -CINQUE;
+        }
+
         proiettilino.coordinate.x = -UNO;
         proiettilino.coordinate.y = -UNO;
         _Bool fuorischermo = false;
@@ -165,11 +172,15 @@ int main()
             case MACCHINA4:
                 macchinina[QUATTRO] = pacchetto;
                 break;
-            case MACCHINA5:
-                macchinina[CINQUE] = pacchetto;
+            case CAMION0:
+                camioncino[ZERO] = pacchetto;
                 break;
-            case MACCHINA6:
-                macchinina[SEI] = pacchetto;
+            case CAMION1:
+                camioncino[UNO] = pacchetto;
+                break;
+
+            case CAMION2:
+                camioncino[DUE] = pacchetto;
                 break;
 
             case q:
@@ -207,10 +218,17 @@ int main()
                 pidTronchi[i] = tronchino[i].pid;
             }
 
-            for (i = 0; i < SETTE; i++)
+            for (i = 0; i < CINQUE; i++)
             {
-                stampaMacchina(macchinina[i], i);
+                stampaMacchina(macchinina[i]);
                 pidMacchine[i] = macchinina[i].pid;
+            }
+
+            for (i = 0; i < TRE; i++)
+            {
+
+                stampaCamion(camioncino[i]);
+                pidCamion[i] = camioncino[i].pid;
             }
 
             stampaRana(ranocchio.coordinate);
@@ -225,13 +243,15 @@ int main()
             if (ranocchio.id == q)
             {
                 for (i = 0; i < 3; i++)
-                {
 
                     kill(pidTronchi[i], SIGKILL);
-                }
-                for (i = 0; i < 7; i++)
+                for (i = 0; i < 5; i++)
 
                     kill(pidMacchine[i], SIGKILL);
+
+                for (i = 0; i < 2; i++)
+                    kill(pidCamion[i], SIGKILL);
+
                 endwin();
                 kill(pidRana, SIGKILL);
 
