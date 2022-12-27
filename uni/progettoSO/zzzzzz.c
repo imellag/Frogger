@@ -1,5 +1,4 @@
-/* NON FARCI CASO STO SOLO FACENDO DELLE PROVE PER IL MOUSE E LE FACCIO QUI PER PROVARE PIU FACILMENTE 
- va bene*/
+
 
 #include <curses.h>
 #include <stdio.h>
@@ -16,7 +15,9 @@ int main() {
     curs_set(true);
 
     start_color();
-    
+
+    // PlaySound("C:\\Snakes and Ladders\\snake.wav",NULL,SND_SYNC | SND_LOOP | SND_FILENAME);
+
     mousemask(BUTTON1_PRESSED | REPORT_MOUSE_POSITION, NULL);
 
     int i, j;

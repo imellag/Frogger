@@ -12,7 +12,7 @@ void funzFiume()
 
     attron(COLOR_PAIR(CINQUE));
 
-      // alto 9
+    // alto 9
     for (i = ZERO; i < ALTEZZA_FIUME; i++)
     {
         for (j = ZERO; j < LARGHEZZA_SCHERMO; j++)
@@ -26,11 +26,9 @@ int funzTronchi(int p[DUE])
     int i;
     pid_t tronco[3];
 
-
     int velocita[3];
     int spostamento;
 
-    
     for(i=0;i<3;i++)
         velocita[i]= (DUE + rand() % (CINQUE - DUE)); 
 
@@ -41,19 +39,17 @@ int funzTronchi(int p[DUE])
     else
         spostamento=1;
 
-
     for(i=0;i<3;i++){
-    tronco[i] = fork();
-    if (tronco[i] < ZERO)
-    {
-        perror("Error");
+        tronco[i] = fork();
+        if (tronco[i] < ZERO)
+        {   
+            perror("Error");
+        }
+        else if (tronco[i] == ZERO)
+        {
+            funzTronco(p, i,velocita[i]*spostamento);
+        }
     }
-    else if (tronco[i] == ZERO)
-    {
-        funzTronco(p, i,velocita[i]*spostamento);
-    }
-    }
-   
 }
 
 void funzTronco(int p[DUE], int numeroTronco,int velocita)

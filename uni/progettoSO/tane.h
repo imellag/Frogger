@@ -1,1 +1,2 @@
 void funzTane();
+void stampaTane();

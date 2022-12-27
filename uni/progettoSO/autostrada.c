@@ -88,8 +88,6 @@ void funzCamion(int p[2],int velocitaCorsie[],int spostamento)
     // velocità di ciascuna macchina
     int velocita[3];
 
-
-   
     for (i = 0; i < 3; i++)
     {
         spostamento *= -1;
@@ -224,14 +222,12 @@ Oggetto cambioCorsia(int velocita[], int numeroMacchina, int veicolo)
     macchina.coordinate.y = 20 + corsiaCasuale * 3;
 
     // controllo corsia non occupata
-    /*
+    
     do {
         corsiaCasuale = rand() % 3;
-    } while(postoOccupato(macchina.coordinate ,corsiaCasuale));
-    */
-     
-
-    corsiaCasuale = rand() % 3;
+    } while(postoOccupato(macchina.coordinate, corsiaCasuale, velocita,veicolo));
+    
+    // corsiaCasuale = rand() % 3;
     macchina.coordinate.y = 20 + corsiaCasuale * 3;
 
     macchina.velocita = velocita[corsiaCasuale];
@@ -246,8 +242,6 @@ Oggetto cambioCorsia(int velocita[], int numeroMacchina, int veicolo)
         else
             macchina.coordinate.x = ZERO;
 
-        
-
         macchina.id = MACCHINA0 + numeroMacchina;
     }
     else
@@ -258,35 +252,36 @@ Oggetto cambioCorsia(int velocita[], int numeroMacchina, int veicolo)
         else
             macchina.coordinate.x = ZERO;
 
-
-       
-
         macchina.id = CAMION0 + numeroMacchina;
     }
 
     return macchina;
 }
-/*
-_Bool postoOccupato(Coordinate veicolo, int corsia){
+
+_Bool postoOccupato(Coordinate veicolo, int corsia, int velocita[],int veicol){
     // sappiamo che la prima corsia parte da 20y
 
-    int i; _Bool flag=false;
+    int i; 
+    _Bool flag=false;
+    
+    char inizioStrada=mvinch(20+(corsia*3), UNO);
+    char prova2=mvinch(20+(corsia*3), LARGHEZZA_SCHERMO-DUE);
+    
+    mvprintw(1,1,"%d",prova);
+    refresh();
 
-    for(i=0;i<3;i++){
-        // if direzione == sinistra -> destra
-        if((coordinate 20, 1) != " " && veicolo.y != " ") {
-
-            flag=true;
-
-        }  
-
-
-
-    }
-
-
+        if (velocita[corsia] > 0) {
+            if(prova != ' ') {
+                flag = true;
+            }  
+        }
+        else {
+            if (prova2 != ' ') {
+                flag = true;
+            }
+        }
+    
 
     return flag;
-
 }
-*/
+

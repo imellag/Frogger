@@ -18,7 +18,6 @@ Oggetto cambioCorsia();
 // funziona per stampare la macchina
 void stampaMacchina(Oggetto macchina);
 
-
 void stampaCamion(Oggetto camion);
 
-_Bool postoOccupato(Coordinate veicolo, int corsia);
+_Bool postoOccupato(Coordinate veicolo, int corsia, int velocita[], int veicol);

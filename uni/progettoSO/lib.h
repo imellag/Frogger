@@ -47,11 +47,17 @@ enum numeri {ZERO, UNO, DUE, TRE, QUATTRO, CINQUE, SEI, SETTE, OTTO, NOVE, DIECI
 #define INIZIO_MARCIAPIEDE 29
 #define ALTEZZA_MARCIAPIEDE 3
 
+// dimensioni tane
+#define ALTEZZA_TANE 3
+#define LARGHEZZA_TANE 15
+#define INIZIO_TANE 5
+
 // definisco un numero per ciascuno colore che viene utilizzato
 #define COLORE_RANA 10
 #define COLORE_MARCIAPIEDE 20
 #define COLORE_AUTOSTRADA 30
 #define COLORE_TRONCHI 40
+#define COLORE_TANA 50
 
 // lettura/scrittura della pipe
 #define READ 0

@@ -211,6 +211,8 @@ int main()
             funzAutostrada();
             funzPrato();
             funzFiume();
+            funzTane();
+
             for (i = ZERO; i < TRE; i++)
             {
                 stampaTronco(tronchino[i].coordinate);
@@ -226,7 +228,6 @@ int main()
 
             for (i = 0; i < TRE; i++)
             {
-
                 stampaCamion(camioncino[i]);
                 pidCamion[i] = camioncino[i].pid;
             }
