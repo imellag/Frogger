@@ -14,9 +14,9 @@ void funzTane() {
         }
     }
 
-    attroff(COLOR_PAIR(SETTE));
+    stampaTane();
 
-    // stampaTane();
+    attroff(COLOR_PAIR(SETTE));
 }
 
 void stampaTane() {
@@ -36,9 +36,9 @@ void stampaTane() {
 
         if (i != 4) {
             for (k = 0; k < 15; k++) {
-                mvaddch(INIZIO_TANE+ALTEZZA_TANE-UNO, pos.x + k, "_");
-                pos.x++;
+                mvaddch(INIZIO_TANE+ALTEZZA_TANE-UNO, pos.x + k, '_');
             }
         }
+        pos.x += LARGHEZZA_TANE;
     }
 }

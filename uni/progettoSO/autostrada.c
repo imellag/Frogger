@@ -267,11 +267,11 @@ _Bool postoOccupato(Coordinate veicolo, int corsia, int velocita[],int veicol){
     char inizioStrada=mvinch(20+(corsia*3), UNO);
     char prova2=mvinch(20+(corsia*3), LARGHEZZA_SCHERMO-DUE);
     
-    mvprintw(1,1,"%d",prova);
+    mvprintw(1,1,"%d",inizioStrada);
     refresh();
 
         if (velocita[corsia] > 0) {
-            if(prova != ' ') {
+            if(inizioStrada != ' ') {
                 flag = true;
             }  
         }
