@@ -36,7 +36,7 @@ int main()
 
     dimensioneFinestra(maxx, maxy);
 
-    // menuIniziale();
+    menuIniziale();
 
     colori();
 

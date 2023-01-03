@@ -6,7 +6,7 @@ char frogger[CINQUE][45] = {
     "|  ___|  _ \\ / _ \\ / ___|/ ___| ____|  _ \\| |",
     "| |_  | |_) | | | | |  _| |  _|  _| | |_) | |",
     "|  _| |  _ <| |_| | |_| | |_| | |___|  _ <|_|",
-    "|_|   |_| \\_\\___/ \\____|\\____|_____|_| \\_(_) "};
+    "|_|   |_| \\\\_\\___/ \\____|\\____|_____|_| \\_(_)"};
 
 
 void menuIniziale() {
@@ -20,11 +20,7 @@ void menuIniziale() {
     attron(COLOR_PAIR(UNO));
 
     // stampa nome con scritta di caricamento
-    for (i = 0; i < 5; i++) {
-        for (j = 0; j < 45; j++) {
-            mvaddch(10 + i,LARGHEZZA_SCHERMO / 2 - 23 + j, frogger[i][j]);
-        }
-    }
+    stampaFrogger(LARGHEZZA_SCHERMO / 2 - 23, 10);
 
     mvprintw(25, 63, "Caricamento");
 
@@ -42,36 +38,41 @@ void menuIniziale() {
     erase();
 
     /*
-    12-17   nuova partita
-    19-24  impostazioni
-    26-31  esci
+    15-20   nuova partita
+    22-27  impostazioni
+    29-34  esci
     */
 
     /*
-    40 larghezza
+    36 larghezza
     */
 
     for (i = 0; i < 5; i++) {
-        for (j = 0; j < 40; j++) {
-            mvprintw(12+i, 50+j, " ");
+        for (j = 0; j < 36; j++) {
+            mvprintw(15+i, 52+j, " ");
         }
     }
     for (i = 0; i < 5; i++) {
-        for (j = 0; j < 40; j++) {
-            mvprintw(19+i, 50+j, " ");
+        for (j = 0; j < 36; j++) {
+            mvprintw(22+i, 52+j, " ");
         }
     }
     for (i = 0; i < 5; i++) {
-        for (j = 0; j < 40; j++) {
-            mvprintw(26+i, 50+j, " ");
+        for (j = 0; j < 36; j++) {
+            mvprintw(29+i, 52+j, " ");
         }
     }
 
-    mvprintw(14,58,"Inizia una nuova partita");
-    mvprintw(21, 64,"Impostazioni");
-    mvprintw(28, 62, "Esci dal gioco");
+    mvprintw(17,58,"Inizia una nuova partita");
+    mvprintw(24, 64,"Impostazioni");
+    mvprintw(31, 62, "Esci dal gioco");
 
     attroff(COLOR_PAIR(DUE));
+    attron(COLOR_PAIR(UNO));
+
+    stampaFrogger(LARGHEZZA_SCHERMO / 2 - 23, 5);
+
+    attron(COLOR_PAIR(DUE));
 
     refresh();
 
@@ -91,7 +92,7 @@ void menuIniziale() {
                     // mvprintw(0, 0, "Input ricevuto"); debug
                     refresh();
                     
-                    if (event.x > 50 && event.x < 90 && event.y > 26 && event.y < 31){ // USCITA
+                    if (event.x > 50 && event.x < 90 && event.y > 29 && event.y < 34){ // USCITA
                         clear();
                         mvprintw(ALTEZZA_SCHERMO/2, LARGHEZZA_SCHERMO/2-7, "Uscita in corso");
                         refresh();
@@ -99,10 +100,10 @@ void menuIniziale() {
                         endwin();
                         exit(EXIT_SUCCESS);
                     }
-                    if (event.x > 50 && event.x < 90 && event.y > 12 && event.y < 17) { // nuova partita
+                    if (event.x > 50 && event.x < 90 && event.y > 15 && event.y < 20) { // nuova partita
                         break;
                     }
-                    else if (event.x > 50 && event.x < 90 && event.y > 19 && event.y < 24) { // impostazioni
+                    else if (event.x > 50 && event.x < 90 && event.y > 22 && event.y < 27) { // impostazioni
                         continue;
                     }
                 }
@@ -115,3 +116,12 @@ void menuIniziale() {
     curs_set(false);
 }
 
+void stampaFrogger(int iniziox, int inizioy) {
+    int i, j;
+
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 45; j++) {
+            mvaddch(inizioy + i, iniziox + j, frogger[i][j]);
+        }
+    }
+}
