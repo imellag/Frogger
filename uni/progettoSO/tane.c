@@ -6,7 +6,9 @@ char spriteTana[TRE][LARGHEZZA_TANE] = {"     _____     ", "    /     \\    ", "
 void funzTane() {
     int i, j;
 
-    attron(COLOR_PAIR(SETTE));
+    init_pair(2, COLOR_BLACK, COLORE_TANA);
+
+    attron(COLOR_PAIR(2));
 
     for(i = ZERO; i < ALTEZZA_TANE; i++){
         for(j = ZERO; j < LARGHEZZA_SCHERMO; j++){
@@ -16,7 +18,7 @@ void funzTane() {
 
     stampaTane();
 
-    attroff(COLOR_PAIR(SETTE));
+    attroff(COLOR_PAIR(2));
 }
 
 void stampaTane() {

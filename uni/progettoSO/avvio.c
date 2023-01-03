@@ -72,7 +72,7 @@ void menuIniziale() {
 
     stampaFrogger(LARGHEZZA_SCHERMO / 2 - 23, 5);
 
-    attron(COLOR_PAIR(DUE));
+    attroff(COLOR_PAIR(UNO));
 
     refresh();
 
