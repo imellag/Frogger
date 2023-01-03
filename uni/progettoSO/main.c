@@ -205,7 +205,7 @@ int main()
                   write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
               }
   */
-            stampaVite(vite);
+           
 
             funzMarciapiede();
             funzAutostrada();
@@ -233,7 +233,36 @@ int main()
             }
 
             stampaRana(ranocchio.coordinate);
+            for (i = 0; i < CINQUE; i++)
+            {
 
+              
+                
+                if (macchinina[i].coordinate.x < ranocchio.coordinate.x  && (macchinina[i].coordinate.x+LARGHEZZA_MACCHINA) >ranocchio.coordinate.x 
+                 && macchinina[i].coordinate.y == ranocchio.coordinate.y )
+                   {
+                 
+                    vite--;
+                    ranocchio.coordinate.x = ZERO;
+                    ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
+                    write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
+                    clear();
+                }
+            }
+            for (i = 0; i < TRE; i++)
+            {
+
+                if (camioncino[i].coordinate.x < ranocchio.coordinate.x && (camioncino[i].coordinate.x+LARGHEZZA_CAMION) > ranocchio.coordinate.x && camioncino[i].coordinate.y == ranocchio.coordinate.y)
+                {
+             
+                    vite--;
+                    ranocchio.coordinate.x = ZERO;
+                    ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
+                    write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
+                    clear();
+                }
+            }
+             stampaVite(vite);
             if (!fuorischermo)
                 mvwprintw(stdscr, proiettilino.coordinate.y, proiettilino.coordinate.x, "%c", spriteProiettile);
 
@@ -241,8 +270,9 @@ int main()
             mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %d", tempo);
             refresh();
 
-            if (ranocchio.id == q)
+            if (ranocchio.id == q || vite==0)
             {
+                GameOver();
                 for (i = 0; i < 3; i++)
 
                     kill(pidTronchi[i], SIGKILL);
@@ -311,5 +341,17 @@ int controlloPosizione(Coordinate rana)
         return COLOR_GREEN;
     else if (rana.y >= 8 && rana.y < INIZIO_PRATO)
         return COLOR_BLUE;
-    
+
 }
+
+void GameOver(){
+
+    clear();
+    mvprintw(ALTEZZA_SCHERMO/2,LARGHEZZA_SCHERMO/2,"Hai perso!");
+    refresh();
+  //  sleep(6);
+  getch();
+
+
+}
+

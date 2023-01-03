@@ -39,26 +39,19 @@ int controlloLimiti(Coordinate entita, int tipo)
     }
     else if (tipo == TRONCO0)
     {
-        if (entita.x < ZERO || entita.x >= LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI - UNO)
+        if (entita.x < ZERO || entita.x >= LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI)
             flag = true;
     }
-    else if (tipo == MACCHINA0) // macchina
+    else if (tipo == MACCHINA0 ||  tipo == CAMION0) // macchina o camion
     {
         if (entita.x < ZERO) {
             flag = 1;
         }
-        else if(entita.x >= LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA) {
+        else if(entita.x >= LARGHEZZA_SCHERMO ) {
             flag = 2;
         }
     }
-    else if (tipo == CAMION0) { // camion
-        if (entita.x < ZERO) {
-            flag = 1;
-        }
-        else if(entita.x >= LARGHEZZA_SCHERMO - LARGHEZZA_CAMION) {
-            flag = 2;
-        }
-    }
+    
 
     return flag;
 }

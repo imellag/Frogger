@@ -4,7 +4,7 @@
 
 char spriteMacchine[ALTEZZA_RANA][LARGHEZZA_MACCHINA] = {" /^\\_", "| __ |", "o   o"};
 char spriteMacchineContrario[ALTEZZA_RANA][LARGHEZZA_MACCHINA] = {" _/^\\", "| __ |", " o   o"};
-char spriteCamion[ALTEZZA_RANA][LARGHEZZA_CAMION] = {"/_______/^\\_", "|_______|___|", " O O O   O O"};
+char spriteCamion[ALTEZZA_RANA][LARGHEZZA_CAMION] = {"/_______/^\\_ ", "|_______|___|", " O O O   O O"};
 char spriteCamionContrario[ALTEZZA_RANA][LARGHEZZA_CAMION] = {" _/^\\_______\\", "|___|_______|", " O O   O O O"};
 
 void funzAutostrada()
@@ -70,13 +70,16 @@ void funzAuto(int p[2])
         if (macchina[i] < ZERO)
             printw("Error");
         else if (macchina[i] == ZERO)
+        {
+
             movimentoMacchina(p, i, velocita);
+        }
     }
 
-    funzCamion(p,velocitaCorsie,spostamento);
+    funzCamion(p, velocitaCorsie, spostamento);
 }
 
-void funzCamion(int p[2],int velocitaCorsie[],int spostamento)
+void funzCamion(int p[2], int velocitaCorsie[], int spostamento)
 {
 
     // contatore
@@ -100,10 +103,14 @@ void funzCamion(int p[2],int velocitaCorsie[],int spostamento)
     for (i = 0; i < 3; i++)
     {
         camion[i] = fork();
+
         if (camion[i] < ZERO)
             printw("Error");
         else if (camion[i] == ZERO)
+        {
+
             movimentoCamion(p, i, velocita);
+        }
     }
 }
 
@@ -111,8 +118,14 @@ void movimentoMacchina(int p[DUE], int numeroMacchina, int velocita[])
 {
     Oggetto macchina[5];
 
-    srand(getpid());
+    int tempoRandom = MIN_TEMPO_MACCHINA + rand() % (MAX_TEMPO_MACCHINA - MIN_TEMPO_MACCHINA);
+    usleep(100000 + tempoRandom);
 
+    /* if (velocita[numeroMacchina] < 0)
+         macchina[numeroMacchina].coordinate.x = LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA;
+     else*/
+
+    srand(getpid());
     macchina[numeroMacchina].coordinate.x = rand() % (LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA);
     macchina[numeroMacchina].coordinate.y = 20 + (numeroMacchina % 3) * 3;
     macchina[numeroMacchina].id = MACCHINA0 + numeroMacchina;
@@ -123,15 +136,18 @@ void movimentoMacchina(int p[DUE], int numeroMacchina, int velocita[])
     while (true)
     {
         write(p[WRITE], &macchina[numeroMacchina], sizeof(Oggetto));
-        macchina[numeroMacchina].coordinate.x += macchina[numeroMacchina].velocita;
-        if (controlloLimiti(macchina[numeroMacchina].coordinate, MACCHINA0) == 2 || controlloLimiti(macchina[numeroMacchina].coordinate, MACCHINA0) == 1 ){
+        // macchina[numeroMacchina].coordinate.x += macchina[numeroMacchina].velocita;
+        if (velocita[numeroMacchina] < 0)
+            macchina[numeroMacchina].coordinate.x--;
+        else
+            macchina[numeroMacchina].coordinate.x++;
+        if (controlloLimiti(macchina[numeroMacchina].coordinate, MACCHINA0) == 2)
+            macchina[numeroMacchina].coordinate.x = ZERO;
 
-                 macchina[numeroMacchina] = cambioCorsia(velocita, numeroMacchina, MACCHINA0);
-               
+        else if (controlloLimiti(macchina[numeroMacchina].coordinate, MACCHINA0) == 1)
+            macchina[numeroMacchina].coordinate.x = LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA;
 
-        }
-
-        usleep(100000);
+        usleep(tempoRandom);
     }
 }
 
@@ -139,8 +155,14 @@ void movimentoCamion(int p[DUE], int numeroCamion, int velocita[])
 {
     Oggetto camion[3];
 
-    srand(getpid());
+    int tempoRandom = MIN_TEMPO_CAMION + rand() % (MAX_TEMPO_CAMION - MIN_TEMPO_CAMION);
+    usleep(100000 + tempoRandom);
 
+    /*
+    if (velocita[numeroCamion] < 0)
+        camion[numeroCamion].coordinate.x = LARGHEZZA_SCHERMO - LARGHEZZA_CAMION;
+    else*/
+    srand(getpid());
     camion[numeroCamion].coordinate.x = rand() % (LARGHEZZA_SCHERMO - LARGHEZZA_CAMION);
     camion[numeroCamion].coordinate.y = 20 + (numeroCamion % 3) * 3;
     camion[numeroCamion].id = CAMION0 + numeroCamion;
@@ -151,12 +173,23 @@ void movimentoCamion(int p[DUE], int numeroCamion, int velocita[])
     while (true)
     {
         write(p[WRITE], &camion[numeroCamion], sizeof(Oggetto));
-        camion[numeroCamion].coordinate.x += camion[numeroCamion].velocita;
+        // camion[numeroCamion].coordinate.x += camion[numeroCamion].velocita;
+        if (velocita[numeroCamion] < 0)
+            camion[numeroCamion].coordinate.x--;
+        else
+            camion[numeroCamion].coordinate.x++;
 
-        if (controlloLimiti(camion[numeroCamion].coordinate, CAMION0) == 2 || controlloLimiti(camion[numeroCamion].coordinate, CAMION0) == 1)
-            camion[numeroCamion] = cambioCorsia(velocita, numeroCamion, CAMION0);
+        if (controlloLimiti(camion[numeroCamion].coordinate, CAMION0) == 2)
+        {
 
-        usleep(100000);
+            camion[numeroCamion].coordinate.x = ZERO;
+        }
+        else if (controlloLimiti(camion[numeroCamion].coordinate, CAMION0) == 1)
+        {
+            camion[numeroCamion].coordinate.x = LARGHEZZA_SCHERMO - LARGHEZZA_CAMION;
+        }
+
+        usleep(tempoRandom);
     }
 }
 
@@ -171,7 +204,11 @@ void stampaMacchina(Oggetto macchina)
         for (i = ZERO; i < ALTEZZA_RANA; i++)
         {
             for (j = ZERO; j < LARGHEZZA_MACCHINA; j++)
-                mvprintw(macchina.coordinate.y + i, macchina.coordinate.x + j, "%c", spriteMacchineContrario[i][j]);
+            {
+                if ((macchina.coordinate.x - j) < ZERO)
+                    break;
+                mvprintw(macchina.coordinate.y + i, macchina.coordinate.x - j, "%c", spriteMacchineContrario[i][LARGHEZZA_MACCHINA - 1 - j]);
+            }
         }
     }
     else
@@ -179,7 +216,11 @@ void stampaMacchina(Oggetto macchina)
         for (i = ZERO; i < ALTEZZA_RANA; i++)
         {
             for (j = ZERO; j < LARGHEZZA_MACCHINA; j++)
+            {
+                if ((macchina.coordinate.x + j) >= LARGHEZZA_SCHERMO)
+                    break;
                 mvprintw(macchina.coordinate.y + i, macchina.coordinate.x + j, "%c", spriteMacchine[i][j]);
+            }
         }
     }
 
@@ -198,7 +239,11 @@ void stampaCamion(Oggetto camion)
         for (i = ZERO; i < ALTEZZA_RANA; i++)
         {
             for (j = ZERO; j < LARGHEZZA_CAMION; j++)
-                mvprintw(camion.coordinate.y + i, camion.coordinate.x + j, "%c", spriteCamionContrario[i][j]);
+            {
+                if ((camion.coordinate.x - j) < ZERO)
+                    break;
+                mvprintw(camion.coordinate.y + i, camion.coordinate.x - j, "%c", spriteCamionContrario[i][LARGHEZZA_CAMION - 1 - j]);
+            }
         }
     }
     else
@@ -206,7 +251,11 @@ void stampaCamion(Oggetto camion)
         for (i = ZERO; i < ALTEZZA_RANA; i++)
         {
             for (j = ZERO; j < LARGHEZZA_CAMION; j++)
+            {
+                if ((camion.coordinate.x + j) >= LARGHEZZA_SCHERMO)
+                    break;
                 mvprintw(camion.coordinate.y + i, camion.coordinate.x + j, "%c", spriteCamion[i][j]);
+            }
         }
     }
 
@@ -222,21 +271,19 @@ Oggetto cambioCorsia(int velocita[], int numeroMacchina, int veicolo)
     macchina.coordinate.y = 20 + corsiaCasuale * 3;
 
     // controllo corsia non occupata
-    
-    do {
-        corsiaCasuale = rand() % 3;
-    } while(postoOccupato(macchina.coordinate, corsiaCasuale, velocita,veicolo));
-    
+
+    corsiaCasuale = rand() % 3;
+
     // corsiaCasuale = rand() % 3;
     macchina.coordinate.y = 20 + corsiaCasuale * 3;
 
     macchina.velocita = velocita[corsiaCasuale];
-    
-    macchina.pid=getpid();
+
+    macchina.pid = getpid();
 
     if (veicolo == MACCHINA0)
     {
-         
+
         if (velocita[corsiaCasuale] < 0)
             macchina.coordinate.x = LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA;
         else
@@ -246,7 +293,7 @@ Oggetto cambioCorsia(int velocita[], int numeroMacchina, int veicolo)
     }
     else
     {
-       
+
         if (velocita[corsiaCasuale] < 0)
             macchina.coordinate.x = LARGHEZZA_SCHERMO - LARGHEZZA_CAMION;
         else
@@ -255,33 +302,91 @@ Oggetto cambioCorsia(int velocita[], int numeroMacchina, int veicolo)
         macchina.id = CAMION0 + numeroMacchina;
     }
 
+    usleep(10000);
     return macchina;
 }
 
-_Bool postoOccupato(Coordinate veicolo, int corsia, int velocita[],int veicol){
+_Bool postoOccupato(Coordinate veicolo, int corsia, int velocita[], int tipoveicolo)
+{
     // sappiamo che la prima corsia parte da 20y
 
-    int i; 
-    _Bool flag=false;
-    
-    char inizioStrada=mvinch(20+(corsia*3), UNO);
-    char prova2=mvinch(20+(corsia*3), LARGHEZZA_SCHERMO-DUE);
-    
-    mvprintw(1,1,"%d",inizioStrada);
-    refresh();
+    int i;
+    _Bool flag = true;
 
-        if (velocita[corsia] > 0) {
-            if(inizioStrada != ' ') {
-                flag = true;
-            }  
-        }
-        else {
-            if (prova2 != ' ') {
-                flag = true;
+    char inizioStrada;
+    char fineStrada = mvinch(20 + (corsia * 3), LARGHEZZA_SCHERMO - DUE);
+
+    if (tipoveicolo == CAMION0)
+    {
+        for (i = 0; i < LARGHEZZA_CAMION; i++)
+        {
+
+            if (velocita[corsia] > 0)
+            {
+
+                inizioStrada = mvinch(21 + (corsia * 3), ZERO + i);
+                if (inizioStrada == ' ')
+                    flag = false;
+                else
+                {
+                    flag = true;
+
+                    break;
+                }
+            }
+            else
+            {
+
+                fineStrada = mvinch(21 + (corsia * 3), LARGHEZZA_SCHERMO - i);
+
+                if (fineStrada == ' ')
+                    flag = false;
+                else
+                {
+
+                    flag = true;
+                    break;
+                }
             }
         }
-    
+    }
+    else
+    {
+
+        for (i = 0; i < LARGHEZZA_MACCHINA; i++)
+        {
+            if (velocita[corsia] > 0)
+            {
+                if (i == 0)
+                    inizioStrada = mvinch(21 + (corsia * 3), i);
+                else
+                    inizioStrada = mvinch(20 + (corsia * 3), i);
+                if (inizioStrada == ' ')
+                    flag = false;
+                else
+                {
+
+                    flag = true;
+                    break;
+                }
+            }
+            else
+            {
+                if (i == LARGHEZZA_MACCHINA - 1)
+                    fineStrada = mvinch(21 + (corsia * 3), LARGHEZZA_SCHERMO - i);
+                else
+                    fineStrada = mvinch(20 + (corsia * 3), LARGHEZZA_SCHERMO - i);
+                if (fineStrada == ' ')
+                    flag = false;
+                else
+                {
+
+                    flag = true;
+                    break;
+                }
+            }
+        }
+    }
 
     return flag;
 }
-
