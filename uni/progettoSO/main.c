@@ -270,9 +270,11 @@ int main()
             mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %d", tempo);
             refresh();
 
-            if (ranocchio.id == q || vite==0)
+            if (ranocchio.id == q || vite==ZERO)
             {
-                GameOver();
+                if (vite == ZERO)
+                    gameOver();
+
                 for (i = 0; i < 3; i++)
 
                     kill(pidTronchi[i], SIGKILL);
@@ -344,14 +346,13 @@ int controlloPosizione(Coordinate rana)
 
 }
 
-void GameOver(){
+void gameOver(){
 
     clear();
     mvprintw(ALTEZZA_SCHERMO/2,LARGHEZZA_SCHERMO/2,"Hai perso!");
     refresh();
-  //  sleep(6);
-  getch();
+    sleep(2);
 
-
+    getch();
 }
 
