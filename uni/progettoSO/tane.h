@@ -1,2 +1,2 @@
-void funzTane();
-void stampaTane();
+void funzTane(bool arrayTane[]);
+void stampaTane(bool arrayTane[]);

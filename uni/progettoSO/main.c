@@ -19,6 +19,8 @@ int main()
     int maxx_precedente, maxy_precedente;
     int tempo = 30, punteggio = ZERO, vite = TRE;
     Coordinate rana;
+    bool arrayTane[CINQUE] = {false, false, false, false, false};
+    int risultato;
 
     rana.x = ZERO;
     rana.y = ALTEZZA_SCHERMO - SEI;
@@ -144,6 +146,7 @@ int main()
             case PROIETTILE_OUT:
                 fuorischermo = true;
                 break;
+
             case TRONCO0:
                 tronchino[ZERO] = pacchetto;
                 break;
@@ -157,28 +160,25 @@ int main()
             case MACCHINA0:
                 macchinina[ZERO] = pacchetto;
                 break;
-
             case MACCHINA1:
                 macchinina[UNO] = pacchetto;
                 break;
-
             case MACCHINA2:
                 macchinina[DUE] = pacchetto;
                 break;
-
             case MACCHINA3:
                 macchinina[TRE] = pacchetto;
                 break;
             case MACCHINA4:
                 macchinina[QUATTRO] = pacchetto;
                 break;
+
             case CAMION0:
                 camioncino[ZERO] = pacchetto;
                 break;
             case CAMION1:
                 camioncino[UNO] = pacchetto;
                 break;
-
             case CAMION2:
                 camioncino[DUE] = pacchetto;
                 break;
@@ -199,19 +199,30 @@ int main()
                 clear();
 
             /*  nuoveCoordinate.x = controlloRanaTronco(ranocchio.coordinate, tronchino);
-              if (!(nuoveCoordinate.x == -1))
-              {
+            if (!(nuoveCoordinate.x == -1))
+            {
                   ranocchio.coordinate.x = nuoveCoordinate.x;
                   write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
-              }
-  */
-           
+            }
+            */
 
+            risultato = controlloLimiti(ranocchio.coordinate, RANA);
+            
+            if (risultato < SEI && risultato >= UNO) {
+                arrayTane[risultato-1] = true;
+                ranocchio.coordinate.x = ZERO;
+                ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
+                write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
+                clear();
+                punteggio += 2000;
+            }
+            
+        
             funzMarciapiede();
             funzAutostrada();
             funzPrato();
             funzFiume();
-            funzTane();
+            funzTane(arrayTane);
 
             for (i = ZERO; i < TRE; i++)
             {
@@ -235,13 +246,9 @@ int main()
             stampaRana(ranocchio.coordinate);
             for (i = 0; i < CINQUE; i++)
             {
-
-              
-                
                 if (macchinina[i].coordinate.x < ranocchio.coordinate.x  && (macchinina[i].coordinate.x+LARGHEZZA_MACCHINA) >ranocchio.coordinate.x 
-                 && macchinina[i].coordinate.y == ranocchio.coordinate.y )
-                   {
-                 
+                && macchinina[i].coordinate.y == ranocchio.coordinate.y )
+                {
                     vite--;
                     ranocchio.coordinate.x = ZERO;
                     ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
@@ -251,10 +258,8 @@ int main()
             }
             for (i = 0; i < TRE; i++)
             {
-
                 if (camioncino[i].coordinate.x < ranocchio.coordinate.x && (camioncino[i].coordinate.x+LARGHEZZA_CAMION) > ranocchio.coordinate.x && camioncino[i].coordinate.y == ranocchio.coordinate.y)
                 {
-             
                     vite--;
                     ranocchio.coordinate.x = ZERO;
                     ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
@@ -262,7 +267,8 @@ int main()
                     clear();
                 }
             }
-             stampaVite(vite);
+
+            stampaVite(vite);
             if (!fuorischermo)
                 mvwprintw(stdscr, proiettilino.coordinate.y, proiettilino.coordinate.x, "%c", spriteProiettile);
 
@@ -351,7 +357,7 @@ void gameOver(){
     clear();
     mvprintw(ALTEZZA_SCHERMO/2,LARGHEZZA_SCHERMO/2,"Hai perso!");
     refresh();
-    sleep(2);
+    // sleep(2);
 
     getch();
 }
