@@ -82,4 +82,5 @@ void colori()
     init_pair(4, COLOR_BLACK, COLOR_GREEN); // colore prato
     init_pair(5, COLOR_BLACK, COLOR_BLUE);  // colore fiume
     init_pair(6, COLOR_BLACK, COLORE_TRONCHI);
+    // init_pair(7, COLOR_BLACK, COLORE_TANA);
 }

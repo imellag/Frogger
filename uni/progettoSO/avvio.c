@@ -114,6 +114,7 @@ void menuIniziale() {
     // printf("\033[?1003l\n"); // Disable mouse movement events, as l = low
 
     curs_set(false);
+    clear();
 }
 
 void stampaFrogger(int iniziox, int inizioy) {

@@ -4,6 +4,7 @@
 
 void funzMarciapiede() {
     int i,j;
+    
     attron( COLOR_PAIR(DUE));
 
     /* -6 perché lascio tre righe in basso per le info (tempo ecc) e il marciapiede è alto 3 */    
