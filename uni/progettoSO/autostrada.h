@@ -1,3 +1,8 @@
+#define MIN_TEMPO_MACCHINA 20000
+#define MAX_TEMPO_MACCHINA 40000
+#define MIN_TEMPO_CAMION 20000
+#define MAX_TEMPO_CAMION 40000
+
 // stampa lo sfondo dell'autostrada
 void funzAutostrada();
 

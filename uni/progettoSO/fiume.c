@@ -30,7 +30,7 @@ int funzTronchi(int p[DUE])
     int spostamento;
 
     for(i=0;i<3;i++)
-        velocita[i]= (DUE + rand() % (CINQUE - DUE)); 
+        velocita[i]= UNO; 
 
     spostamento=rand()%2;
     
@@ -55,6 +55,9 @@ int funzTronchi(int p[DUE])
 void funzTronco(int p[DUE], int numeroTronco,int velocita)
 {
     Oggetto tronco[TRE];
+    
+    int tempoRandom= TEMPO_TRONCO_MIN+rand()%(TEMPO_TRONCO_MAX-TEMPO_TRONCO_MIN);
+    
     srand(getpid());
    
     tronco[numeroTronco].coordinate.y = 8+numeroTronco*3;
@@ -67,11 +70,13 @@ void funzTronco(int p[DUE], int numeroTronco,int velocita)
     while (true)
     {
         write(p[WRITE], &tronco[numeroTronco], sizeof(Oggetto));
-        tronco[numeroTronco].coordinate.x += tronco[numeroTronco].velocita;
+        
+          tronco[numeroTronco].coordinate.x +=tronco[numeroTronco].velocita;
+         
         if (controlloLimiti(tronco[numeroTronco].coordinate, TRONCO0))
             tronco[numeroTronco].velocita = tronco[numeroTronco].velocita * -UNO;
 
-        usleep(100000);
+        usleep(tempoRandom);
     }
 }
 
