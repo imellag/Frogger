@@ -26,22 +26,22 @@ void funzRana(int p[], int pRana[])
         {
         case KEY_UP:
             rana.coordinate.y -= ALTEZZA_RANA;
-            if (controlloLimiti(rana.coordinate, RANA))
+            if (controlloLimiti(rana.coordinate, RANA) == SEI)
                 rana.coordinate.y += ALTEZZA_RANA;
             break;
         case KEY_DOWN:
             rana.coordinate.y += ALTEZZA_RANA;
-            if (controlloLimiti(rana.coordinate, RANA))
+            if (controlloLimiti(rana.coordinate, RANA) == SEI)
                 rana.coordinate.y -= ALTEZZA_RANA;
             break;
         case KEY_RIGHT:
             rana.coordinate.x += LARGHEZZA_RANA;
-            if (controlloLimiti(rana.coordinate, RANA))
+            if (controlloLimiti(rana.coordinate, RANA) == SEI)
                 rana.coordinate.x -= LARGHEZZA_RANA;
             break;
         case KEY_LEFT:
             rana.coordinate.x -= LARGHEZZA_RANA;
-            if (controlloLimiti(rana.coordinate, RANA))
+            if (controlloLimiti(rana.coordinate, RANA) == SEI)
                 rana.coordinate.x += LARGHEZZA_RANA;
             break;
 

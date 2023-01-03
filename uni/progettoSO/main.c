@@ -311,4 +311,5 @@ int controlloPosizione(Coordinate rana)
         return COLOR_GREEN;
     else if (rana.y >= 8 && rana.y < INIZIO_PRATO)
         return COLOR_BLUE;
+    
 }

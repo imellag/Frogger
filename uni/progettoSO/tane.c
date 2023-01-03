@@ -39,6 +39,11 @@ void stampaTane() {
                 mvaddch(INIZIO_TANE+ALTEZZA_TANE-UNO, pos.x + k, '_');
             }
         }
+        else {
+            for (k = 0; k < 5; k++) {
+                mvaddch(INIZIO_TANE+ALTEZZA_TANE-UNO, pos.x + k, '_');
+            }
+        }
         pos.x += LARGHEZZA_TANE;
     }
 }

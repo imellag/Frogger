@@ -4,6 +4,7 @@
 /.config
 /.profile
 /.sudo_as_admin_successful
+/.vscode
 /.vscode-server
 /.wget-hsts
 *.o

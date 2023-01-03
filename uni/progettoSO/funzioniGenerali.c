@@ -6,8 +6,27 @@ int controlloLimiti(Coordinate entita, int tipo)
     int flag = false;
     if (tipo == RANA)
     {
-        if (entita.x < ZERO || entita.x >= LARGHEZZA_SCHERMO || entita.y <= SEI || entita.y >= ALTEZZA_SCHERMO - CINQUE) 
-            flag = true;
+        /* prima controllo se le coordinate corrispondono a una tana e restituisco il numero della tana per chiuderla, 
+        altrimenti restituisco 6 che indica che la rana ha superato il confine */ 
+
+        if (entita.y == CINQUE) {
+            if (entita.x == INIZIO_TANE)
+                flag = UNO;
+            else if (entita.x == LARGHEZZA_TANE * DUE + INIZIO_TANE)
+                flag = DUE;
+            else if (entita.x == LARGHEZZA_TANE * QUATTRO + INIZIO_TANE)            
+                flag = TRE;
+            else if (entita.x == LARGHEZZA_TANE * SEI + INIZIO_TANE)
+                flag = QUATTRO;
+            else if (entita.x == LARGHEZZA_TANE * OTTO + INIZIO_TANE)
+                flag = CINQUE;
+            else 
+                flag = SEI;
+        }
+            
+        else if (entita.x < ZERO || entita.x >= LARGHEZZA_SCHERMO || entita.y <= SEI || entita.y >= ALTEZZA_SCHERMO - CINQUE) {
+            flag = SEI;
+        }
     
     }
 
