@@ -211,14 +211,6 @@ int main()
             if (maxx != maxx_precedente || maxy != maxy_precedente)
                 clear();
 
-            /*  nuoveCoordinate.x = controlloRanaTronco(ranocchio.coordinate, tronchino);
-            if (!(nuoveCoordinate.x == -1))
-            {
-                  ranocchio.coordinate.x = nuoveCoordinate.x;
-                  write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
-            }
-            */
-
             risultato = controlloLimiti(ranocchio.coordinate, RANA);
 
             if (risultato < SEI && risultato >= UNO)
