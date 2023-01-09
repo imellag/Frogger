@@ -59,6 +59,7 @@ enum gameDifficulty {EASY, MEDIUM, HARD};
 #define ALTEZZA_TANE 3
 #define LARGHEZZA_TANE 15
 #define INIZIO_TANE 5
+#define NUMERO_TANE 5
 
 // definisco un numero per ciascuno colore che viene utilizzato
 #define COLORE_RANA 10
