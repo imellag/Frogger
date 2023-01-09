@@ -1,3 +1,5 @@
+#include "lib.h"
+
 #define TEMPO_TRONCO_MIN 25000
 #define TEMPO_TRONCO_MAX 40000
 

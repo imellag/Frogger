@@ -102,22 +102,20 @@ void colori()
     // init_pair(7, COLOR_BLACK, COLORE_TANA);
 }
 
-
 void gameOver()
 {
 
     clear();
     mvprintw(ALTEZZA_SCHERMO / 2, LARGHEZZA_SCHERMO / 2, "Hai perso!");
     refresh();
-     sleep(2);
+    sleep(2);
 
     getch();
 }
 
-
-int controlloPosizione(Coordinate rana,_Bool coloreRanaTronco)
+int controlloPosizione(Coordinate rana, _Bool coloreRanaTronco)
 {
-    if(coloreRanaTronco)
+    if (coloreRanaTronco)
         return COLORE_TRONCHI;
     if (rana.y == INIZIO_MARCIAPIEDE)
         return COLORE_MARCIAPIEDE;
@@ -128,4 +126,3 @@ int controlloPosizione(Coordinate rana,_Bool coloreRanaTronco)
     else if (rana.y >= 8 && rana.y < INIZIO_PRATO)
         return COLOR_BLUE;
 }
-
