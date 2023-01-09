@@ -53,13 +53,13 @@ void funzAuto(int p[2])
 
     // randomizzo la velocità
     for (i = 0; i < 3; i++)
-        velocitaCorsie[i] = (DUE + rand() % (CINQUE - DUE));
+        velocitaCorsie[i] =UNO;
     for (i = 0; i < 5; i++)
     {
         if (!(i % 3 == 0))
             spostamento *= -1;
 
-        velocita[i] = velocitaCorsie[i % 3] * spostamento;
+        velocita[i] = velocitaCorsie[i % 3]*spostamento;
     }
 
     // genero i processi macchina
@@ -93,9 +93,10 @@ void funzCamion(int p[2], int velocitaCorsie[], int spostamento)
 
     for (i = 0; i < 3; i++)
     {
-        spostamento *= -1;
+          spostamento *= -1;
+     
 
-        velocita[i] = velocitaCorsie[i % 3] * spostamento;
+        velocita[i] = velocitaCorsie[i] * spostamento;
     }
 
     // genero i processi macchina
@@ -119,7 +120,7 @@ void movimentoMacchina(int p[DUE], int numeroMacchina, int velocita[])
     Oggetto macchina[5];
 
     int tempoRandom = MIN_TEMPO_MACCHINA + rand() % (MAX_TEMPO_MACCHINA - MIN_TEMPO_MACCHINA);
-    usleep(100000 + tempoRandom);
+  //  usleep(100000 + tempoRandom);
 
     /* if (velocita[numeroMacchina] < 0)
          macchina[numeroMacchina].coordinate.x = LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA;
@@ -156,7 +157,7 @@ void movimentoCamion(int p[DUE], int numeroCamion, int velocita[])
     Oggetto camion[3];
 
     int tempoRandom = MIN_TEMPO_CAMION + rand() % (MAX_TEMPO_CAMION - MIN_TEMPO_CAMION);
-    usleep(100000 + tempoRandom);
+ //   usleep(100000 + tempoRandom);
 
     /*
     if (velocita[numeroCamion] < 0)
@@ -262,7 +263,7 @@ void stampaCamion(Oggetto camion)
     attroff(COLOR_PAIR(DIECI));
 }
 
-Oggetto cambioCorsia(int velocita[], int numeroMacchina, int veicolo)
+/*Oggetto cambioCorsia(int velocita[], int numeroMacchina, int veicolo)
 {
 
     Oggetto macchina;
@@ -306,87 +307,4 @@ Oggetto cambioCorsia(int velocita[], int numeroMacchina, int veicolo)
     return macchina;
 }
 
-_Bool postoOccupato(Coordinate veicolo, int corsia, int velocita[], int tipoveicolo)
-{
-    // sappiamo che la prima corsia parte da 20y
-
-    int i;
-    _Bool flag = true;
-
-    char inizioStrada;
-    char fineStrada = mvinch(20 + (corsia * 3), LARGHEZZA_SCHERMO - DUE);
-
-    if (tipoveicolo == CAMION0)
-    {
-        for (i = 0; i < LARGHEZZA_CAMION; i++)
-        {
-
-            if (velocita[corsia] > 0)
-            {
-
-                inizioStrada = mvinch(21 + (corsia * 3), ZERO + i);
-                if (inizioStrada == ' ')
-                    flag = false;
-                else
-                {
-                    flag = true;
-
-                    break;
-                }
-            }
-            else
-            {
-
-                fineStrada = mvinch(21 + (corsia * 3), LARGHEZZA_SCHERMO - i);
-
-                if (fineStrada == ' ')
-                    flag = false;
-                else
-                {
-
-                    flag = true;
-                    break;
-                }
-            }
-        }
-    }
-    else
-    {
-
-        for (i = 0; i < LARGHEZZA_MACCHINA; i++)
-        {
-            if (velocita[corsia] > 0)
-            {
-                if (i == 0)
-                    inizioStrada = mvinch(21 + (corsia * 3), i);
-                else
-                    inizioStrada = mvinch(20 + (corsia * 3), i);
-                if (inizioStrada == ' ')
-                    flag = false;
-                else
-                {
-
-                    flag = true;
-                    break;
-                }
-            }
-            else
-            {
-                if (i == LARGHEZZA_MACCHINA - 1)
-                    fineStrada = mvinch(21 + (corsia * 3), LARGHEZZA_SCHERMO - i);
-                else
-                    fineStrada = mvinch(20 + (corsia * 3), LARGHEZZA_SCHERMO - i);
-                if (fineStrada == ' ')
-                    flag = false;
-                else
-                {
-
-                    flag = true;
-                    break;
-                }
-            }
-        }
-    }
-
-    return flag;
-}
+*/

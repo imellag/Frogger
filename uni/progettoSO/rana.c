@@ -4,7 +4,7 @@
 
 char spriteRana[ALTEZZA_RANA][LARGHEZZA_RANA + UNO] = {" o.o ", "+-|-+", "\\-|-/"};
 
-void funzRana(int p[], int pRana[])
+void funzRana(int p[], int pRana[], int pTronchi[])
 {
     Oggetto rana;
     Oggetto proiettile;
@@ -17,11 +17,17 @@ void funzRana(int p[], int pRana[])
     int lettura;
     close(p[READ]);
     close(pRana[WRITE]);
+    close(pTronchi[READ]);
+    _Bool move;
 
     while (true)
     {
-           
+
+        // if()
+        timeout(1);
         inputMovimento = getch();
+        read(pRana[READ],&rana,sizeof(Oggetto));
+        move = true;
         switch (inputMovimento)
         {
         case KEY_UP:
@@ -51,6 +57,7 @@ void funzRana(int p[], int pRana[])
             break;
 
         case SPACEBAR:
+            move = false;
 
             pidProiettile = fork();
             if (pidProiettile < ZERO)
@@ -66,14 +73,17 @@ void funzRana(int p[], int pRana[])
             break;
 
         default:
+            move = false;
             break;
         }
-      
-            read(pRana[READ],&rana,sizeof(Oggetto));
+
+        // read(pRana[READ],&rana,sizeof(Oggetto));
+        if (move)
             write(p[WRITE], &rana, sizeof(Oggetto));
-            proiettile_sparato = ZERO;
-        
+
+        proiettile_sparato = ZERO;
     }
+    usleep(10000);
 }
 
 int funzProiettile(Oggetto rana, int p[DUE])
@@ -98,12 +108,14 @@ int funzProiettile(Oggetto rana, int p[DUE])
     return CINQUE;
 }
 
-void stampaRana(Coordinate rana)
+void stampaRana(Coordinate rana, _Bool coloreRanaTronco)
 {
     int i, j, colorePosizione;
-    colorePosizione = controlloPosizione(rana);
+    colorePosizione = controlloPosizione(rana, coloreRanaTronco);
+
     init_pair(SETTE, COLORE_RANA, colorePosizione);
     attron(COLOR_PAIR(SETTE));
+
     for (i = ZERO; i < ALTEZZA_RANA; i++)
     {
         for (j = ZERO; j < LARGHEZZA_RANA; j++)
