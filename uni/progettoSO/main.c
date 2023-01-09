@@ -21,7 +21,7 @@ int main()
     int maxx_precedente, maxy_precedente;
     int tempo = 30, punteggio = ZERO, vite = TRE;
     Coordinate rana;
-    bool arrayTane[CINQUE] = {false, false, false, false, false};
+    bool arrayTane[NUMERO_TANE] = {false, false, false, false, false};
     int risultato;
     int gameDifficulty;
     _Bool coloreTroncoRana = false;
