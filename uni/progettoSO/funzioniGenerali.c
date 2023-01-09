@@ -1,29 +1,34 @@
 #include "lib.h"
 #include "funzioniGenerali.h"
+#include "tane.h"
+
+_Bool checkCoordinate(int posizione, int coordinata_da_checkare, int intorni)
+{
+    return (posizione >= coordinata_da_checkare - intorni && posizione <= coordinata_da_checkare + intorni);
+}
 
 int controlloLimiti(Coordinate entita, int tipo)
 {
     int flag = false;
     if (tipo == RANA)
     {
-        /* prima controllo se le coordinate corrispondono a una tana e restituisco il numero della tana per chiuderla, 
-        altrimenti restituisco 6 che indica che la rana ha superato il confine */ 
-
-        if (entita.y == CINQUE) {
-            if (entita.x == INIZIO_TANE)
-                flag = UNO;
-            else if (entita.x == LARGHEZZA_TANE * DUE + INIZIO_TANE)
-                flag = DUE;
-            else if (entita.x == LARGHEZZA_TANE * QUATTRO + INIZIO_TANE)            
-                flag = TRE;
-            else if (entita.x == LARGHEZZA_TANE * SEI + INIZIO_TANE)
-                flag = QUATTRO;
-            else if (entita.x == LARGHEZZA_TANE * OTTO + INIZIO_TANE)
-                flag = CINQUE;
-            else 
-                flag = SEI;
+        /* prima controllo se le coordinate corrispondono a una tana e restituisco il numero della tana per chiuderla,
+        altrimenti restituisco 6 che indica che la rana ha superato il confine */
+        const int RAGGIO_HITBOX_TANE = 5; /* La tana e le due caselle ai lati */
+        if (entita.y == CINQUE)
+        {
+            for (int i = 0; i < NUMERO_TANE; i++ ) {
+                if (checkCoordinate(entita.x, INIZIO_TANE + (LARGHEZZA_TANE * 2 * i), RAGGIO_HITBOX_TANE)) {
+                    /* offsettiamo di uno perché return 0 rappresenta nessuna collisione */
+                    flag = i + 1;
+                    break;
+                }
+            }
+            /* necessario per qualche motivo TODO: investigare */
+            if (!flag) flag = SEI;
         }
-            
+
+        /* necessario? */
         else if (entita.x < ZERO || entita.x >= LARGHEZZA_SCHERMO || entita.y <= SEI || entita.y >= ALTEZZA_SCHERMO - CINQUE) {
             flag = SEI;
         }
@@ -97,22 +102,20 @@ void colori()
     // init_pair(7, COLOR_BLACK, COLORE_TANA);
 }
 
-
 void gameOver()
 {
 
     clear();
     mvprintw(ALTEZZA_SCHERMO / 2, LARGHEZZA_SCHERMO / 2, "Hai perso!");
     refresh();
-     sleep(2);
+    sleep(2);
 
     getch();
 }
 
-
-int controlloPosizione(Coordinate rana,_Bool coloreRanaTronco)
+int controlloPosizione(Coordinate rana, _Bool coloreRanaTronco)
 {
-    if(coloreRanaTronco)
+    if (coloreRanaTronco)
         return COLORE_TRONCHI;
     if (rana.y == INIZIO_MARCIAPIEDE)
         return COLORE_MARCIAPIEDE;
@@ -123,4 +126,3 @@ int controlloPosizione(Coordinate rana,_Bool coloreRanaTronco)
     else if (rana.y >= 8 && rana.y < INIZIO_PRATO)
         return COLOR_BLUE;
 }
-
