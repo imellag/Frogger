@@ -7,6 +7,7 @@
 #include "fiume.h"
 #include "tane.h"
 #include "avvio.h"
+#include "collisioni.h"
 
 char spriteProiettile = '^';
 char spriteCuore[] = {"<3"};
@@ -16,12 +17,15 @@ int main()
     srand(time(NULL));
 
     int maxx, maxy;
+    int differenza;
     int maxx_precedente, maxy_precedente;
     int tempo = 30, punteggio = ZERO, vite = TRE;
     Coordinate rana;
     bool arrayTane[CINQUE] = {false, false, false, false, false};
     int risultato;
     int gameDifficulty;
+    _Bool coloreTroncoRana = false;
+    _Bool sulTronco = false;
 
     rana.x = ZERO;
     rana.y = ALTEZZA_SCHERMO - SEI;
@@ -59,6 +63,14 @@ int main()
     }
     fcntl(pRana[0], F_SETFL, fcntl(pRana[0], F_GETFL) | O_NONBLOCK);
 
+    int pTronchi[DUE];
+    if (pipe(pTronchi) == -UNO)
+    {
+        perror("Error\n");
+        exit(-UNO);
+    }
+    fcntl(pTronchi[0], F_SETFL, fcntl(pTronchi[0], F_GETFL) | O_NONBLOCK);
+
     /* Lascio due righe vuote in basso per scrivere il tempo/punteggio ecc. dopo.
     Quindi dato che l'altezza è il numero totale di "pixel" ma effettivamente poi
     le coordinate partono da 0 tolgo 3 alla rana rispetto all'altezza dello schermo
@@ -70,13 +82,13 @@ int main()
     funzAutostrada();
     funzPrato();
     funzFiume();
-    stampaRana(rana);
+    stampaRana(rana, coloreTroncoRana);
 
     mvwprintw(stdscr, UNO, LARGHEZZA_SCHERMO / DUE - QUATTRO, "Score: %d", punteggio);
     mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %d", tempo);
     refresh();
 
-    pid_t pidRana, pidMacchine[CINQUE], pidTronchi[TRE], pidNemici, pidProiettile, pidCamion[DUE];
+    pid_t pidRana, pidMacchine[CINQUE], pidTronchi[TRE], pidNemici, pidProiettile, pidCamion[TRE], schermo;
     pidRana = fork();
 
     if (pidRana < ZERO)
@@ -86,12 +98,12 @@ int main()
     }
     else if (pidRana == ZERO)
     {
-        funzRana(p, pRana);
+        funzRana(p, pRana, pTronchi);
     }
     else
     {
         funzAuto(p);
-        funzTronchi(p);
+        funzTronchi(p, pTronchi, pRana);
 
         int i;
         Oggetto pacchetto;
@@ -138,7 +150,6 @@ int main()
             {
             case RANA:
                 ranocchio = pacchetto;
-
                 break;
 
             case PROIETTILE:
@@ -209,17 +220,17 @@ int main()
             */
 
             risultato = controlloLimiti(ranocchio.coordinate, RANA);
-            
-            if (risultato < SEI && risultato >= UNO) {
-                arrayTane[risultato-1] = true;
+
+            if (risultato < SEI && risultato >= UNO)
+            {
+                arrayTane[risultato - 1] = true;
                 ranocchio.coordinate.x = ZERO;
                 ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
                 write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
                 clear();
                 punteggio += 2000;
             }
-            
-        
+
             funzMarciapiede();
             funzAutostrada();
             funzPrato();
@@ -245,30 +256,84 @@ int main()
                 pidCamion[i] = camioncino[i].pid;
             }
 
-            stampaRana(ranocchio.coordinate);
             for (i = 0; i < CINQUE; i++)
             {
-                if (macchinina[i].coordinate.x < ranocchio.coordinate.x  && (macchinina[i].coordinate.x+LARGHEZZA_MACCHINA) >ranocchio.coordinate.x 
-                && macchinina[i].coordinate.y == ranocchio.coordinate.y )
+                if (macchinina[i].velocita < 0)
                 {
-                    vite--;
-                    ranocchio.coordinate.x = ZERO;
-                    ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
-                    write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
-                    clear();
+                    if (macchinina[i].coordinate.x > ranocchio.coordinate.x && (macchinina[i].coordinate.x - LARGHEZZA_MACCHINA) < ranocchio.coordinate.x && macchinina[i].coordinate.y == ranocchio.coordinate.y)
+                    {
+                        vite--;
+                        ranocchio.coordinate.x = ZERO;
+                        ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
+                        write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
+                        clear();
+                    }
+                }
+                else
+                {
+                    if (macchinina[i].coordinate.x < ranocchio.coordinate.x && (macchinina[i].coordinate.x + LARGHEZZA_MACCHINA) > ranocchio.coordinate.x && macchinina[i].coordinate.y == ranocchio.coordinate.y)
+                    {
+                        vite--;
+                        ranocchio.coordinate.x = ZERO;
+                        ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
+                        write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
+                        clear();
+                    }
                 }
             }
+            coloreTroncoRana = false;
             for (i = 0; i < TRE; i++)
             {
-                if (camioncino[i].coordinate.x < ranocchio.coordinate.x && (camioncino[i].coordinate.x+LARGHEZZA_CAMION) > ranocchio.coordinate.x && camioncino[i].coordinate.y == ranocchio.coordinate.y)
+
+                if (tronchino[i].coordinate.x <= ranocchio.coordinate.x && (tronchino[i].coordinate.x + LARGHEZZA_TRONCHI) >= ranocchio.coordinate.x && ranocchio.coordinate.y == tronchino[i].coordinate.y)
+                {
+                    if (!sulTronco)
+                    {
+
+                        differenza = ranocchio.coordinate.x - tronchino[i].coordinate.x;
+                        sulTronco = true;
+                    }
+                    ranocchio.coordinate.x = tronchino[i].coordinate.x + differenza;
+                    coloreTroncoRana = true;
+                    write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
+                }
+                else if (ranocchio.coordinate.y == tronchino[i].coordinate.y)
                 {
                     vite--;
                     ranocchio.coordinate.x = ZERO;
                     ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
                     write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
                     clear();
+                    sulTronco = false;
+                }
+                else
+                {
+                }
+
+                if (camioncino[i].velocita < 0)
+                {
+                    if (camioncino[i].coordinate.x > ranocchio.coordinate.x && (camioncino[i].coordinate.x - LARGHEZZA_CAMION) < ranocchio.coordinate.x && camioncino[i].coordinate.y == ranocchio.coordinate.y)
+                    {
+                        vite--;
+                        ranocchio.coordinate.x = ZERO;
+                        ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
+                        write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
+                        clear();
+                    }
+                }
+                else
+                {
+                    if (camioncino[i].coordinate.x < ranocchio.coordinate.x && (camioncino[i].coordinate.x + LARGHEZZA_CAMION) > ranocchio.coordinate.x && camioncino[i].coordinate.y == ranocchio.coordinate.y)
+                    {
+                        vite--;
+                        ranocchio.coordinate.x = ZERO;
+                        ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
+                        write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
+                        clear();
+                    }
                 }
             }
+            stampaRana(ranocchio.coordinate, coloreTroncoRana);
 
             stampaVite(vite);
             if (!fuorischermo)
@@ -278,7 +343,7 @@ int main()
             mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %d", tempo);
             refresh();
 
-            if (ranocchio.id == q || vite==ZERO)
+            if (ranocchio.id == q || vite == ZERO)
             {
                 if (vite == ZERO)
                     gameOver();
@@ -339,28 +404,3 @@ void stampaVite(int vite)
     }
     attroff(COLOR_PAIR(OTTO));
 }
-
-int controlloPosizione(Coordinate rana)
-{
-
-    if (rana.y == INIZIO_MARCIAPIEDE)
-        return COLORE_MARCIAPIEDE;
-    else if (rana.y >= INIZIO_AUTOSTRADA && rana.y < INIZIO_MARCIAPIEDE)
-        return COLORE_AUTOSTRADA;
-    else if (rana.y == INIZIO_PRATO)
-        return COLOR_GREEN;
-    else if (rana.y >= 8 && rana.y < INIZIO_PRATO)
-        return COLOR_BLUE;
-
-}
-
-void gameOver(){
-
-    clear();
-    mvprintw(ALTEZZA_SCHERMO/2,LARGHEZZA_SCHERMO/2,"Hai perso!");
-    refresh();
-    // sleep(2);
-
-    getch();
-}
-

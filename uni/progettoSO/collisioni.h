@@ -1,0 +1,1 @@
+void controlloCollisioniMacchine(int pRana[DUE], Oggetto macchinina[],Oggetto ranocchio,int *vite,Oggetto camioncino[]);

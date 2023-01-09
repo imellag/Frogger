@@ -8,20 +8,22 @@ char spriteTronchi[ALTEZZA_RANA][LARGHEZZA_TRONCHI + UNO] = {"<~~~~~~~~~~~~~>", 
 void funzFiume()
 {
     int i, j;
-
-
     attron(COLOR_PAIR(CINQUE));
-
+    int ondina='~';
+    int random;
     // alto 9
     for (i = ZERO; i < ALTEZZA_FIUME; i++)
     {
-        for (j = ZERO; j < LARGHEZZA_SCHERMO; j++)
+        for (j = ZERO; j < LARGHEZZA_SCHERMO; j++){
             mvprintw(INIZIO_FIUME + i, ZERO + j, " ");
+        
+        }
     }
     attroff(COLOR_PAIR(CINQUE));
+
 }
 
-int funzTronchi(int p[DUE])
+int funzTronchi(int p[DUE], int pTronchi[], int pRana[])
 {
     int i;
     pid_t tronco[3];
@@ -29,66 +31,71 @@ int funzTronchi(int p[DUE])
     int velocita[3];
     int spostamento;
 
-    for(i=0;i<3;i++)
-        velocita[i]= UNO; 
+    for (i = 0; i < 3; i++)
+        velocita[i] = UNO;
 
-    spostamento=rand()%2;
-    
-    if(spostamento==0)
-        spostamento=-1;
+    spostamento = rand() % 2;
+
+    if (spostamento == 0)
+        spostamento = -1;
     else
-        spostamento=1;
+        spostamento = 1;
 
-    for(i=0;i<3;i++){
+    for (i = 0; i < 3; i++)
+    {
         tronco[i] = fork();
         if (tronco[i] < ZERO)
-        {   
+        {
             perror("Error");
         }
         else if (tronco[i] == ZERO)
         {
-            funzTronco(p, i,velocita[i]*spostamento);
+            funzTronco(p, i, velocita[i] * spostamento, pTronchi, pRana);
         }
     }
 }
 
-void funzTronco(int p[DUE], int numeroTronco,int velocita)
+void funzTronco(int p[DUE], int numeroTronco, int velocita, int pTronchi[], int pRana[])
 {
     Oggetto tronco[TRE];
-    
-    int tempoRandom= TEMPO_TRONCO_MIN+rand()%(TEMPO_TRONCO_MAX-TEMPO_TRONCO_MIN);
-    
+    Oggetto rana;
+
+
     srand(getpid());
-   
-    tronco[numeroTronco].coordinate.y = 8+numeroTronco*3;
-    tronco[numeroTronco].coordinate.x = rand()%(LARGHEZZA_SCHERMO-LARGHEZZA_TRONCHI) ; 
-    tronco[numeroTronco].id = TRONCO0+numeroTronco;
+
+    tronco[numeroTronco].coordinate.y = 8 + numeroTronco * 3;
+    tronco[numeroTronco].coordinate.x = rand() % (LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI);
+    tronco[numeroTronco].id = TRONCO0 + numeroTronco;
     tronco[numeroTronco].velocita = velocita;
-    tronco[numeroTronco].pid=getpid();
-     
+    tronco[numeroTronco].pid = getpid();
+
     close(p[READ]);
+    
+    close(pRana[READ]);
     while (true)
     {
         write(p[WRITE], &tronco[numeroTronco], sizeof(Oggetto));
-        
-          tronco[numeroTronco].coordinate.x +=tronco[numeroTronco].velocita;
-         
-        if (controlloLimiti(tronco[numeroTronco].coordinate, TRONCO0))
-            tronco[numeroTronco].velocita = tronco[numeroTronco].velocita * -UNO;
 
-        usleep(tempoRandom);
+    
+
+            tronco[numeroTronco].coordinate.x += tronco[numeroTronco].velocita;
+
+            if (controlloLimiti(tronco[numeroTronco].coordinate, TRONCO0))
+                tronco[numeroTronco].velocita = tronco[numeroTronco].velocita * -UNO;
+
+            usleep(40000);
+        }
     }
-}
 
-void stampaTronco(Coordinate tronco)
-{
-
-    int i, j;
-    attron(COLOR_PAIR(SEI));
-    for (i = ZERO; i < ALTEZZA_RANA; i++)
+    void stampaTronco(Coordinate tronco)
     {
-        for (j = ZERO; j < LARGHEZZA_TRONCHI; j++)
-            mvaddch(tronco.y + i, tronco.x + j, spriteTronchi[i][j]);
+
+        int i, j;
+        attron(COLOR_PAIR(SEI));
+        for (i = ZERO; i < ALTEZZA_RANA; i++)
+        {
+            for (j = ZERO; j < LARGHEZZA_TRONCHI; j++)
+                mvaddch(tronco.y + i, tronco.x + j, spriteTronchi[i][j]);
+        }
+        attroff(COLOR_PAIR(SEI));
     }
-    attroff(COLOR_PAIR(SEI));
-}

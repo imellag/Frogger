@@ -96,3 +96,31 @@ void colori()
     init_pair(6, COLOR_BLACK, COLORE_TRONCHI);
     // init_pair(7, COLOR_BLACK, COLORE_TANA);
 }
+
+
+void gameOver()
+{
+
+    clear();
+    mvprintw(ALTEZZA_SCHERMO / 2, LARGHEZZA_SCHERMO / 2, "Hai perso!");
+    refresh();
+     sleep(2);
+
+    getch();
+}
+
+
+int controlloPosizione(Coordinate rana,_Bool coloreRanaTronco)
+{
+    if(coloreRanaTronco)
+        return COLORE_TRONCHI;
+    if (rana.y == INIZIO_MARCIAPIEDE)
+        return COLORE_MARCIAPIEDE;
+    else if (rana.y >= INIZIO_AUTOSTRADA && rana.y < INIZIO_MARCIAPIEDE)
+        return COLORE_AUTOSTRADA;
+    else if (rana.y == INIZIO_PRATO)
+        return COLOR_GREEN;
+    else if (rana.y >= 8 && rana.y < INIZIO_PRATO)
+        return COLOR_BLUE;
+}
+
