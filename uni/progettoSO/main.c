@@ -279,16 +279,15 @@ int main()
                     }
                 }
             }
-
+            coloreTroncoRana = false;
             for (i = 0; i < TRE; i++)
             {
 
-                if (tronchino[i].coordinate.x <= ranocchio.coordinate.x 
-                && (tronchino[i].coordinate.x + LARGHEZZA_TRONCHI) >= ranocchio.coordinate.x && ranocchio.coordinate.y == tronchino[i].coordinate.y)
+                if (tronchino[i].coordinate.x <= ranocchio.coordinate.x && (tronchino[i].coordinate.x + LARGHEZZA_TRONCHI) >= ranocchio.coordinate.x && ranocchio.coordinate.y == tronchino[i].coordinate.y)
                 {
                     if (!sulTronco)
                     {
-                      
+
                         differenza = ranocchio.coordinate.x - tronchino[i].coordinate.x;
                         sulTronco = true;
                     }
@@ -304,13 +303,9 @@ int main()
                     write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
                     clear();
                     sulTronco = false;
-
-                    
                 }
                 else
                 {
-                    coloreTroncoRana = false;
-                       
                 }
 
                 if (camioncino[i].velocita < 0)
