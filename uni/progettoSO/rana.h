@@ -1,3 +1,5 @@
+#include "lib.h"
+
 // funziona nella quale viene preso l'input dell'utente (movimento, proiettile, uscita)
 void funzRana(int p[], int pRana[],int pTronchi[]);
 // funzione che gestisce il movimento del proiettile

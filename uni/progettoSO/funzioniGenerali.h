@@ -1,3 +1,5 @@
+#include "lib.h"
+
 /* funzione generale utilizzata per diversi oggetti nel gioco, riconosciuti tramite la variabile tipo, 
 e in base al movimento di questo controlla che si comporti correttamente una volta arrivato al bordo dello schermo */
 int controlloLimiti(Coordinate entita, int tipo);
