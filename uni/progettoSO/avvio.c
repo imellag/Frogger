@@ -9,7 +9,9 @@ char frogger[CINQUE][45] = {
     "|_|   |_| \\\\_\\___/ \\____|\\____|_____|_| \\_(_)"};
 
 
-void menuIniziale() {
+int menuIniziale() {
+    int gameDifficulty;
+
     curs_set(true);
     mousemask(BUTTON1_PRESSED | REPORT_MOUSE_POSITION, NULL);
 
@@ -47,24 +49,10 @@ void menuIniziale() {
     36 larghezza
     */
 
-    for (i = 0; i < 5; i++) {
-        for (j = 0; j < 36; j++) {
-            mvprintw(15+i, 52+j, " ");
-        }
-    }
-    for (i = 0; i < 5; i++) {
-        for (j = 0; j < 36; j++) {
-            mvprintw(22+i, 52+j, " ");
-        }
-    }
-    for (i = 0; i < 5; i++) {
-        for (j = 0; j < 36; j++) {
-            mvprintw(29+i, 52+j, " ");
-        }
-    }
+    stampaRettangoli();
 
-    mvprintw(17,58,"Inizia una nuova partita");
-    mvprintw(24, 64,"Impostazioni");
+    mvprintw(17, 58, "Inizia una nuova partita");
+    mvprintw(24, 64, "Impostazioni");
     mvprintw(31, 62, "Esci dal gioco");
 
     attroff(COLOR_PAIR(DUE));
@@ -101,7 +89,37 @@ void menuIniziale() {
                         exit(EXIT_SUCCESS);
                     }
                     if (event.x > 50 && event.x < 90 && event.y > 15 && event.y < 20) { // nuova partita
-                        break;
+                        clear();
+                        attron(COLOR_PAIR(DUE));
+
+                        stampaRettangoli();
+
+                        mvprintw(17, 67, "Facile");
+                        mvprintw(24, 68, "Media");
+                        mvprintw(31, 65, "Difficile");
+
+                        attroff(COLOR_PAIR(DUE));
+                        attron(COLOR_PAIR(UNO));
+
+                        stampaFrogger(LARGHEZZA_SCHERMO / 2 - 23, 5);
+
+                        attroff(COLOR_PAIR(UNO));
+
+                        refresh();
+
+                        input = getch();
+                        getmouse(&event);
+
+                        if (event.x > 50 && event.x < 90 && event.y > 15 && event.y < 20) {
+                            return EASY;
+                        }
+                        else if (event.x > 50 && event.x < 90 && event.y > 22 && event.y < 27) {
+                            return MEDIUM;
+                        }
+                        else if (event.x > 50 && event.x < 90 && event.y > 29 && event.y < 34) {
+                            return HARD;
+                        }
+
                     }
                     else if (event.x > 50 && event.x < 90 && event.y > 22 && event.y < 27) { // impostazioni
                         continue;
@@ -115,6 +133,26 @@ void menuIniziale() {
 
     curs_set(false);
     clear();
+}
+
+void stampaRettangoli() {
+    int i, j;
+
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 36; j++) {
+            mvprintw(15+i, 52+j, " ");
+        }
+    }
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 36; j++) {
+            mvprintw(22+i, 52+j, " ");
+        }
+    }
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 36; j++) {
+            mvprintw(29+i, 52+j, " ");
+        }
+    }
 }
 
 void stampaFrogger(int iniziox, int inizioy) {

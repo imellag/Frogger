@@ -21,6 +21,7 @@ int main()
     Coordinate rana;
     bool arrayTane[CINQUE] = {false, false, false, false, false};
     int risultato;
+    int gameDifficulty;
 
     rana.x = ZERO;
     rana.y = ALTEZZA_SCHERMO - SEI;
@@ -38,7 +39,8 @@ int main()
 
     dimensioneFinestra(maxx, maxy);
 
-    // menuIniziale();
+    // gameDifficulty = menuIniziale();
+    clear();
 
     colori();
 
