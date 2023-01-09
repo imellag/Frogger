@@ -64,8 +64,6 @@ int menuIniziale() {
 
     refresh();
 
-    // printf("\033[?1003h\n"); // Makes the terminal report mouse movement events (per ora non ci serve)
-
     while (true) {
         int input = getch();
 
@@ -107,19 +105,20 @@ int menuIniziale() {
 
                         refresh();
 
-                        input = getch();
-                        getmouse(&event);
+                        while (true) {
+                            input = getch();
+                            getmouse(&event);
 
-                        if (event.x > 50 && event.x < 90 && event.y > 15 && event.y < 20) {
-                            return EASY;
+                            if (event.x > 50 && event.x < 90 && event.y > 15 && event.y < 20) {
+                                return EASY;
+                            }
+                            else if (event.x > 50 && event.x < 90 && event.y > 22 && event.y < 27) {
+                                return MEDIUM;
+                            }
+                            else if (event.x > 50 && event.x < 90 && event.y > 29 && event.y < 34) {
+                                return HARD;
+                            }
                         }
-                        else if (event.x > 50 && event.x < 90 && event.y > 22 && event.y < 27) {
-                            return MEDIUM;
-                        }
-                        else if (event.x > 50 && event.x < 90 && event.y > 29 && event.y < 34) {
-                            return HARD;
-                        }
-
                     }
                     else if (event.x > 50 && event.x < 90 && event.y > 22 && event.y < 27) { // impostazioni
                         continue;
@@ -128,8 +127,6 @@ int menuIniziale() {
             }
         }
     }
-
-    // printf("\033[?1003l\n"); // Disable mouse movement events, as l = low
 
     curs_set(false);
     clear();

@@ -16,6 +16,10 @@ enum numeri {ZERO, UNO, DUE, TRE, QUATTRO, CINQUE, SEI, SETTE, OTTO, NOVE, DIECI
 // difficoltà di gioco disponibili
 enum gameDifficulty {EASY, MEDIUM, HARD};
 
+// input da tastiera
+#define q 113
+#define SPACEBAR ' '
+
 // dimensioni rana
 #define ALTEZZA_RANA 3
 #define LARGHEZZA_RANA 5
@@ -87,8 +91,5 @@ void dimensioneFinestra(int maxx, int maxy);
 // stampa le vite rimaste
 void stampaVite(int vite);
 
-// controllo in che punto è la rana e in base a quello assegna il colore
-// della zona sottostante
-//int controlloPosizione(Coordinate rana,_Bool coloreRanaTronco);
-
+// stampa la scritta finale quando il giocatore esaurisce le vite
 void gameOver();
