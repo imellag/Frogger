@@ -23,6 +23,7 @@ int main()
     Coordinate rana;
     bool arrayTane[CINQUE] = {false, false, false, false, false};
     int risultato;
+    int gameDifficulty;
     _Bool coloreTroncoRana = false;
     _Bool sulTronco = false;
 
@@ -42,7 +43,8 @@ int main()
 
     dimensioneFinestra(maxx, maxy);
 
-    // menuIniziale();
+    // gameDifficulty = menuIniziale();
+    clear();
 
     colori();
 
@@ -208,14 +210,6 @@ int main()
             getmaxyx(stdscr, maxy, maxx);
             if (maxx != maxx_precedente || maxy != maxy_precedente)
                 clear();
-
-            /*  nuoveCoordinate.x = controlloRanaTronco(ranocchio.coordinate, tronchino);
-            if (!(nuoveCoordinate.x == -1))
-            {
-                  ranocchio.coordinate.x = nuoveCoordinate.x;
-                  write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
-            }
-            */
 
             risultato = controlloLimiti(ranocchio.coordinate, RANA);
 

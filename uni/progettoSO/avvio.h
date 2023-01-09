@@ -1,3 +1,4 @@
 // menu iniziale di gioco
-void menuIniziale();
+int menuIniziale();
 void stampaFrogger(int iniziox, int inizioy);
+void stampaRettangoli();

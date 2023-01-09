@@ -14,6 +14,9 @@ MACCHINA1, MACCHINA2, MACCHINA3, MACCHINA4, CAMION0, CAMION1,CAMION2};
 // serve per togliere vari magic numbers
 enum numeri {ZERO, UNO, DUE, TRE, QUATTRO, CINQUE, SEI, SETTE, OTTO, NOVE, DIECI};
 
+// difficoltà di gioco disponibili
+enum gameDifficulty {EASY, MEDIUM, HARD};
+
 // dimensioni rana
 #define ALTEZZA_RANA 3
 #define LARGHEZZA_RANA 5
