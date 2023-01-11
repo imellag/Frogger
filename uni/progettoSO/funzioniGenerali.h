@@ -15,3 +15,7 @@ void gameOver();
 
 // in base alla posizione della rana stampa i colori sottostanti
 int controlloPosizione(Coordinate rana,_Bool coloreRanaTronco);
+
+void funzTempo(int pOrologio[]);
+
+void orologio(int pOrologio[]);

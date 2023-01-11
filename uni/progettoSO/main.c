@@ -19,7 +19,7 @@ int main()
     int maxx, maxy;
     int differenza;
     int maxx_precedente, maxy_precedente;
-    int tempo = 30, punteggio = ZERO, vite = TRE;
+    int tempo=40, punteggio = ZERO, vite = TRE;
 
     bool arrayTane[NUMERO_TANE] = {false, false, false, false, false};
     int risultato;
@@ -70,6 +70,20 @@ int main()
     // funzione per rendere non bloccante la pipe
     fcntl(pRana[0], F_SETFL, fcntl(pRana[0], F_GETFL) | O_NONBLOCK);
 
+
+    
+    // pipe non bloccante che mi serve per comunicare con il processo rana
+    // in caso di collisioni o spostamenti(es: rana sul tronco)
+    int pOrologio[DUE];
+    if (pipe(pOrologio) == -UNO)
+    {
+        perror("Error\n");
+        exit(-UNO);
+    }
+
+    // funzione per rendere non bloccante la pipe
+    fcntl(pOrologio[0], F_SETFL, fcntl(pOrologio[0], F_GETFL) | O_NONBLOCK);
+
     /* Lascio due righe vuote in basso per scrivere il tempo/punteggio ecc. dopo.
     Quindi dato che l'altezza è il numero totale di "pixel" ma effettivamente poi
     le coordinate partono da 0 tolgo 3 alla rana rispetto all'altezza dello schermo
@@ -103,6 +117,7 @@ int main()
     {
         funzAuto(p);
         funzTronchi(p, pRana);
+        funzTempo(pOrologio);
 
         int i;
         Oggetto pacchetto;
@@ -138,11 +153,12 @@ int main()
 
         close(p[WRITE]);
         close(pRana[READ]);
-
+        close(pOrologio[WRITE]);
         while (true)
         {
 
             read(p[READ], &pacchetto, sizeof(Oggetto));
+            read(pOrologio[READ],&tempo,sizeof(int));
             switch (pacchetto.id)
             {
             case RANA:
@@ -213,12 +229,14 @@ int main()
             // controllo se la rana è entrata nelle tane allora la porto alla posizione iniziale e aggiorno il punteggio
             if (risultato < SEI && risultato >= UNO)
             {
+                if(!(arrayTane[risultato - 1] == true)){
                 arrayTane[risultato - 1] = true;
                 ranocchio.coordinate.x = ZERO;
                 ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
                 write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
                 clear();
                 punteggio += 2000;
+                }
             }
 
             // stampa dei colori di background
@@ -353,7 +371,7 @@ int main()
             mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %d", tempo);
             refresh();
 
-            if (ranocchio.id == q || vite == ZERO)
+            if (ranocchio.id == q || vite == ZERO || tempo<=0)
             {
                 if (vite == ZERO)
                     gameOver();

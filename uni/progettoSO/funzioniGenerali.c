@@ -116,3 +116,37 @@ int controlloPosizione(Coordinate rana, _Bool coloreRanaTronco)
     else if (rana.y >= 8 && rana.y < INIZIO_PRATO)
         return COLOR_BLUE;
 }
+
+void funzTempo(int pOrologio[]){
+
+    pid_t pidTempo;
+
+    pidTempo=fork();
+
+    if(pidTempo<0){
+
+        printw("Error");
+        exit(1);
+    }
+    else if(pidTempo==0){
+        orologio(pOrologio);
+    }
+
+
+}
+
+void orologio(int pOrologio[]){
+
+    int tempo=40;
+
+    close(pOrologio[READ]);
+    while(true){
+
+        write(pOrologio[WRITE],&tempo,sizeof(int));
+        tempo--;
+        sleep(1);
+    }
+
+
+
+}
