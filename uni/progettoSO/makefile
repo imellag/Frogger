@@ -1,5 +1,5 @@
-progetto.out: main.o marciapiede.o rana.o prato.o autostrada.o fiume.o tane.o funzioniGenerali.o collisioni.o avvio.o 
-	gcc main.o marciapiede.o rana.o prato.o autostrada.o fiume.o tane.o funzioniGenerali.o collisioni.o avvio.o -lncurses -o progetto.out
+progetto.out: main.o marciapiede.o rana.o prato.o autostrada.o fiume.o tane.o funzioniGenerali.o collisioni.o avvio.o funzioniMain.o
+	gcc main.o marciapiede.o rana.o prato.o autostrada.o fiume.o tane.o funzioniGenerali.o collisioni.o avvio.o funzioniMain.o -lncurses -o progetto.out
 marciapiede.o: marciapiede.c marciapiede.h lib.h
 	gcc -c marciapiede.c
 main.o: main.c lib.h
@@ -19,7 +19,9 @@ funzioniGenerali.o: funzioniGenerali.c funzioniGenerali.h lib.h
 avvio.o: avvio.c avvio.h lib.h
 	gcc -c avvio.c
 collisioni.o: collisioni.c collisioni.h lib.h
-	gcc -c collisioni.c 
+	gcc -c collisioni.c
+funzioniMain.o: funzioniMain.c funzioniMain.h lib.h
+	gcc -c funzioniMain.c
 clean:
 	rm *.o
-	rm *.out 
+	rm *.out

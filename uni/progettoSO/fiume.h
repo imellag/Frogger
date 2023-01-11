@@ -5,7 +5,7 @@
 
 void funzFiume();
 
-int funzTronchi(int p[2],int pTronchi[],int pRana[]);
-void funzTronco(int p[2],int numeroTronco,int velocita,int pTronchi[],int pRana[]);
+int funzTronchi(int p[2],int pRana[]);
+void funzTronco(int p[2],int numeroTronco,int velocita,int pRana[]);
 void stampaTronco(Coordinate tronco);
 void stampaNemico(Coordinate nemico);

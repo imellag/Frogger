@@ -8,9 +8,9 @@
 #include "tane.h"
 #include "avvio.h"
 #include "collisioni.h"
+#include "funzioniMain.h"
 
 char spriteProiettile = '^';
-char spriteCuore[] = {"<3"};
 
 int main()
 {
@@ -20,15 +20,16 @@ int main()
     int differenza;
     int maxx_precedente, maxy_precedente;
     int tempo = 30, punteggio = ZERO, vite = TRE;
-    Coordinate rana;
+
     bool arrayTane[NUMERO_TANE] = {false, false, false, false, false};
     int risultato;
     int gameDifficulty;
     _Bool coloreTroncoRana = false;
     _Bool sulTronco = false;
 
-    rana.x = ZERO;
-    rana.y = ALTEZZA_SCHERMO - SEI;
+    Oggetto ranocchio;
+    ranocchio.coordinate.x = ZERO;
+    ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
 
     initscr();
     noecho();
@@ -48,6 +49,8 @@ int main()
 
     colori();
 
+    // pipe principale che viene utilizzata per inviare le posizioni dei vari oggetti
+    // e stamparli successivamente nel main
     int p[DUE];
     if (pipe(p) == -UNO)
     {
@@ -55,21 +58,17 @@ int main()
         exit(-UNO);
     }
 
+    // pipe non bloccante che mi serve per comunicare con il processo rana
+    // in caso di collisioni o spostamenti(es: rana sul tronco)
     int pRana[DUE];
     if (pipe(pRana) == -UNO)
     {
         perror("Error\n");
         exit(-UNO);
     }
-    fcntl(pRana[0], F_SETFL, fcntl(pRana[0], F_GETFL) | O_NONBLOCK);
 
-    int pTronchi[DUE];
-    if (pipe(pTronchi) == -UNO)
-    {
-        perror("Error\n");
-        exit(-UNO);
-    }
-    fcntl(pTronchi[0], F_SETFL, fcntl(pTronchi[0], F_GETFL) | O_NONBLOCK);
+    // funzione per rendere non bloccante la pipe
+    fcntl(pRana[0], F_SETFL, fcntl(pRana[0], F_GETFL) | O_NONBLOCK);
 
     /* Lascio due righe vuote in basso per scrivere il tempo/punteggio ecc. dopo.
     Quindi dato che l'altezza è il numero totale di "pixel" ma effettivamente poi
@@ -82,8 +81,8 @@ int main()
     funzAutostrada();
     funzPrato();
     funzFiume();
-    stampaRana(rana, coloreTroncoRana);
-
+    stampaRana(ranocchio.coordinate, coloreTroncoRana);
+    
     mvwprintw(stdscr, UNO, LARGHEZZA_SCHERMO / DUE - QUATTRO, "Score: %d", punteggio);
     mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %d", tempo);
     refresh();
@@ -98,39 +97,37 @@ int main()
     }
     else if (pidRana == ZERO)
     {
-        funzRana(p, pRana, pTronchi);
+        funzRana(p, pRana);
     }
     else
     {
         funzAuto(p);
-        funzTronchi(p, pTronchi, pRana);
+        funzTronchi(p, pRana);
 
         int i;
         Oggetto pacchetto;
         Oggetto proiettilino;
-        Oggetto ranocchio;
+
         Coordinate nuoveCoordinate;
-        ranocchio.coordinate.x = -4;
-        ranocchio.coordinate.y = -4;
+      
 
         Oggetto tronchino[TRE];
-
-        for (i = 0; i < 3; i++)
-        {
-            tronchino[i].coordinate.x = -CINQUE;
-            tronchino[i].coordinate.y = -CINQUE;
-        }
         Oggetto macchinina[CINQUE];
+        Oggetto camioncino[TRE];
+
         for (i = 0; i < 5; i++)
         {
+            if (i < 3)
+            {
+                tronchino[i].coordinate.x = -CINQUE;
+                tronchino[i].coordinate.y = -CINQUE;
+
+                camioncino[i].coordinate.x = -CINQUE;
+                camioncino[i].coordinate.y = -CINQUE;
+            }
+
             macchinina[i].coordinate.x = -CINQUE;
             macchinina[i].coordinate.y = -CINQUE;
-        }
-        Oggetto camioncino[TRE];
-        for (i = 0; i < 3; i++)
-        {
-            camioncino[i].coordinate.x = -CINQUE;
-            camioncino[i].coordinate.y = -CINQUE;
         }
 
         proiettilino.coordinate.x = -UNO;
@@ -213,6 +210,7 @@ int main()
 
             risultato = controlloLimiti(ranocchio.coordinate, RANA);
 
+            // controllo se la rana è entrata nelle tane allora la porto alla posizione iniziale e aggiorno il punteggio
             if (risultato < SEI && risultato >= UNO)
             {
                 arrayTane[risultato - 1] = true;
@@ -223,108 +221,128 @@ int main()
                 punteggio += 2000;
             }
 
+            // stampa dei colori di background
             funzMarciapiede();
             funzAutostrada();
             funzPrato();
             funzFiume();
+
+            // stampa la tane e ne tiene controllo
             funzTane(arrayTane);
 
-            for (i = ZERO; i < TRE; i++)
-            {
-                stampaTronco(tronchino[i].coordinate);
+            coloreTroncoRana = false;
 
-                pidTronchi[i] = tronchino[i].pid;
-            }
-
+            // ciclo per assegnare i pid agli oggetti e successivamente controllo le collisioni
+            // con le varia macchine o se la rana è presente sul tronco
             for (i = 0; i < CINQUE; i++)
             {
+                if (i < 3)
+                {
+                    // stampo i 3 tronchi
+                    stampaTronco(tronchino[i].coordinate);
+                    // mi prendo i pid dei tronchi per poi utilizzare questo array per
+                    // killare correttamente i vari processi tronchi
+                    pidTronchi[i] = tronchino[i].pid;
+
+                    // stampo i camion
+                    stampaCamion(camioncino[i]);
+
+                    // mi prendo i pid dei camion per poi utilizzare questo array per
+                    // killare correttamente i vari processi camion
+                    pidCamion[i] = camioncino[i].pid;
+
+                    // controllo se la rana è salita sul tronco
+                    if (tronchino[i].coordinate.x <= ranocchio.coordinate.x && (tronchino[i].coordinate.x + LARGHEZZA_TRONCHI) >= ranocchio.coordinate.x && ranocchio.coordinate.y == tronchino[i].coordinate.y)
+                    {
+
+                        // appena salita la rana mi calcolo la differenza tra l'inizio del tronco e la posizione della rana
+                        // così facendo la rana salirà sul tronco nel punto esatto
+                        if (!sulTronco)
+                        {
+
+                            differenza = ranocchio.coordinate.x - tronchino[i].coordinate.x;
+                            sulTronco = true;
+                        }
+                        ranocchio.coordinate.x = tronchino[i].coordinate.x + differenza;
+                        coloreTroncoRana = true;
+
+                        // comunico la posizione al processo rana
+                        write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
+                    }
+
+                    // in questo casa la rana è sull'altezza del tronco però una x diversa dal range di esso
+                    // pertanto non è riuscita a salire sul tronco successivo quindi comunico le coordinate di partenza
+                    // e tolgo una vita
+                    else if (ranocchio.coordinate.y == tronchino[i].coordinate.y)
+                    {
+                        vite--;
+                        ranocchio.coordinate.x = ZERO;
+                        ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
+                        write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
+                        clear();
+                        sulTronco = false;
+                    }
+
+                    // controllo la direzione inversa
+                    if (camioncino[i].velocita < 0)
+                    {
+                        // controllo se la rana è stata investita da un camioncino
+                        if (camioncino[i].coordinate.x > ranocchio.coordinate.x && (camioncino[i].coordinate.x - LARGHEZZA_CAMION) < ranocchio.coordinate.x && camioncino[i].coordinate.y == ranocchio.coordinate.y)
+                        {
+                            vite--;
+                            ranocchio.coordinate.x = ZERO;
+                            ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
+                            write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
+                            clear();
+                        }
+                    }
+                    else
+                    {
+                        if (camioncino[i].coordinate.x < ranocchio.coordinate.x && (camioncino[i].coordinate.x + LARGHEZZA_CAMION) > ranocchio.coordinate.x && camioncino[i].coordinate.y == ranocchio.coordinate.y)
+                        {
+                            vite--;
+                            ranocchio.coordinate.x = ZERO;
+                            ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
+                            write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
+                            clear();
+                        }
+                    }
+                }
+
                 stampaMacchina(macchinina[i]);
                 pidMacchine[i] = macchinina[i].pid;
-            }
 
-            for (i = 0; i < TRE; i++)
-            {
-                stampaCamion(camioncino[i]);
-                pidCamion[i] = camioncino[i].pid;
-            }
-
-            for (i = 0; i < CINQUE; i++)
-            {
+                // se la macchina ha direzione inversa
                 if (macchinina[i].velocita < 0)
                 {
+                    // controllo se la rana è dentro il range dello sprite della macchina
+                    // allora la porto alla alla posizione di partenza e tolgo una vita
                     if (macchinina[i].coordinate.x > ranocchio.coordinate.x && (macchinina[i].coordinate.x - LARGHEZZA_MACCHINA) < ranocchio.coordinate.x && macchinina[i].coordinate.y == ranocchio.coordinate.y)
                     {
                         vite--;
                         ranocchio.coordinate.x = ZERO;
                         ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
+                        // invio la posizione di partenza al processo rana
                         write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
                         clear();
                     }
                 }
                 else
                 {
+                    // controllo se la rana è dentro il range dello sprite della macchina
+                    // allora la porto alla alla posizione di partenza e tolgo una vita
                     if (macchinina[i].coordinate.x < ranocchio.coordinate.x && (macchinina[i].coordinate.x + LARGHEZZA_MACCHINA) > ranocchio.coordinate.x && macchinina[i].coordinate.y == ranocchio.coordinate.y)
                     {
                         vite--;
                         ranocchio.coordinate.x = ZERO;
                         ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
+                        // invio la posizione di partenza al processo rana
                         write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
                         clear();
                     }
                 }
             }
-            coloreTroncoRana = false;
-            for (i = 0; i < TRE; i++)
-            {
 
-                if (tronchino[i].coordinate.x <= ranocchio.coordinate.x && (tronchino[i].coordinate.x + LARGHEZZA_TRONCHI) >= ranocchio.coordinate.x && ranocchio.coordinate.y == tronchino[i].coordinate.y)
-                {
-                    if (!sulTronco)
-                    {
-
-                        differenza = ranocchio.coordinate.x - tronchino[i].coordinate.x;
-                        sulTronco = true;
-                    }
-                    ranocchio.coordinate.x = tronchino[i].coordinate.x + differenza;
-                    coloreTroncoRana = true;
-                    write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
-                }
-                else if (ranocchio.coordinate.y == tronchino[i].coordinate.y)
-                {
-                    vite--;
-                    ranocchio.coordinate.x = ZERO;
-                    ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
-                    write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
-                    clear();
-                    sulTronco = false;
-                }
-                else
-                {
-                }
-
-                if (camioncino[i].velocita < 0)
-                {
-                    if (camioncino[i].coordinate.x > ranocchio.coordinate.x && (camioncino[i].coordinate.x - LARGHEZZA_CAMION) < ranocchio.coordinate.x && camioncino[i].coordinate.y == ranocchio.coordinate.y)
-                    {
-                        vite--;
-                        ranocchio.coordinate.x = ZERO;
-                        ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
-                        write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
-                        clear();
-                    }
-                }
-                else
-                {
-                    if (camioncino[i].coordinate.x < ranocchio.coordinate.x && (camioncino[i].coordinate.x + LARGHEZZA_CAMION) > ranocchio.coordinate.x && camioncino[i].coordinate.y == ranocchio.coordinate.y)
-                    {
-                        vite--;
-                        ranocchio.coordinate.x = ZERO;
-                        ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
-                        write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
-                        clear();
-                    }
-                }
-            }
             stampaRana(ranocchio.coordinate, coloreTroncoRana);
 
             stampaVite(vite);
@@ -340,15 +358,16 @@ int main()
                 if (vite == ZERO)
                     gameOver();
 
-                for (i = 0; i < 3; i++)
-
-                    kill(pidTronchi[i], SIGKILL);
                 for (i = 0; i < 5; i++)
+                {
+                    if (i < 3)
+                    {
+                        kill(pidCamion[i], SIGKILL);
+                        kill(pidTronchi[i], SIGKILL);
+                    }
 
                     kill(pidMacchine[i], SIGKILL);
-
-                for (i = 0; i < 2; i++)
-                    kill(pidCamion[i], SIGKILL);
+                }
 
                 endwin();
                 kill(pidRana, SIGKILL);
@@ -357,42 +376,4 @@ int main()
             }
         }
     }
-}
-
-void dimensioneFinestra(int maxx, int maxy)
-{
-    clear();
-    while (maxy < ALTEZZA_SCHERMO || maxx < LARGHEZZA_SCHERMO)
-    {
-        erase();
-        mvwprintw(stdscr, maxy / DUE, maxx / DUE - 17, "Ingrandisci lo schermo per giocare!"); // -17 per centrare la scritta
-        getmaxyx(stdscr, maxy, maxx);
-        refresh();
-    }
-
-    clear();
-    mvwprintw(stdscr, ALTEZZA_SCHERMO / DUE, LARGHEZZA_SCHERMO / DUE - 32, "Per evitare problemi non diminuire la dimensione della finestra!");
-    mvwprintw(stdscr, ALTEZZA_SCHERMO / DUE + UNO, LARGHEZZA_SCHERMO / DUE - SETTE, "Buona fortuna!");
-    refresh();
-    clear();
-    refresh();
-}
-
-void stampaVite(int vite)
-{
-    Coordinate vita;
-    vita.x = LARGHEZZA_SCHERMO - TRE;
-    vita.y = ALTEZZA_SCHERMO - DUE;
-    /* inizio a stamparle da in basso a destra, poi mi sposto
-    verso sinistra */
-    init_pair(OTTO, COLOR_RED, COLOR_BLACK);
-    attron(COLOR_PAIR(OTTO));
-    for (int i = ZERO; i < vite; i++)
-    {
-        for (int j = ZERO; j < DUE; j++)
-            mvprintw(vita.y, vita.x + j, "%c", spriteCuore[j]);
-
-        vita.x -= TRE; // lascio 1 di spazio tra le varie vite
-    }
-    attroff(COLOR_PAIR(OTTO));
 }
