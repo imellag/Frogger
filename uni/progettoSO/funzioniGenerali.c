@@ -24,7 +24,7 @@ int controlloLimiti(Coordinate entita, int tipo)
                     break;
                 }
             }
-            /* necessario per qualche motivo TODO: investigare */
+            /* da cambiare: la rana perde se va in una tana già chiusa o dove non c'è una tana */
             if (!flag) flag = SEI;
         }
 
@@ -56,7 +56,6 @@ int controlloLimiti(Coordinate entita, int tipo)
         }
     }
     
-
     return flag;
 }
 
@@ -98,7 +97,7 @@ void colori()
     init_pair(4, COLOR_BLACK, COLOR_GREEN); // colore prato
     init_pair(5, COLOR_BLACK, COLOR_BLUE);  // colore fiume
     init_pair(6, COLOR_BLACK, COLORE_TRONCHI);
-    // init_pair(7, COLOR_BLACK, COLORE_TANA);
+    
 }
 
 
