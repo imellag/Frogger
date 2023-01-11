@@ -19,7 +19,7 @@ int main()
     int maxx, maxy;
     int differenza;
     int maxx_precedente, maxy_precedente;
-    int tempo=40, punteggio = ZERO, vite = TRE;
+    int tempo = 40, punteggio = ZERO, vite = TRE;
 
     bool arrayTane[NUMERO_TANE] = {false, false, false, false, false};
     int risultato;
@@ -70,8 +70,6 @@ int main()
     // funzione per rendere non bloccante la pipe
     fcntl(pRana[0], F_SETFL, fcntl(pRana[0], F_GETFL) | O_NONBLOCK);
 
-
-    
     // pipe non bloccante che mi serve per comunicare con il processo rana
     // in caso di collisioni o spostamenti(es: rana sul tronco)
     int pOrologio[DUE];
@@ -96,7 +94,7 @@ int main()
     funzPrato();
     funzFiume();
     stampaRana(ranocchio.coordinate, coloreTroncoRana);
-    
+
     mvwprintw(stdscr, UNO, LARGHEZZA_SCHERMO / DUE - QUATTRO, "Score: %d", punteggio);
     mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %d", tempo);
     refresh();
@@ -124,7 +122,6 @@ int main()
         Oggetto proiettilino;
 
         Coordinate nuoveCoordinate;
-      
 
         Oggetto tronchino[TRE];
         Oggetto macchinina[CINQUE];
@@ -158,7 +155,7 @@ int main()
         {
 
             read(p[READ], &pacchetto, sizeof(Oggetto));
-            read(pOrologio[READ],&tempo,sizeof(int));
+            read(pOrologio[READ], &tempo, sizeof(int));
             switch (pacchetto.id)
             {
             case RANA:
@@ -229,13 +226,11 @@ int main()
             // controllo se la rana è entrata nelle tane allora la porto alla posizione iniziale e aggiorno il punteggio
             if (risultato < SEI && risultato >= UNO)
             {
-                if(!(arrayTane[risultato - 1] == true)){
-                arrayTane[risultato - 1] = true;
-                ranocchio.coordinate.x = ZERO;
-                ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
-                write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
-                clear();
-                punteggio += 2000;
+                if (!(arrayTane[risultato - 1] == true))
+                {
+                    arrayTane[risultato - 1] = true;
+                    ranocchio=posizioneInizialeRana(pRana, ranocchio);
+                    punteggio += 2000;
                 }
             }
 
@@ -294,10 +289,7 @@ int main()
                     else if (ranocchio.coordinate.y == tronchino[i].coordinate.y)
                     {
                         vite--;
-                        ranocchio.coordinate.x = ZERO;
-                        ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
-                        write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
-                        clear();
+                        ranocchio=posizioneInizialeRana(pRana, ranocchio);
                         sulTronco = false;
                     }
 
@@ -308,10 +300,7 @@ int main()
                         if (camioncino[i].coordinate.x > ranocchio.coordinate.x && (camioncino[i].coordinate.x - LARGHEZZA_CAMION) < ranocchio.coordinate.x && camioncino[i].coordinate.y == ranocchio.coordinate.y)
                         {
                             vite--;
-                            ranocchio.coordinate.x = ZERO;
-                            ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
-                            write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
-                            clear();
+                            ranocchio=posizioneInizialeRana(pRana, ranocchio);
                         }
                     }
                     else
@@ -319,10 +308,7 @@ int main()
                         if (camioncino[i].coordinate.x < ranocchio.coordinate.x && (camioncino[i].coordinate.x + LARGHEZZA_CAMION) > ranocchio.coordinate.x && camioncino[i].coordinate.y == ranocchio.coordinate.y)
                         {
                             vite--;
-                            ranocchio.coordinate.x = ZERO;
-                            ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
-                            write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
-                            clear();
+                            ranocchio=posizioneInizialeRana(pRana, ranocchio);
                         }
                     }
                 }
@@ -338,11 +324,7 @@ int main()
                     if (macchinina[i].coordinate.x > ranocchio.coordinate.x && (macchinina[i].coordinate.x - LARGHEZZA_MACCHINA) < ranocchio.coordinate.x && macchinina[i].coordinate.y == ranocchio.coordinate.y)
                     {
                         vite--;
-                        ranocchio.coordinate.x = ZERO;
-                        ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
-                        // invio la posizione di partenza al processo rana
-                        write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
-                        clear();
+                        ranocchio=posizioneInizialeRana(pRana, ranocchio);
                     }
                 }
                 else
@@ -352,11 +334,7 @@ int main()
                     if (macchinina[i].coordinate.x < ranocchio.coordinate.x && (macchinina[i].coordinate.x + LARGHEZZA_MACCHINA) > ranocchio.coordinate.x && macchinina[i].coordinate.y == ranocchio.coordinate.y)
                     {
                         vite--;
-                        ranocchio.coordinate.x = ZERO;
-                        ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
-                        // invio la posizione di partenza al processo rana
-                        write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
-                        clear();
+                        ranocchio=posizioneInizialeRana(pRana, ranocchio);
                     }
                 }
             }
@@ -371,7 +349,7 @@ int main()
             mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %d", tempo);
             refresh();
 
-            if (ranocchio.id == q || vite == ZERO || tempo<=0)
+            if (ranocchio.id == q || vite == ZERO || tempo <= 0)
             {
                 if (vite == ZERO)
                     gameOver();
