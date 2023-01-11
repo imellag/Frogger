@@ -265,7 +265,8 @@ int main()
                     pidCamion[i] = camioncino[i].pid;
 
                     // controllo se la rana è salita sul tronco
-                    if (tronchino[i].coordinate.x <= ranocchio.coordinate.x && (tronchino[i].coordinate.x + LARGHEZZA_TRONCHI) >= ranocchio.coordinate.x && ranocchio.coordinate.y == tronchino[i].coordinate.y)
+                    if (tronchino[i].coordinate.x <= ranocchio.coordinate.x && (tronchino[i].coordinate.x + LARGHEZZA_TRONCHI) >= ranocchio.coordinate.x 
+                    && ranocchio.coordinate.y == tronchino[i].coordinate.y)
                     {
 
                         // appena salita la rana mi calcolo la differenza tra l'inizio del tronco e la posizione della rana
@@ -293,50 +294,24 @@ int main()
                         sulTronco = false;
                     }
 
-                    // controllo la direzione inversa
-                    if (camioncino[i].velocita < 0)
-                    {
-                        // controllo se la rana è stata investita da un camioncino
-                        if (camioncino[i].coordinate.x > ranocchio.coordinate.x && (camioncino[i].coordinate.x - LARGHEZZA_CAMION) < ranocchio.coordinate.x && camioncino[i].coordinate.y == ranocchio.coordinate.y)
+                     if (controlloCollisioneOggetti(camioncino[i],ranocchio.coordinate,LARGHEZZA_CAMION))
                         {
                             vite--;
                             ranocchio=posizioneInizialeRana(pRana, ranocchio);
                         }
-                    }
-                    else
-                    {
-                        if (camioncino[i].coordinate.x < ranocchio.coordinate.x && (camioncino[i].coordinate.x + LARGHEZZA_CAMION) > ranocchio.coordinate.x && camioncino[i].coordinate.y == ranocchio.coordinate.y)
-                        {
-                            vite--;
-                            ranocchio=posizioneInizialeRana(pRana, ranocchio);
-                        }
-                    }
+
                 }
 
                 stampaMacchina(macchinina[i]);
                 pidMacchine[i] = macchinina[i].pid;
 
-                // se la macchina ha direzione inversa
-                if (macchinina[i].velocita < 0)
-                {
                     // controllo se la rana è dentro il range dello sprite della macchina
                     // allora la porto alla alla posizione di partenza e tolgo una vita
-                    if (macchinina[i].coordinate.x > ranocchio.coordinate.x && (macchinina[i].coordinate.x - LARGHEZZA_MACCHINA) < ranocchio.coordinate.x && macchinina[i].coordinate.y == ranocchio.coordinate.y)
+                    if (controlloCollisioneOggetti(macchinina[i],ranocchio.coordinate,LARGHEZZA_MACCHINA))
                     {
                         vite--;
                         ranocchio=posizioneInizialeRana(pRana, ranocchio);
                     }
-                }
-                else
-                {
-                    // controllo se la rana è dentro il range dello sprite della macchina
-                    // allora la porto alla alla posizione di partenza e tolgo una vita
-                    if (macchinina[i].coordinate.x < ranocchio.coordinate.x && (macchinina[i].coordinate.x + LARGHEZZA_MACCHINA) > ranocchio.coordinate.x && macchinina[i].coordinate.y == ranocchio.coordinate.y)
-                    {
-                        vite--;
-                        ranocchio=posizioneInizialeRana(pRana, ranocchio);
-                    }
-                }
             }
 
             stampaRana(ranocchio.coordinate, coloreTroncoRana);

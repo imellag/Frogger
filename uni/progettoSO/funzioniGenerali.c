@@ -30,7 +30,8 @@ int controlloLimiti(Coordinate entita, int tipo)
             if (!flag)
                 flag = SEI;
             /* da cambiare: la rana perde se va in una tana già chiusa o dove non c'è una tana */
-            if (!flag) flag = SEI;
+            if (!flag)
+                flag = SEI;
         }
 
         /* necessario? */ // si
@@ -104,7 +105,6 @@ void colori()
     init_pair(4, COLOR_BLACK, COLOR_GREEN); // colore prato
     init_pair(5, COLOR_BLACK, COLOR_BLUE);  // colore fiume
     init_pair(6, COLOR_BLACK, COLORE_TRONCHI);
-    
 }
 
 int controlloPosizione(Coordinate rana, _Bool coloreRanaTronco)
@@ -162,4 +162,21 @@ Oggetto posizioneInizialeRana(int pRana[], Oggetto rana)
     rana.coordinate.y = ALTEZZA_SCHERMO - SEI;
     write(pRana[WRITE], &rana, sizeof(Oggetto));
     clear();
+}
+
+bool controlloCollisioneOggetti(Oggetto entita, Coordinate rana, int LARGHEZZA_ENTITA)
+{
+    bool flag = false;
+    if (entita.velocita < 0)
+    {
+        if (entita.coordinate.x > rana.x && (entita.coordinate.x - LARGHEZZA_ENTITA) < rana.x && entita.coordinate.y == rana.y)
+            flag = true;
+    }
+    else
+    {
+        if (entita.coordinate.x < rana.x && (entita.coordinate.x + LARGHEZZA_ENTITA) > rana.x && entita.coordinate.y == rana.y)
+          flag = true;
+        
+    }
+    return flag;
 }
