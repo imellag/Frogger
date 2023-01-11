@@ -20,15 +20,16 @@ int main()
     int differenza;
     int maxx_precedente, maxy_precedente;
     int tempo = 30, punteggio = ZERO, vite = TRE;
-    Coordinate rana;
+
     bool arrayTane[NUMERO_TANE] = {false, false, false, false, false};
     int risultato;
     int gameDifficulty;
     _Bool coloreTroncoRana = false;
     _Bool sulTronco = false;
 
-    rana.x = ZERO;
-    rana.y = ALTEZZA_SCHERMO - SEI;
+    Oggetto ranocchio;
+    ranocchio.coordinate.x = ZERO;
+    ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
 
     initscr();
     noecho();
@@ -48,7 +49,7 @@ int main()
 
     colori();
 
-    // pipe principale che viene utilizzata per inviare le posizioni dei vari oggetti 
+    // pipe principale che viene utilizzata per inviare le posizioni dei vari oggetti
     // e stamparli successivamente nel main
     int p[DUE];
     if (pipe(p) == -UNO)
@@ -57,8 +58,8 @@ int main()
         exit(-UNO);
     }
 
-    // pipe non bloccante che mi serve per comunicare con il processo rana 
-    //in caso di collisioni o spostamenti(es: rana sul tronco)
+    // pipe non bloccante che mi serve per comunicare con il processo rana
+    // in caso di collisioni o spostamenti(es: rana sul tronco)
     int pRana[DUE];
     if (pipe(pRana) == -UNO)
     {
@@ -80,8 +81,8 @@ int main()
     funzAutostrada();
     funzPrato();
     funzFiume();
-    stampaRana(rana, coloreTroncoRana);
-
+    stampaRana(ranocchio.coordinate, coloreTroncoRana);
+    
     mvwprintw(stdscr, UNO, LARGHEZZA_SCHERMO / DUE - QUATTRO, "Score: %d", punteggio);
     mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %d", tempo);
     refresh();
@@ -106,10 +107,9 @@ int main()
         int i;
         Oggetto pacchetto;
         Oggetto proiettilino;
-        Oggetto ranocchio;
+
         Coordinate nuoveCoordinate;
-        ranocchio.coordinate.x = -4;
-        ranocchio.coordinate.y = -4;
+      
 
         Oggetto tronchino[TRE];
         Oggetto macchinina[CINQUE];
