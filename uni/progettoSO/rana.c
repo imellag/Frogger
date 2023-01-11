@@ -2,9 +2,27 @@
 #include "rana.h"
 #include "funzioniGenerali.h"
 
-char spriteRana[ALTEZZA_RANA][LARGHEZZA_RANA + UNO] = {" o.o ", "+-|-+", "\\-|-/"};
+char spriteRana[ALTEZZA_RANA][LARGHEZZA_RANA] = {" o.o ", "+-|-+", "\\-|-/"};
 
-void funzRana(int p[], int pRana[])
+
+void funzRana(int p[],int pRana[]){
+
+    pid_t pidRana;
+
+    pidRana=fork();
+    if (pidRana < ZERO)
+    {
+        printw("Error");
+        exit(-1);
+    }
+    else if (pidRana == ZERO)
+    {
+        movimentoRana(p, pRana);
+    }
+
+
+}
+void movimentoRana(int p[], int pRana[])
 {
     Oggetto rana;
     Oggetto proiettile;
@@ -22,7 +40,7 @@ void funzRana(int p[], int pRana[])
     while (true)
     {
 
-        // if()
+
         timeout(1);
         inputMovimento = getch();
         read(pRana[READ],&rana,sizeof(Oggetto));

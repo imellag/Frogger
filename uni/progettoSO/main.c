@@ -100,251 +100,237 @@ int main()
     refresh();
 
     pid_t pidRana, pidMacchine[CINQUE], pidTronchi[TRE], pidNemici, pidProiettile, pidCamion[TRE], schermo;
-    pidRana = fork();
 
-    if (pidRana < ZERO)
+    funzRana(p, pRana);
+    funzAuto(p);
+    funzTronchi(p, pRana);
+    funzTempo(pOrologio);
+
+    int i;
+    Oggetto pacchetto;
+    Oggetto proiettilino;
+
+    Coordinate nuoveCoordinate;
+
+    Oggetto tronchino[TRE];
+    Oggetto macchinina[CINQUE];
+    Oggetto camioncino[TRE];
+
+    for (i = 0; i < 5; i++)
     {
-        printw("Error");
-        exit(-1);
+        if (i < 3)
+        {
+            tronchino[i].coordinate.x = -CINQUE;
+            tronchino[i].coordinate.y = -CINQUE;
+
+            camioncino[i].coordinate.x = -CINQUE;
+            camioncino[i].coordinate.y = -CINQUE;
+        }
+
+        macchinina[i].coordinate.x = -CINQUE;
+        macchinina[i].coordinate.y = -CINQUE;
     }
-    else if (pidRana == ZERO)
+
+    proiettilino.coordinate.x = -UNO;
+    proiettilino.coordinate.y = -UNO;
+    _Bool fuorischermo = false;
+
+    int direzione;
+
+    close(p[WRITE]);
+    close(pRana[READ]);
+    close(pOrologio[WRITE]);
+    while (true)
     {
-        funzRana(p, pRana);
-    }
-    else
-    {
-        funzAuto(p);
-        funzTronchi(p, pRana);
-        funzTempo(pOrologio);
 
-        int i;
-        Oggetto pacchetto;
-        Oggetto proiettilino;
+        read(p[READ], &pacchetto, sizeof(Oggetto));
+        read(pOrologio[READ], &tempo, sizeof(int));
+        switch (pacchetto.id)
+        {
+        case RANA:
+            ranocchio = pacchetto;
+            break;
 
-        Coordinate nuoveCoordinate;
+        case PROIETTILE:
+            proiettilino = pacchetto;
+            fuorischermo = false;
+            break;
+        case PROIETTILE_OUT:
+            fuorischermo = true;
+            break;
 
-        Oggetto tronchino[TRE];
-        Oggetto macchinina[CINQUE];
-        Oggetto camioncino[TRE];
+        case TRONCO0:
+            tronchino[ZERO] = pacchetto;
+            break;
+        case TRONCO1:
+            tronchino[UNO] = pacchetto;
+            break;
+        case TRONCO2:
+            tronchino[DUE] = pacchetto;
+            break;
 
-        for (i = 0; i < 5; i++)
+        case MACCHINA0:
+            macchinina[ZERO] = pacchetto;
+            break;
+        case MACCHINA1:
+            macchinina[UNO] = pacchetto;
+            break;
+        case MACCHINA2:
+            macchinina[DUE] = pacchetto;
+            break;
+        case MACCHINA3:
+            macchinina[TRE] = pacchetto;
+            break;
+        case MACCHINA4:
+            macchinina[QUATTRO] = pacchetto;
+            break;
+
+        case CAMION0:
+            camioncino[ZERO] = pacchetto;
+            break;
+        case CAMION1:
+            camioncino[UNO] = pacchetto;
+            break;
+        case CAMION2:
+            camioncino[DUE] = pacchetto;
+            break;
+
+        case q:
+            ranocchio = pacchetto;
+            break;
+
+        default:
+            break;
+        }
+
+        // se la dimensione della finestra cambiata allora pulisce lo schermo per evitare problemi
+        maxx_precedente = maxx;
+        maxy_precedente = maxy;
+        getmaxyx(stdscr, maxy, maxx);
+        if (maxx != maxx_precedente || maxy != maxy_precedente)
+            clear();
+
+        risultato = controlloLimiti(ranocchio.coordinate, RANA);
+
+        // controllo se la rana è entrata nelle tane allora la porto alla posizione iniziale e aggiorno il punteggio
+        if (risultato < SEI && risultato >= UNO)
+        {
+            if (!(arrayTane[risultato - 1] == true))
+            {
+                arrayTane[risultato - 1] = true;
+                ranocchio = posizioneInizialeRana(pRana, ranocchio);
+                punteggio += 2000;
+            }
+        }
+
+        // stampa dei colori di background
+        funzMarciapiede();
+        funzAutostrada();
+        funzPrato();
+        funzFiume();
+
+        // stampa la tane e ne tiene controllo
+        funzTane(arrayTane);
+
+        coloreTroncoRana = false;
+
+        // ciclo per assegnare i pid agli oggetti e successivamente controllo le collisioni
+        // con le varia macchine o se la rana è presente sul tronco
+        for (i = 0; i < CINQUE; i++)
         {
             if (i < 3)
             {
-                tronchino[i].coordinate.x = -CINQUE;
-                tronchino[i].coordinate.y = -CINQUE;
+                // stampo i 3 tronchi
+                stampaTronco(tronchino[i].coordinate);
+                // mi prendo i pid dei tronchi per poi utilizzare questo array per
+                // killare correttamente i vari processi tronchi
+                pidTronchi[i] = tronchino[i].pid;
 
-                camioncino[i].coordinate.x = -CINQUE;
-                camioncino[i].coordinate.y = -CINQUE;
-            }
+                // stampo i camion
+                stampaCamion(camioncino[i]);
 
-            macchinina[i].coordinate.x = -CINQUE;
-            macchinina[i].coordinate.y = -CINQUE;
-        }
+                // mi prendo i pid dei camion per poi utilizzare questo array per
+                // killare correttamente i vari processi camion
+                pidCamion[i] = camioncino[i].pid;
 
-        proiettilino.coordinate.x = -UNO;
-        proiettilino.coordinate.y = -UNO;
-        _Bool fuorischermo = false;
-
-        int direzione;
-
-        close(p[WRITE]);
-        close(pRana[READ]);
-        close(pOrologio[WRITE]);
-        while (true)
-        {
-
-            read(p[READ], &pacchetto, sizeof(Oggetto));
-            read(pOrologio[READ], &tempo, sizeof(int));
-            switch (pacchetto.id)
-            {
-            case RANA:
-                ranocchio = pacchetto;
-                break;
-
-            case PROIETTILE:
-                proiettilino = pacchetto;
-                fuorischermo = false;
-                break;
-            case PROIETTILE_OUT:
-                fuorischermo = true;
-                break;
-
-            case TRONCO0:
-                tronchino[ZERO] = pacchetto;
-                break;
-            case TRONCO1:
-                tronchino[UNO] = pacchetto;
-                break;
-            case TRONCO2:
-                tronchino[DUE] = pacchetto;
-                break;
-
-            case MACCHINA0:
-                macchinina[ZERO] = pacchetto;
-                break;
-            case MACCHINA1:
-                macchinina[UNO] = pacchetto;
-                break;
-            case MACCHINA2:
-                macchinina[DUE] = pacchetto;
-                break;
-            case MACCHINA3:
-                macchinina[TRE] = pacchetto;
-                break;
-            case MACCHINA4:
-                macchinina[QUATTRO] = pacchetto;
-                break;
-
-            case CAMION0:
-                camioncino[ZERO] = pacchetto;
-                break;
-            case CAMION1:
-                camioncino[UNO] = pacchetto;
-                break;
-            case CAMION2:
-                camioncino[DUE] = pacchetto;
-                break;
-
-            case q:
-                ranocchio = pacchetto;
-                break;
-
-            default:
-                break;
-            }
-
-            // se la dimensione della finestra cambiata allora pulisce lo schermo per evitare problemi
-            maxx_precedente = maxx;
-            maxy_precedente = maxy;
-            getmaxyx(stdscr, maxy, maxx);
-            if (maxx != maxx_precedente || maxy != maxy_precedente)
-                clear();
-
-            risultato = controlloLimiti(ranocchio.coordinate, RANA);
-
-            // controllo se la rana è entrata nelle tane allora la porto alla posizione iniziale e aggiorno il punteggio
-            if (risultato < SEI && risultato >= UNO)
-            {
-                if (!(arrayTane[risultato - 1] == true))
+                // controllo se la rana è salita sul tronco
+                if (tronchino[i].coordinate.x <= ranocchio.coordinate.x && (tronchino[i].coordinate.x + LARGHEZZA_TRONCHI) >= ranocchio.coordinate.x && ranocchio.coordinate.y == tronchino[i].coordinate.y)
                 {
-                    arrayTane[risultato - 1] = true;
-                    ranocchio=posizioneInizialeRana(pRana, ranocchio);
-                    punteggio += 2000;
+
+                    // appena salita la rana mi calcolo la differenza tra l'inizio del tronco e la posizione della rana
+                    // così facendo la rana salirà sul tronco nel punto esatto
+                    if (!sulTronco)
+                    {
+
+                        differenza = ranocchio.coordinate.x - tronchino[i].coordinate.x;
+                        sulTronco = true;
+                    }
+                    ranocchio.coordinate.x = tronchino[i].coordinate.x + differenza;
+                    coloreTroncoRana = true;
+
+                    // comunico la posizione al processo rana
+                    write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
+                }
+
+                // in questo casa la rana è sull'altezza del tronco però una x diversa dal range di esso
+                // pertanto non è riuscita a salire sul tronco successivo quindi comunico le coordinate di partenza
+                // e tolgo una vita
+                else if (ranocchio.coordinate.y == tronchino[i].coordinate.y)
+                {
+                    vite--;
+                    ranocchio = posizioneInizialeRana(pRana, ranocchio);
+                    sulTronco = false;
+                }
+
+                if (controlloCollisioneOggetti(camioncino[i], ranocchio.coordinate, LARGHEZZA_CAMION))
+                {
+                    vite--;
+                    ranocchio = posizioneInizialeRana(pRana, ranocchio);
                 }
             }
 
-            // stampa dei colori di background
-            funzMarciapiede();
-            funzAutostrada();
-            funzPrato();
-            funzFiume();
+            stampaMacchina(macchinina[i]);
+            pidMacchine[i] = macchinina[i].pid;
 
-            // stampa la tane e ne tiene controllo
-            funzTane(arrayTane);
+            // controllo se la rana è dentro il range dello sprite della macchina
+            // allora la porto alla alla posizione di partenza e tolgo una vita
+            if (controlloCollisioneOggetti(macchinina[i], ranocchio.coordinate, LARGHEZZA_MACCHINA))
+            {
+                vite--;
+                ranocchio = posizioneInizialeRana(pRana, ranocchio);
+            }
+        }
 
-            coloreTroncoRana = false;
+        stampaRana(ranocchio.coordinate, coloreTroncoRana);
 
-            // ciclo per assegnare i pid agli oggetti e successivamente controllo le collisioni
-            // con le varia macchine o se la rana è presente sul tronco
-            for (i = 0; i < CINQUE; i++)
+        stampaVite(vite);
+        if (!fuorischermo)
+            mvwprintw(stdscr, proiettilino.coordinate.y, proiettilino.coordinate.x, "%c", spriteProiettile);
+
+        mvwprintw(stdscr, UNO, LARGHEZZA_SCHERMO / DUE - QUATTRO, "Score: %d", punteggio);
+        mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %d", tempo);
+        refresh();
+
+        if (ranocchio.id == q || vite == ZERO || tempo <= 0)
+        {
+            if (vite == ZERO)
+                gameOver();
+
+            for (i = 0; i < 5; i++)
             {
                 if (i < 3)
                 {
-                    // stampo i 3 tronchi
-                    stampaTronco(tronchino[i].coordinate);
-                    // mi prendo i pid dei tronchi per poi utilizzare questo array per
-                    // killare correttamente i vari processi tronchi
-                    pidTronchi[i] = tronchino[i].pid;
-
-                    // stampo i camion
-                    stampaCamion(camioncino[i]);
-
-                    // mi prendo i pid dei camion per poi utilizzare questo array per
-                    // killare correttamente i vari processi camion
-                    pidCamion[i] = camioncino[i].pid;
-
-                    // controllo se la rana è salita sul tronco
-                    if (tronchino[i].coordinate.x <= ranocchio.coordinate.x && (tronchino[i].coordinate.x + LARGHEZZA_TRONCHI) >= ranocchio.coordinate.x 
-                    && ranocchio.coordinate.y == tronchino[i].coordinate.y)
-                    {
-
-                        // appena salita la rana mi calcolo la differenza tra l'inizio del tronco e la posizione della rana
-                        // così facendo la rana salirà sul tronco nel punto esatto
-                        if (!sulTronco)
-                        {
-
-                            differenza = ranocchio.coordinate.x - tronchino[i].coordinate.x;
-                            sulTronco = true;
-                        }
-                        ranocchio.coordinate.x = tronchino[i].coordinate.x + differenza;
-                        coloreTroncoRana = true;
-
-                        // comunico la posizione al processo rana
-                        write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
-                    }
-
-                    // in questo casa la rana è sull'altezza del tronco però una x diversa dal range di esso
-                    // pertanto non è riuscita a salire sul tronco successivo quindi comunico le coordinate di partenza
-                    // e tolgo una vita
-                    else if (ranocchio.coordinate.y == tronchino[i].coordinate.y)
-                    {
-                        vite--;
-                        ranocchio=posizioneInizialeRana(pRana, ranocchio);
-                        sulTronco = false;
-                    }
-
-                     if (controlloCollisioneOggetti(camioncino[i],ranocchio.coordinate,LARGHEZZA_CAMION))
-                        {
-                            vite--;
-                            ranocchio=posizioneInizialeRana(pRana, ranocchio);
-                        }
-
+                    kill(pidCamion[i], SIGKILL);
+                    kill(pidTronchi[i], SIGKILL);
                 }
 
-                stampaMacchina(macchinina[i]);
-                pidMacchine[i] = macchinina[i].pid;
-
-                    // controllo se la rana è dentro il range dello sprite della macchina
-                    // allora la porto alla alla posizione di partenza e tolgo una vita
-                    if (controlloCollisioneOggetti(macchinina[i],ranocchio.coordinate,LARGHEZZA_MACCHINA))
-                    {
-                        vite--;
-                        ranocchio=posizioneInizialeRana(pRana, ranocchio);
-                    }
+                kill(pidMacchine[i], SIGKILL);
             }
 
-            stampaRana(ranocchio.coordinate, coloreTroncoRana);
+            endwin();
+            kill(pidRana, SIGKILL);
 
-            stampaVite(vite);
-            if (!fuorischermo)
-                mvwprintw(stdscr, proiettilino.coordinate.y, proiettilino.coordinate.x, "%c", spriteProiettile);
-
-            mvwprintw(stdscr, UNO, LARGHEZZA_SCHERMO / DUE - QUATTRO, "Score: %d", punteggio);
-            mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %d", tempo);
-            refresh();
-
-            if (ranocchio.id == q || vite == ZERO || tempo <= 0)
-            {
-                if (vite == ZERO)
-                    gameOver();
-
-                for (i = 0; i < 5; i++)
-                {
-                    if (i < 3)
-                    {
-                        kill(pidCamion[i], SIGKILL);
-                        kill(pidTronchi[i], SIGKILL);
-                    }
-
-                    kill(pidMacchine[i], SIGKILL);
-                }
-
-                endwin();
-                kill(pidRana, SIGKILL);
-
-                return EXIT_SUCCESS;
-            }
+            return EXIT_SUCCESS;
         }
     }
 }
