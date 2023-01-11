@@ -4,6 +4,7 @@
 #include "autostrada.h"
 
 char spriteTronchi[ALTEZZA_RANA][LARGHEZZA_TRONCHI + UNO] = {"<~~~~~~~~~~~~~>", "<~~~~~~~~~~~~~>", "<~~~~~~~~~~~~~>"};
+char spriteNemico[ALTEZZA_NEMICO][LARGHEZZA_NEMICO] = {"o\\/o", ":||:", "./\\."};
 
 void funzFiume()
 {
@@ -60,7 +61,6 @@ void funzTronco(int p[DUE], int numeroTronco, int velocita, int pTronchi[], int 
     Oggetto tronco[TRE];
     Oggetto rana;
 
-
     srand(getpid());
 
     tronco[numeroTronco].coordinate.y = 8 + numeroTronco * 3;
@@ -76,26 +76,39 @@ void funzTronco(int p[DUE], int numeroTronco, int velocita, int pTronchi[], int 
     {
         write(p[WRITE], &tronco[numeroTronco], sizeof(Oggetto));
 
-    
+        tronco[numeroTronco].coordinate.x += tronco[numeroTronco].velocita;
 
-            tronco[numeroTronco].coordinate.x += tronco[numeroTronco].velocita;
-
-            if (controlloLimiti(tronco[numeroTronco].coordinate, TRONCO0))
-                tronco[numeroTronco].velocita = tronco[numeroTronco].velocita * -UNO;
-
-            usleep(40000);
-        }
+        if (controlloLimiti(tronco[numeroTronco].coordinate, TRONCO0))
+            tronco[numeroTronco].velocita = tronco[numeroTronco].velocita * -UNO;
+        usleep(40000);
     }
+}
 
-    void stampaTronco(Coordinate tronco)
+void stampaTronco(Coordinate tronco)
+{
+    int i, j;
+
+    attron(COLOR_PAIR(SEI));
+
+    for (i = ZERO; i < ALTEZZA_RANA; i++)
     {
-
-        int i, j;
-        attron(COLOR_PAIR(SEI));
-        for (i = ZERO; i < ALTEZZA_RANA; i++)
-        {
-            for (j = ZERO; j < LARGHEZZA_TRONCHI; j++)
-                mvaddch(tronco.y + i, tronco.x + j, spriteTronchi[i][j]);
-        }
-        attroff(COLOR_PAIR(SEI));
+        for (j = ZERO; j < LARGHEZZA_TRONCHI; j++)
+            mvaddch(tronco.y + i, tronco.x + j, spriteTronchi[i][j]);
     }
+
+    attroff(COLOR_PAIR(SEI));
+}
+
+void stampaNemico(Coordinate nemico) {
+    int i, j;
+
+    // attron scegliere colore nemico
+
+    for (i = ZERO; i < ALTEZZA_NEMICO; i++)
+    {
+        for (j = ZERO; j < LARGHEZZA_NEMICO; j++)
+            mvaddch(nemico.y + i, nemico.x + j, spriteNemico[i][j]);
+    }
+
+    // attroff
+}

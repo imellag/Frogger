@@ -28,11 +28,10 @@ int controlloLimiti(Coordinate entita, int tipo)
             if (!flag) flag = SEI;
         }
 
-        /* necessario? */
+        /* necessario? */ // si
         else if (entita.x < ZERO || entita.x >= LARGHEZZA_SCHERMO || entita.y <= SEI || entita.y >= ALTEZZA_SCHERMO - CINQUE) {
             flag = SEI;
         }
-    
     }
 
     else if (tipo == PROIETTILE)
