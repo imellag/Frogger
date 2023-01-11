@@ -26,14 +26,11 @@ int controlloLimiti(Coordinate entita, int tipo)
                     break;
                 }
             }
-<<<<<<< HEAD
             /* necessario per qualche motivo TODO: investigare */
             if (!flag)
                 flag = SEI;
-=======
             /* da cambiare: la rana perde se va in una tana già chiusa o dove non c'è una tana */
             if (!flag) flag = SEI;
->>>>>>> 2e2c7059ab6054b0178285e019830145bb3d9626
         }
 
         /* necessario? */ // si
@@ -66,11 +63,6 @@ int controlloLimiti(Coordinate entita, int tipo)
             flag = 2;
         }
     }
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> 2e2c7059ab6054b0178285e019830145bb3d9626
     return flag;
 }
 
