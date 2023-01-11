@@ -63,7 +63,7 @@ enum gameDifficulty {EASY, MEDIUM, HARD};
 
 // dimensioni nemici
 #define ALTEZZA_NEMICO 3
-#define LARGHEZZA_NEMICO 4
+#define LARGHEZZA_NEMICO 5
 
 // definisco un numero per ciascuno colore che viene utilizzato
 #define COLORE_RANA 10

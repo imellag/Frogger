@@ -26,9 +26,14 @@ int controlloLimiti(Coordinate entita, int tipo)
                     break;
                 }
             }
+<<<<<<< HEAD
             /* necessario per qualche motivo TODO: investigare */
             if (!flag)
                 flag = SEI;
+=======
+            /* da cambiare: la rana perde se va in una tana già chiusa o dove non c'è una tana */
+            if (!flag) flag = SEI;
+>>>>>>> 2e2c7059ab6054b0178285e019830145bb3d9626
         }
 
         /* necessario? */ // si
@@ -61,7 +66,11 @@ int controlloLimiti(Coordinate entita, int tipo)
             flag = 2;
         }
     }
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 2e2c7059ab6054b0178285e019830145bb3d9626
     return flag;
 }
 
@@ -103,7 +112,7 @@ void colori()
     init_pair(4, COLOR_BLACK, COLOR_GREEN); // colore prato
     init_pair(5, COLOR_BLACK, COLOR_BLUE);  // colore fiume
     init_pair(6, COLOR_BLACK, COLORE_TRONCHI);
-    // init_pair(7, COLOR_BLACK, COLORE_TANA);
+    
 }
 
 int controlloPosizione(Coordinate rana, _Bool coloreRanaTronco)

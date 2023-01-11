@@ -102,7 +102,7 @@ void stampaTronco(Coordinate tronco)
 void stampaNemico(Coordinate nemico) {
     int i, j;
 
-    // attron scegliere colore nemico
+    attron(COLOR_PAIR(UNO)); // ROSSO
 
     for (i = ZERO; i < ALTEZZA_NEMICO; i++)
     {
@@ -110,5 +110,5 @@ void stampaNemico(Coordinate nemico) {
             mvaddch(nemico.y + i, nemico.x + j, spriteNemico[i][j]);
     }
 
-    // attroff
+    attroff(COLOR_PAIR(UNO));
 }
