@@ -43,7 +43,7 @@ int controlloLimiti(Coordinate entita, int tipo)
 
     else if (tipo == PROIETTILE)
     {
-        if (entita.y < NOVE)
+        if (entita.y < 9)
         {
             flag = 1;
         }
@@ -143,7 +143,7 @@ void funzTempo(int pOrologio[])
 void orologio(int pOrologio[])
 {
 
-    int tempo = 40;
+    int tempo = 50;
 
     close(pOrologio[READ]);
     while (true)

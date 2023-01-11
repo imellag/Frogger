@@ -55,7 +55,6 @@ int funzTronchi(int p[DUE], int pRana[])
         }
     }
 }
-
 void funzTronco(int p[DUE], int numeroTronco, int velocita, int pRana[])
 {
     Oggetto tronco[TRE];

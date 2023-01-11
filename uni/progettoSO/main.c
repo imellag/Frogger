@@ -210,7 +210,7 @@ int main()
         if (maxx != maxx_precedente || maxy != maxy_precedente)
             clear();
 
-        risultato = controlloLimiti(ranocchio.coordinate, RANA);
+       // risultato = controlloLimiti(ranocchio.coordinate, RANA);
 
         // controllo se la rana è entrata nelle tane allora la porto alla posizione iniziale e aggiorno il punteggio
         if (risultato < SEI && risultato >= UNO)
@@ -308,7 +308,7 @@ int main()
             mvwprintw(stdscr, proiettilino.coordinate.y, proiettilino.coordinate.x, "%c", spriteProiettile);
 
         mvwprintw(stdscr, UNO, LARGHEZZA_SCHERMO / DUE - QUATTRO, "Score: %d", punteggio);
-        mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %d", tempo);
+        mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %-20d", tempo);
         refresh();
 
         if (ranocchio.id == q || vite == ZERO || tempo <= 0)
