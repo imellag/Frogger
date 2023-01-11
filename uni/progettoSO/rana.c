@@ -4,7 +4,7 @@
 
 char spriteRana[ALTEZZA_RANA][LARGHEZZA_RANA + UNO] = {" o.o ", "+-|-+", "\\-|-/"};
 
-void funzRana(int p[], int pRana[], int pTronchi[])
+void funzRana(int p[], int pRana[])
 {
     Oggetto rana;
     Oggetto proiettile;
@@ -17,7 +17,6 @@ void funzRana(int p[], int pRana[], int pTronchi[])
     int lettura;
     close(p[READ]);
     close(pRana[WRITE]);
-    close(pTronchi[READ]);
     _Bool move;
 
     while (true)

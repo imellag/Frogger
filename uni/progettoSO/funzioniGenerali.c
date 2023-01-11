@@ -9,7 +9,7 @@ _Bool checkCoordinate(int posizione, int coordinata_da_checkare, int intorni)
 
 int controlloLimiti(Coordinate entita, int tipo)
 {
-    int flag = false;
+    int flag = 0;
     if (tipo == RANA)
     {
         /* prima controllo se le coordinate corrispondono a una tana e restituisco il numero della tana per chiuderla,
@@ -39,13 +39,13 @@ int controlloLimiti(Coordinate entita, int tipo)
     {
         if (entita.y <NOVE)
         {
-            flag = true;
+            flag = 1;
         }
     }
     else if (tipo == TRONCO0)
     {
         if (entita.x < ZERO || entita.x >= LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI)
-            flag = true;
+            flag = 1;
     }
     else if (tipo == MACCHINA0 ||  tipo == CAMION0) // macchina o camion
     {
@@ -102,16 +102,7 @@ void colori()
     // init_pair(7, COLOR_BLACK, COLORE_TANA);
 }
 
-void gameOver()
-{
 
-    clear();
-    mvprintw(ALTEZZA_SCHERMO / 2, LARGHEZZA_SCHERMO / 2, "Hai perso!");
-    refresh();
-    sleep(2);
-
-    getch();
-}
 
 int controlloPosizione(Coordinate rana, _Bool coloreRanaTronco)
 {

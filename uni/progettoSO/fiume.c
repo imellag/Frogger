@@ -23,7 +23,7 @@ void funzFiume()
 
 }
 
-int funzTronchi(int p[DUE], int pTronchi[], int pRana[])
+int funzTronchi(int p[DUE], int pRana[])
 {
     int i;
     pid_t tronco[3];
@@ -50,12 +50,12 @@ int funzTronchi(int p[DUE], int pTronchi[], int pRana[])
         }
         else if (tronco[i] == ZERO)
         {
-            funzTronco(p, i, velocita[i] * spostamento, pTronchi, pRana);
+            funzTronco(p, i, velocita[i] * spostamento, pRana);
         }
     }
 }
 
-void funzTronco(int p[DUE], int numeroTronco, int velocita, int pTronchi[], int pRana[])
+void funzTronco(int p[DUE], int numeroTronco, int velocita, int pRana[])
 {
     Oggetto tronco[TRE];
     Oggetto rana;
