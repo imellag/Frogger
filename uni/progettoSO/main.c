@@ -14,6 +14,8 @@ char spriteProiettile = '^';
 
 int main()
 {
+
+    
     srand(time(NULL));
 
     int maxx, maxy;
@@ -48,6 +50,7 @@ int main()
     clear();
 
     colori();
+
 
     // pipe principale che viene utilizzata per inviare le posizioni dei vari oggetti
     // e stamparli successivamente nel main
