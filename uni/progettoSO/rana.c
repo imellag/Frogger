@@ -5,6 +5,7 @@
 char spriteRana[ALTEZZA_RANA][LARGHEZZA_RANA] = {" o.o ", "+-|-+", "\\-|-/"};
 
 
+
 void funzRana(int p[],int pRana[]){
 
     pid_t pidRana;
@@ -101,6 +102,8 @@ void movimentoRana(int p[], int pRana[])
     }
     usleep(10000);
 }
+
+
 
 void funzProiettile(Oggetto rana, int p[DUE])
 {

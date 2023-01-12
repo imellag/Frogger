@@ -15,7 +15,6 @@ char spriteProiettile = '^';
 int main()
 {
 
-    
     srand(time(NULL));
 
     int maxx, maxy;
@@ -23,11 +22,17 @@ int main()
     int maxx_precedente, maxy_precedente;
     int tempo = 40, punteggio = ZERO, vite = TRE;
 
+    double diff;
+    int spawnNemico;
+
     bool arrayTane[NUMERO_TANE] = {false, false, false, false, false};
+
+    bool nemico[3] = {false, false, false};
     int risultato;
     int gameDifficulty;
     _Bool coloreTroncoRana = false;
     _Bool sulTronco = false;
+    time_t inizio, fine;
 
     Oggetto ranocchio;
     ranocchio.coordinate.x = ZERO;
@@ -50,7 +55,6 @@ int main()
     clear();
 
     colori();
-
 
     // pipe principale che viene utilizzata per inviare le posizioni dei vari oggetti
     // e stamparli successivamente nel main
@@ -118,7 +122,9 @@ int main()
     Oggetto tronchino[TRE];
     Oggetto macchinina[CINQUE];
     Oggetto camioncino[TRE];
-
+    // Oggetto nemico[TRE];
+    Coordinate vecchieNemico[TRE];
+    int j;
     for (i = 0; i < 5; i++)
     {
         if (i < 3)
@@ -126,6 +132,8 @@ int main()
             tronchino[i].coordinate.x = -CINQUE;
             tronchino[i].coordinate.y = -CINQUE;
 
+            vecchieNemico[i].x = -CINQUE;
+            vecchieNemico[i].y = -CINQUE;
             camioncino[i].coordinate.x = -CINQUE;
             camioncino[i].coordinate.y = -CINQUE;
         }
@@ -139,6 +147,7 @@ int main()
     _Bool fuorischermo = false;
 
     int direzione;
+    time(&inizio);
 
     close(p[WRITE]);
     close(pRana[READ]);
@@ -197,7 +206,6 @@ int main()
         case CAMION2:
             camioncino[DUE] = pacchetto;
             break;
-
         case q:
             ranocchio = pacchetto;
             break;
@@ -213,7 +221,7 @@ int main()
         if (maxx != maxx_precedente || maxy != maxy_precedente)
             clear();
 
-       // risultato = controlloLimiti(ranocchio.coordinate, RANA);
+        // risultato = controlloLimiti(ranocchio.coordinate, RANA);
 
         // controllo se la rana è entrata nelle tane allora la porto alla posizione iniziale e aggiorno il punteggio
         if (risultato < SEI && risultato >= UNO)
@@ -236,6 +244,12 @@ int main()
         funzTane(arrayTane);
 
         coloreTroncoRana = false;
+        time(&fine);
+        if ((diff = difftime(fine, inizio)) >= 10){
+            nemico[rand() % 3] = true;
+            time(&inizio);
+        }
+    
 
         // ciclo per assegnare i pid agli oggetti e successivamente controllo le collisioni
         // con le varia macchine o se la rana è presente sul tronco
@@ -243,8 +257,21 @@ int main()
         {
             if (i < 3)
             {
-                // stampo i 3 tronchi
-                stampaTronco(tronchino[i].coordinate);
+                /*    if (vecchieNemico[i].x != nemico[i].coordinate.x)
+                    {
+                        clear();
+                        refresh();
+                        vecchieNemico[i].x = nemico[i].coordinate.x;
+                    }
+                */
+
+                if (nemico[i])
+                {
+                    stampaNemico(tronchino[i].coordinate);
+                }
+                else
+                    // stampo i 3 tronchi
+                    stampaTronco(tronchino[i].coordinate);
                 // mi prendo i pid dei tronchi per poi utilizzare questo array per
                 // killare correttamente i vari processi tronchi
                 pidTronchi[i] = tronchino[i].pid;
