@@ -339,10 +339,10 @@ int main()
         mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %-20d", tempo);
         refresh();
 
-        if (ranocchio.id == q || vite == ZERO || tempo <= 0)
-        {
-            if (vite == ZERO)
-                gameOver();
+            if (ranocchio.id == q || vite == ZERO || tempo<=0)
+            {
+                if (vite == ZERO)
+                    gameOver();
 
             for (i = 0; i < 5; i++)
             {

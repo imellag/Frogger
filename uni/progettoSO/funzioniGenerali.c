@@ -140,8 +140,7 @@ void funzTempo(int pOrologio[])
     }
 }
 
-void orologio(int pOrologio[])
-{
+void orologio(int pOrologio[]) {
 
     int tempo = 50;
 
