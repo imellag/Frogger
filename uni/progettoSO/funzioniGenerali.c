@@ -17,26 +17,33 @@ int controlloLimiti(Coordinate entita, int tipo)
         const int RAGGIO_HITBOX_TANE = 5; /* La tana e le due caselle ai lati */
         if (entita.y == CINQUE)
         {
-            for (int i = 0; i < NUMERO_TANE; i++ ) {
-                if (checkCoordinate(entita.x, INIZIO_TANE + (LARGHEZZA_TANE * 2 * i), RAGGIO_HITBOX_TANE)) {
+            for (int i = 0; i < NUMERO_TANE; i++)
+            {
+                if (checkCoordinate(entita.x, INIZIO_TANE + (LARGHEZZA_TANE * 2 * i), RAGGIO_HITBOX_TANE))
+                {
                     /* offsettiamo di uno perché return 0 rappresenta nessuna collisione */
                     flag = i + 1;
                     break;
                 }
             }
+            /* necessario per qualche motivo TODO: investigare */
+            if (!flag)
+                flag = SEI;
             /* da cambiare: la rana perde se va in una tana già chiusa o dove non c'è una tana */
-            if (!flag) flag = SEI;
+            if (!flag)
+                flag = SEI;
         }
 
         /* necessario? */ // si
-        else if (entita.x < ZERO || entita.x >= LARGHEZZA_SCHERMO || entita.y <= SEI || entita.y >= ALTEZZA_SCHERMO - CINQUE) {
+        else if (entita.x < ZERO || entita.x >= LARGHEZZA_SCHERMO || entita.y <= SEI || entita.y >= ALTEZZA_SCHERMO - CINQUE)
+        {
             flag = SEI;
         }
     }
 
     else if (tipo == PROIETTILE)
     {
-        if (entita.y <NOVE)
+        if (entita.y < 9)
         {
             flag = 1;
         }
@@ -46,16 +53,17 @@ int controlloLimiti(Coordinate entita, int tipo)
         if (entita.x < ZERO || entita.x >= LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI)
             flag = 1;
     }
-    else if (tipo == MACCHINA0 ||  tipo == CAMION0) // macchina o camion
+    else if (tipo == MACCHINA0 || tipo == CAMION0) // macchina o camion
     {
-        if (entita.x < ZERO) {
+        if (entita.x < ZERO)
+        {
             flag = 1;
         }
-        else if(entita.x >= LARGHEZZA_SCHERMO ) {
+        else if (entita.x >= LARGHEZZA_SCHERMO)
+        {
             flag = 2;
         }
     }
-    
     return flag;
 }
 
@@ -97,7 +105,6 @@ void colori()
     init_pair(4, COLOR_BLACK, COLOR_GREEN); // colore prato
     init_pair(5, COLOR_BLACK, COLOR_BLUE);  // colore fiume
     init_pair(6, COLOR_BLACK, COLORE_TRONCHI);
-    
 }
 
 int controlloPosizione(Coordinate rana, _Bool coloreRanaTronco)
@@ -114,30 +121,61 @@ int controlloPosizione(Coordinate rana, _Bool coloreRanaTronco)
         return COLOR_BLUE;
 }
 
-void funzTempo(int pOrologio[]){
+void funzTempo(int pOrologio[])
+{
 
     pid_t pidTempo;
 
-    pidTempo=fork();
+    pidTempo = fork();
 
-    if(pidTempo<0){
+    if (pidTempo < 0)
+    {
 
         printw("Error");
         exit(1);
     }
-    else if(pidTempo==0){
+    else if (pidTempo == 0)
+    {
         orologio(pOrologio);
     }
 }
 
 void orologio(int pOrologio[]) {
 
-    int tempo =40;
+    int tempo = 50;
 
     close(pOrologio[READ]);
-    while(true) {
-        write(pOrologio[WRITE],&tempo,sizeof(int));
+    while (true)
+    {
+
+        write(pOrologio[WRITE], &tempo, sizeof(int));
         tempo--;
         sleep(1);
     }
+}
+
+Oggetto posizioneInizialeRana(int pRana[], Oggetto rana)
+{
+
+    rana.coordinate.x = ZERO;
+    rana.coordinate.y = ALTEZZA_SCHERMO - SEI;
+    write(pRana[WRITE], &rana, sizeof(Oggetto));
+    clear();
+}
+
+bool controlloCollisioneOggetti(Oggetto entita, Coordinate rana, int LARGHEZZA_ENTITA)
+{
+    bool flag = false;
+    if (entita.velocita < 0)
+    {
+        if (entita.coordinate.x > rana.x && (entita.coordinate.x - LARGHEZZA_ENTITA) < rana.x && entita.coordinate.y == rana.y)
+            flag = true;
+    }
+    else
+    {
+        if (entita.coordinate.x < rana.x && (entita.coordinate.x + LARGHEZZA_ENTITA) > rana.x && entita.coordinate.y == rana.y)
+          flag = true;
+        
+    }
+    return flag;
 }

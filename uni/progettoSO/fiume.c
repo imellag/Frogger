@@ -3,25 +3,24 @@
 #include "fiume.h"
 #include "autostrada.h"
 
-char spriteTronchi[ALTEZZA_RANA][LARGHEZZA_TRONCHI + UNO] = {"<~~~~~~~~~~~~~>", "<~~~~~~~~~~~~~>", "<~~~~~~~~~~~~~>"};
-char spriteNemico[ALTEZZA_NEMICO][LARGHEZZA_NEMICO] = {"o\\/o", ":||:", "./\\."};
+char spriteTronchi[ALTEZZA_RANA][LARGHEZZA_TRONCHI] = {"<~~~~~~~~~~~~~>", "<~~~~~~~~~~~~~>", "<~~~~~~~~~~~~~>"};
+char spriteNemicosulTronco[ALTEZZA_NEMICO][LARGHEZZA_TRONCHI] = {"<~~~~~o\\/o~~~~>", "<~~~~~:||:~~~~>", "<~~~~~./\\.~~~~>"};
 
 void funzFiume()
 {
     int i, j;
     attron(COLOR_PAIR(CINQUE));
-    int ondina='~';
+    int ondina = '~';
     int random;
     // alto 9
     for (i = ZERO; i < ALTEZZA_FIUME; i++)
     {
-        for (j = ZERO; j < LARGHEZZA_SCHERMO; j++){
+        for (j = ZERO; j < LARGHEZZA_SCHERMO; j++)
+        {
             mvprintw(INIZIO_FIUME + i, ZERO + j, " ");
-        
         }
     }
     attroff(COLOR_PAIR(CINQUE));
-
 }
 
 int funzTronchi(int p[DUE], int pRana[])
@@ -55,26 +54,35 @@ int funzTronchi(int p[DUE], int pRana[])
         }
     }
 }
-
 void funzTronco(int p[DUE], int numeroTronco, int velocita, int pRana[])
 {
     Oggetto tronco[TRE];
     Oggetto rana;
 
+ 
+
+    double diff;
+    int spawnNemico;
+
     srand(getpid());
 
     tronco[numeroTronco].coordinate.y = 8 + numeroTronco * 3;
     tronco[numeroTronco].coordinate.x = rand() % (LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI);
-    tronco[numeroTronco].id = TRONCO0 + numeroTronco;
+
     tronco[numeroTronco].velocita = velocita;
     tronco[numeroTronco].pid = getpid();
 
-    close(p[READ]);
     
+    close(p[READ]);
+
     close(pRana[READ]);
     while (true)
     {
-        write(p[WRITE], &tronco[numeroTronco], sizeof(Oggetto));
+
+    
+            tronco[numeroTronco].id = TRONCO0 + numeroTronco;
+            write(p[WRITE], &tronco[numeroTronco], sizeof(Oggetto));
+        
 
         tronco[numeroTronco].coordinate.x += tronco[numeroTronco].velocita;
 
@@ -99,15 +107,16 @@ void stampaTronco(Coordinate tronco)
     attroff(COLOR_PAIR(SEI));
 }
 
-void stampaNemico(Coordinate nemico) {
+void stampaNemico(Coordinate nemico)
+{
     int i, j;
 
     attron(COLOR_PAIR(UNO)); // ROSSO
 
     for (i = ZERO; i < ALTEZZA_NEMICO; i++)
     {
-        for (j = ZERO; j < LARGHEZZA_NEMICO; j++)
-            mvaddch(nemico.y + i, nemico.x + j, spriteNemico[i][j]);
+        for (j = ZERO; j < LARGHEZZA_TRONCHI; j++)
+            mvaddch(nemico.y + i, nemico.x + j, spriteNemicosulTronco[i][j]);
     }
 
     attroff(COLOR_PAIR(UNO));

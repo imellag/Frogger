@@ -19,3 +19,7 @@ int controlloPosizione(Coordinate rana,_Bool coloreRanaTronco);
 void funzTempo(int pOrologio[]);
 
 void orologio(int pOrologio[]);
+
+Oggetto posizioneInizialeRana(int pRana[], Oggetto rana);
+
+bool controlloCollisioneOggetti(Oggetto entita, Coordinate rana, int LARGHEZZA_ENTITA);

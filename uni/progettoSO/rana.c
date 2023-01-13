@@ -2,9 +2,28 @@
 #include "rana.h"
 #include "funzioniGenerali.h"
 
-char spriteRana[ALTEZZA_RANA][LARGHEZZA_RANA + UNO] = {" o.o ", "+-|-+", "\\-|-/"};
+char spriteRana[ALTEZZA_RANA][LARGHEZZA_RANA] = {" o.o ", "+-|-+", "\\-|-/"};
 
-void funzRana(int p[], int pRana[])
+
+
+void funzRana(int p[],int pRana[]){
+
+    pid_t pidRana;
+
+    pidRana=fork();
+    if (pidRana < ZERO)
+    {
+        printw("Error");
+        exit(-1);
+    }
+    else if (pidRana == ZERO)
+    {
+        movimentoRana(p, pRana);
+    }
+
+
+}
+void movimentoRana(int p[], int pRana[])
 {
     Oggetto rana;
     Oggetto proiettile;
@@ -22,7 +41,7 @@ void funzRana(int p[], int pRana[])
     while (true)
     {
 
-        // if()
+
         timeout(1);
         inputMovimento = getch();
         read(pRana[READ],&rana,sizeof(Oggetto));
@@ -66,8 +85,8 @@ void funzRana(int p[], int pRana[])
             }
             else if (pidProiettile == ZERO)
             {
-                proiettile_sparato = funzProiettile(rana, p);
-                return;
+                funzProiettile(rana, p);
+                exit(0);
             }
             break;
 
@@ -80,12 +99,13 @@ void funzRana(int p[], int pRana[])
         if (move)
             write(p[WRITE], &rana, sizeof(Oggetto));
 
-        proiettile_sparato = ZERO;
     }
     usleep(10000);
 }
 
-int funzProiettile(Oggetto rana, int p[DUE])
+
+
+void funzProiettile(Oggetto rana, int p[DUE])
 {
     Oggetto proiettile;
     proiettile.id = UNO;
@@ -104,7 +124,7 @@ int funzProiettile(Oggetto rana, int p[DUE])
         usleep(50000);
         proiettile.coordinate.y--;
     }
-    return CINQUE;
+    return;
 }
 
 void stampaRana(Coordinate rana, _Bool coloreRanaTronco)
