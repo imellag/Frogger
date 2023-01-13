@@ -158,7 +158,7 @@ int main()
         {
 
             read(p[READ], &pacchetto, sizeof(Oggetto));
-            read(pOrologio[READ],&tempo,sizeof(int));
+            read(pOrologio[READ], &tempo,sizeof(int));
             switch (pacchetto.id)
             {
             case RANA:
@@ -371,7 +371,7 @@ int main()
             mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %d", tempo);
             refresh();
 
-            if (ranocchio.id == q || vite == ZERO || tempo<=0)
+            if (ranocchio.id == q || vite == ZERO || tempo <= 0)
             {
                 if (vite == ZERO)
                     gameOver();
