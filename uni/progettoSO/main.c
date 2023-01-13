@@ -221,7 +221,7 @@ int main()
         if (maxx != maxx_precedente || maxy != maxy_precedente)
             clear();
 
-        // risultato = controlloLimiti(ranocchio.coordinate, RANA);
+         risultato = controlloLimiti(ranocchio.coordinate, RANA);
 
         // controllo se la rana è entrata nelle tane allora la porto alla posizione iniziale e aggiorno il punteggio
         if (risultato < SEI && risultato >= UNO)
@@ -257,14 +257,12 @@ int main()
         {
             if (i < 3)
             {
-                /*    if (vecchieNemico[i].x != nemico[i].coordinate.x)
-                    {
-                        clear();
-                        refresh();
-                        vecchieNemico[i].x = nemico[i].coordinate.x;
-                    }
-                */
 
+                if(controlloCollisioneOggetti(tronchino[i],proiettilino.coordinate,LARGHEZZA_TRONCHI) && nemico[i]==true){
+                nemico[i]=false;
+                kill(proiettilino.pid,SIGKILL);
+                fuorischermo=true;
+                }
                 if (nemico[i])
                 {
                     stampaNemico(tronchino[i].coordinate);

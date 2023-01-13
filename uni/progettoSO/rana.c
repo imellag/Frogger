@@ -111,6 +111,7 @@ void funzProiettile(Oggetto rana, int p[DUE])
     proiettile.id = UNO;
     proiettile.coordinate.x = rana.coordinate.x + DUE;
     proiettile.coordinate.y = rana.coordinate.y - UNO;
+    proiettile.pid=getpid();
     while (true)
     {
         if (controlloLimiti(proiettile.coordinate, PROIETTILE))

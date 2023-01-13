@@ -59,30 +59,21 @@ void funzTronco(int p[DUE], int numeroTronco, int velocita, int pRana[])
     Oggetto tronco[TRE];
     Oggetto rana;
 
- 
-
-    double diff;
-    int spawnNemico;
-
     srand(getpid());
 
     tronco[numeroTronco].coordinate.y = 8 + numeroTronco * 3;
     tronco[numeroTronco].coordinate.x = rand() % (LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI);
-
+    tronco[numeroTronco].id = TRONCO0 + numeroTronco;
     tronco[numeroTronco].velocita = velocita;
     tronco[numeroTronco].pid = getpid();
 
-    
     close(p[READ]);
 
     close(pRana[READ]);
     while (true)
     {
 
-    
-            tronco[numeroTronco].id = TRONCO0 + numeroTronco;
-            write(p[WRITE], &tronco[numeroTronco], sizeof(Oggetto));
-        
+        write(p[WRITE], &tronco[numeroTronco], sizeof(Oggetto));
 
         tronco[numeroTronco].coordinate.x += tronco[numeroTronco].velocita;
 
