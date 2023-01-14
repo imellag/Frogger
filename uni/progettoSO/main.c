@@ -257,7 +257,7 @@ int main()
             {
                 troncoNemico = rand() % 3;
 
-            } while (tronchino[troncoNemico].coordinate.y==ranocchio.coordinate.y);
+            } while (tronchino[troncoNemico].coordinate.y == ranocchio.coordinate.y);
             nemico[troncoNemico] = true;
             time(&inizio_nemico);
         }
@@ -373,7 +373,7 @@ int main()
         {
             if (vite == ZERO)
                 gameOver();
-
+            endwin();
             for (i = 0; i < 5; i++)
             {
                 if (i < 3)
@@ -386,7 +386,6 @@ int main()
             }
             kill(pidRana, SIGKILL);
             kill(pidSchermo, SIGKILL);
-            endwin();
 
             return EXIT_SUCCESS;
         }
