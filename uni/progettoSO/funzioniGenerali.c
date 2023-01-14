@@ -142,14 +142,17 @@ void funzTempo(int pOrologio[])
 
 void orologio(int pOrologio[]) {
 
-    int tempo = 50;
-
+    Schermo schermo;
+    schermo.punteggio=2000;
+    schermo.tempo=50;
+    schermo.pid=getpid();
     close(pOrologio[READ]);
     while (true)
     {
 
-        write(pOrologio[WRITE], &tempo, sizeof(int));
-        tempo--;
+        write(pOrologio[WRITE], &schermo, sizeof(Schermo));
+        schermo.tempo--;
+        schermo.punteggio= schermo.punteggio- 10;
         sleep(1);
     }
 }

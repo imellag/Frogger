@@ -4,13 +4,12 @@
 
 char spriteRana[ALTEZZA_RANA][LARGHEZZA_RANA] = {" o.o ", "+-|-+", "\\-|-/"};
 
-
-
-void funzRana(int p[],int pRana[]){
+void funzRana(int p[], int pRana[])
+{
 
     pid_t pidRana;
 
-    pidRana=fork();
+    pidRana = fork();
     if (pidRana < ZERO)
     {
         printw("Error");
@@ -20,11 +19,11 @@ void funzRana(int p[],int pRana[]){
     {
         movimentoRana(p, pRana);
     }
-
-
 }
 void movimentoRana(int p[], int pRana[])
 {
+    time_t inizio, fine;
+    double diff;
     Oggetto rana;
     Oggetto proiettile;
     rana.id = RANA;
@@ -37,14 +36,13 @@ void movimentoRana(int p[], int pRana[])
     close(p[READ]);
     close(pRana[WRITE]);
     _Bool move;
-
+    time(&inizio);
     while (true)
     {
 
-
         timeout(1);
         inputMovimento = getch();
-        read(pRana[READ],&rana,sizeof(Oggetto));
+        read(pRana[READ], &rana, sizeof(Oggetto));
         move = true;
         switch (inputMovimento)
         {
@@ -77,16 +75,21 @@ void movimentoRana(int p[], int pRana[])
         case SPACEBAR:
             move = false;
 
-            pidProiettile = fork();
-            if (pidProiettile < ZERO)
+            time(&fine);
+            if (difftime(fine, inizio) > 1 )
             {
-                perror("error");
-                exit(1);
-            }
-            else if (pidProiettile == ZERO)
-            {
-                funzProiettile(rana, p);
-                exit(0);
+                time(&inizio);
+                pidProiettile = fork();
+                if (pidProiettile < ZERO)
+                {
+                    perror("error");
+                    exit(1);
+                }
+                else if (pidProiettile == ZERO)
+                {
+                    funzProiettile(rana, p);
+                    exit(0);
+                }
             }
             break;
 
@@ -98,12 +101,9 @@ void movimentoRana(int p[], int pRana[])
         // read(pRana[READ],&rana,sizeof(Oggetto));
         if (move)
             write(p[WRITE], &rana, sizeof(Oggetto));
-
     }
     usleep(10000);
 }
-
-
 
 void funzProiettile(Oggetto rana, int p[DUE])
 {
@@ -111,7 +111,7 @@ void funzProiettile(Oggetto rana, int p[DUE])
     proiettile.id = UNO;
     proiettile.coordinate.x = rana.coordinate.x + DUE;
     proiettile.coordinate.y = rana.coordinate.y - UNO;
-    proiettile.pid=getpid();
+    proiettile.pid = getpid();
     while (true)
     {
         if (controlloLimiti(proiettile.coordinate, PROIETTILE))
@@ -144,4 +144,12 @@ void stampaRana(Coordinate rana, _Bool coloreRanaTronco)
         }
     }
     attroff(COLOR_PAIR(7));
+}
+
+bool controlloCollisioniProiettile(Coordinate proiettile, Coordinate entita, int LARGHEZZA_ENTITA, int ALTEZZA_ENTITA)
+{
+
+    bool flag = false;
+
+    //        if()
 }

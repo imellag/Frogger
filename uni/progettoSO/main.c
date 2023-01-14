@@ -14,15 +14,14 @@ char spriteProiettile = '^';
 
 int main()
 {
-
     srand(time(NULL));
 
     int maxx, maxy;
-    int differenza;
+    int differenza[3];
     int maxx_precedente, maxy_precedente;
-    int tempo = 40, punteggio = ZERO, vite = TRE;
+    int vite = TRE;
 
-    double diff;
+    double diff_nemico, diff_proiettile;
     int spawnNemico;
 
     bool arrayTane[NUMERO_TANE] = {false, false, false, false, false};
@@ -31,13 +30,16 @@ int main()
     int risultato;
     int gameDifficulty;
     _Bool coloreTroncoRana = false;
-    _Bool sulTronco = false;
-    time_t inizio, fine;
+    _Bool sulTronco[3] = {false, false, false};
+    time_t inizio_nemico, fine_nemico, inizio_proiettile, fine_proiettile;
 
     Oggetto ranocchio;
+    Schermo statistiche;
+    statistiche.tempo = 50;
+    statistiche.punteggio = 0;
     ranocchio.coordinate.x = ZERO;
     ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
-
+    int troncoNemico;
     initscr();
     noecho();
     curs_set(false);
@@ -102,11 +104,11 @@ int main()
     funzFiume();
     stampaRana(ranocchio.coordinate, coloreTroncoRana);
 
-    mvwprintw(stdscr, UNO, LARGHEZZA_SCHERMO / DUE - QUATTRO, "Score: %d", punteggio);
-    mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %d", tempo);
+    // mvwprintw(stdscr, UNO, LARGHEZZA_SCHERMO / DUE - QUATTRO, "Score: %d", punteggio);
+    // mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %d", tempo);
     refresh();
 
-    pid_t pidRana, pidMacchine[CINQUE], pidTronchi[TRE], pidNemici, pidProiettile, pidCamion[TRE], schermo;
+    pid_t pidRana, pidMacchine[CINQUE], pidTronchi[TRE], pidNemici, pidProiettile, pidCamion[TRE], pidSchermo;
 
     funzRana(p, pRana);
     funzAuto(p);
@@ -147,7 +149,8 @@ int main()
     _Bool fuorischermo = false;
 
     int direzione;
-    time(&inizio);
+    time(&inizio_nemico);
+    time(&inizio_proiettile);
 
     close(p[WRITE]);
     close(pRana[READ]);
@@ -156,7 +159,7 @@ int main()
     {
 
         read(p[READ], &pacchetto, sizeof(Oggetto));
-        read(pOrologio[READ], &tempo, sizeof(int));
+        read(pOrologio[READ], &statistiche, sizeof(Schermo));
         switch (pacchetto.id)
         {
         case RANA:
@@ -168,7 +171,9 @@ int main()
             fuorischermo = false;
             break;
         case PROIETTILE_OUT:
-            fuorischermo = true;
+            //   fuorischermo = true;
+            proiettilino.coordinate.x = -20;
+            proiettilino.coordinate.y = -20;
             break;
 
         case TRONCO0:
@@ -221,7 +226,7 @@ int main()
         if (maxx != maxx_precedente || maxy != maxy_precedente)
             clear();
 
-         risultato = controlloLimiti(ranocchio.coordinate, RANA);
+        risultato = controlloLimiti(ranocchio.coordinate, RANA);
 
         // controllo se la rana è entrata nelle tane allora la porto alla posizione iniziale e aggiorno il punteggio
         if (risultato < SEI && risultato >= UNO)
@@ -230,7 +235,7 @@ int main()
             {
                 arrayTane[risultato - 1] = true;
                 ranocchio = posizioneInizialeRana(pRana, ranocchio);
-                punteggio += 2000;
+                statistiche.punteggio += 2000;
             }
         }
 
@@ -244,12 +249,18 @@ int main()
         funzTane(arrayTane);
 
         coloreTroncoRana = false;
-        time(&fine);
-        if ((diff = difftime(fine, inizio)) >= 10){
-            nemico[rand() % 3] = true;
-            time(&inizio);
+        time(&fine_nemico);
+        time(&fine_proiettile);
+        if ((diff_nemico = difftime(fine_nemico, inizio_nemico)) >= 5)
+        {
+            do
+            {
+                troncoNemico = rand() % 3;
+
+            } while (tronchino[troncoNemico].coordinate.y==ranocchio.coordinate.y);
+            nemico[troncoNemico] = true;
+            time(&inizio_nemico);
         }
-    
 
         // ciclo per assegnare i pid agli oggetti e successivamente controllo le collisioni
         // con le varia macchine o se la rana è presente sul tronco
@@ -258,14 +269,26 @@ int main()
             if (i < 3)
             {
 
-                if(controlloCollisioneOggetti(tronchino[i],proiettilino.coordinate,LARGHEZZA_TRONCHI) && nemico[i]==true){
-                nemico[i]=false;
-                kill(proiettilino.pid,SIGKILL);
-                fuorischermo=true;
+                if (proiettilino.coordinate.x >= tronchino[i].coordinate.x &&
+                    proiettilino.coordinate.x <= tronchino[i].coordinate.x + LARGHEZZA_TRONCHI && proiettilino.coordinate.y == tronchino[i].coordinate.y + 2 && nemico[i] == true)
+                {
+
+                    nemico[i] = false;
+                    kill(proiettilino.pid, SIGKILL);
+                    fuorischermo = true;
+                    proiettilino.coordinate.x = -CINQUE;
                 }
                 if (nemico[i])
                 {
                     stampaNemico(tronchino[i].coordinate);
+
+                    time(&fine_proiettile);
+                    if ((diff_proiettile = difftime(fine_proiettile, inizio_proiettile)) >= 5)
+                    {
+
+                        time(&inizio_proiettile);
+                        //  funzProiettileNemico(tronchino[i].coordinate, p);
+                    }
                 }
                 else
                     // stampo i 3 tronchi
@@ -284,20 +307,27 @@ int main()
                 // controllo se la rana è salita sul tronco
                 if (tronchino[i].coordinate.x <= ranocchio.coordinate.x && (tronchino[i].coordinate.x + LARGHEZZA_TRONCHI) >= ranocchio.coordinate.x && ranocchio.coordinate.y == tronchino[i].coordinate.y)
                 {
-
-                    // appena salita la rana mi calcolo la differenza tra l'inizio del tronco e la posizione della rana
-                    // così facendo la rana salirà sul tronco nel punto esatto
-                    if (!sulTronco)
+                    if (nemico[i])
                     {
-
-                        differenza = ranocchio.coordinate.x - tronchino[i].coordinate.x;
-                        sulTronco = true;
+                        vite--;
+                        ranocchio = posizioneInizialeRana(pRana, ranocchio);
                     }
-                    ranocchio.coordinate.x = tronchino[i].coordinate.x + differenza;
-                    coloreTroncoRana = true;
+                    else
+                    {
+                        // appena salita la rana mi calcolo la differenza tra l'inizio del tronco e la posizione della rana
+                        // così facendo la rana salirà sul tronco nel punto esatto
+                        if (!sulTronco[i])
+                        {
 
-                    // comunico la posizione al processo rana
-                    write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
+                            differenza[i] = ranocchio.coordinate.x - tronchino[i].coordinate.x;
+                            sulTronco[i] = true;
+                        }
+                        ranocchio.coordinate.x = tronchino[i].coordinate.x + differenza[i];
+                        coloreTroncoRana = true;
+
+                        // comunico la posizione al processo rana
+                        write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
+                    }
                 }
 
                 // in questo casa la rana è sull'altezza del tronco però una x diversa dal range di esso
@@ -307,7 +337,7 @@ int main()
                 {
                     vite--;
                     ranocchio = posizioneInizialeRana(pRana, ranocchio);
-                    sulTronco = false;
+                    sulTronco[i] = false;
                 }
 
                 if (controlloCollisioneOggetti(camioncino[i], ranocchio.coordinate, LARGHEZZA_CAMION))
@@ -328,21 +358,21 @@ int main()
                 ranocchio = posizioneInizialeRana(pRana, ranocchio);
             }
         }
-
+        pidSchermo = statistiche.pid;
         stampaRana(ranocchio.coordinate, coloreTroncoRana);
 
         stampaVite(vite);
         if (!fuorischermo)
             mvwprintw(stdscr, proiettilino.coordinate.y, proiettilino.coordinate.x, "%c", spriteProiettile);
 
-        mvwprintw(stdscr, UNO, LARGHEZZA_SCHERMO / DUE - QUATTRO, "Score: %d", punteggio);
-        mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %-20d", tempo);
+        mvwprintw(stdscr, UNO, LARGHEZZA_SCHERMO / DUE - QUATTRO, "Score: %d", statistiche.punteggio);
+        mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %-20d", statistiche.tempo);
         refresh();
 
-            if (ranocchio.id == q || vite == ZERO || tempo<=0)
-            {
-                if (vite == ZERO)
-                    gameOver();
+        if (ranocchio.id == q || vite == ZERO || statistiche.tempo <= 0)
+        {
+            if (vite == ZERO)
+                gameOver();
 
             for (i = 0; i < 5; i++)
             {
@@ -354,9 +384,9 @@ int main()
 
                 kill(pidMacchine[i], SIGKILL);
             }
-
-            endwin();
             kill(pidRana, SIGKILL);
+            kill(pidSchermo, SIGKILL);
+            endwin();
 
             return EXIT_SUCCESS;
         }

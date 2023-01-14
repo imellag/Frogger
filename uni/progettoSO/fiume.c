@@ -112,3 +112,45 @@ void stampaNemico(Coordinate nemico)
 
     attroff(COLOR_PAIR(UNO));
 }
+
+void funzProiettileNemico(Coordinate tronco, int p[])
+{
+    pid_t proiettileNemico;
+
+    proiettileNemico = fork();
+    if (proiettileNemico < 0)
+    {
+        printw("Error");
+        exit(0);
+    }
+    else if(proiettileNemico==0)
+    {
+        movimentoProiettileNemico(tronco, p);
+        exit(0);
+    }
+}
+
+void movimentoProiettileNemico(Coordinate tronco, int p[])
+{
+    Oggetto proiettile;
+    proiettile.coordinate.x = tronco.x + LARGHEZZA_TRONCHI / 2;
+    proiettile.coordinate.y = tronco.y + 2;
+    proiettile.id=PROIETTILE;
+    proiettile.pid = getpid();
+    close(p[READ]);
+    while (true)
+    {
+
+        /*if (controlloLimiti(proiettile.coordinate, PROIETTILE))
+        {
+            proiettile.id = PROIETTILE_OUT;
+            write(p[WRITE], &proiettile, sizeof(Oggetto));
+            break;
+        }*/
+
+        write(p[WRITE], &proiettile, sizeof(Oggetto));
+        proiettile.coordinate.y++;
+        usleep(40000);
+    }
+}
+
