@@ -113,10 +113,10 @@ void stampaNemico(Coordinate nemico)
     attroff(COLOR_PAIR(UNO));
 }
 
-void funzProiettileNemico(Coordinate tronco, int p[])
+void funzProiettileNemico(Coordinate tronco, int p[],int i)
 {
     pid_t proiettileNemico;
-
+    
     proiettileNemico = fork();
     if (proiettileNemico < 0)
     {
@@ -125,28 +125,29 @@ void funzProiettileNemico(Coordinate tronco, int p[])
     }
     else if(proiettileNemico==0)
     {
-        movimentoProiettileNemico(tronco, p);
+        movimentoProiettileNemico(tronco, p,i);
         exit(0);
     }
+   
 }
 
-void movimentoProiettileNemico(Coordinate tronco, int p[])
+void movimentoProiettileNemico(Coordinate tronco, int p[],int i)
 {
     Oggetto proiettile;
     proiettile.coordinate.x = tronco.x + LARGHEZZA_TRONCHI / 2;
     proiettile.coordinate.y = tronco.y + 2;
-    proiettile.id=PROIETTILE;
+    proiettile.id=PROIETTILE_NEMICO0+i;
     proiettile.pid = getpid();
     close(p[READ]);
     while (true)
     {
 
-        /*if (controlloLimiti(proiettile.coordinate, PROIETTILE))
+        if (proiettile.coordinate.y>=ALTEZZA_SCHERMO)
         {
-            proiettile.id = PROIETTILE_OUT;
+            proiettile.id = PROIETTILE_NEMICO0_OUT+i;
             write(p[WRITE], &proiettile, sizeof(Oggetto));
             break;
-        }*/
+        }
 
         write(p[WRITE], &proiettile, sizeof(Oggetto));
         proiettile.coordinate.y++;

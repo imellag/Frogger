@@ -10,7 +10,7 @@ void funzTronco(int p[2],int numeroTronco,int velocita,int pRana[]);
 void stampaTronco(Coordinate tronco);
 void stampaNemico(Coordinate nemico);
 
-void funzProiettileNemico(Coordinate tronco,int p[]);
-void movimentoProiettileNemico(Coordinate tronco, int p[]);
+void funzProiettileNemico(Coordinate tronco,int p[],int i);
+void movimentoProiettileNemico(Coordinate tronco, int p[],int i);
 
 
