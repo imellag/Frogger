@@ -120,7 +120,7 @@ void movimentoMacchina(int p[DUE], int numeroMacchina, int velocita[])
 
     int velocitaRandom = MIN_TEMPO_MACCHINA + rand() % (MAX_TEMPO_MACCHINA - MIN_TEMPO_MACCHINA);
     srand(getpid());
-    int tempoRandom=20000 + rand()%(100000-500000);
+    int tempoRandom = 20000 + rand() % (3000000 - 1000000);
     usleep(tempoRandom);
 
     if (velocita[numeroMacchina] < 0)
@@ -137,7 +137,7 @@ void movimentoMacchina(int p[DUE], int numeroMacchina, int velocita[])
     while (true)
     {
         write(p[WRITE], &macchina[numeroMacchina], sizeof(Oggetto));
-        // macchina[numeroMacchina].coordinate.x += macchina[numeroMacchina].velocita;
+
         if (velocita[numeroMacchina] < 0)
             macchina[numeroMacchina].coordinate.x--;
         else
@@ -158,14 +158,14 @@ void movimentoCamion(int p[DUE], int numeroCamion, int velocita[])
     int tempoRandom;
     int velocitaRandom = MIN_TEMPO_CAMION + rand() % (MAX_TEMPO_CAMION - MIN_TEMPO_CAMION);
     srand(getpid());
-    tempoRandom=1000000 + rand()%(1000000-200000),
-    usleep( tempoRandom);
+    tempoRandom = 1000000 + rand() % (1000000 - 200000),
+    usleep(tempoRandom);
 
     if (velocita[numeroCamion] < 0)
         camion[numeroCamion].coordinate.x = LARGHEZZA_SCHERMO - LARGHEZZA_CAMION;
     else
-
         camion[numeroCamion].coordinate.x = 0;
+
     camion[numeroCamion].coordinate.y = 20 + (numeroCamion % 3) * 3;
     camion[numeroCamion].id = CAMION0 + numeroCamion;
     camion[numeroCamion].velocita = velocita[numeroCamion];
@@ -175,7 +175,7 @@ void movimentoCamion(int p[DUE], int numeroCamion, int velocita[])
     while (true)
     {
         write(p[WRITE], &camion[numeroCamion], sizeof(Oggetto));
-        // camion[numeroCamion].coordinate.x += camion[numeroCamion].velocita;
+
         if (velocita[numeroCamion] < 0)
             camion[numeroCamion].coordinate.x--;
         else
@@ -263,49 +263,3 @@ void stampaCamion(Oggetto camion)
 
     attroff(COLOR_PAIR(DIECI));
 }
-
-/*Oggetto cambioCorsia(int velocita[], int numeroMacchina, int veicolo)
-{
-
-    Oggetto macchina;
-    int corsiaCasuale;
-
-    macchina.coordinate.y = 20 + corsiaCasuale * 3;
-
-    // controllo corsia non occupata
-
-    corsiaCasuale = rand() % 3;
-
-    // corsiaCasuale = rand() % 3;
-    macchina.coordinate.y = 20 + corsiaCasuale * 3;
-
-    macchina.velocita = velocita[corsiaCasuale];
-
-    macchina.pid = getpid();
-
-    if (veicolo == MACCHINA0)
-    {
-
-        if (velocita[corsiaCasuale] < 0)
-            macchina.coordinate.x = LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA;
-        else
-            macchina.coordinate.x = ZERO;
-
-        macchina.id = MACCHINA0 + numeroMacchina;
-    }
-    else
-    {
-
-        if (velocita[corsiaCasuale] < 0)
-            macchina.coordinate.x = LARGHEZZA_SCHERMO - LARGHEZZA_CAMION;
-        else
-            macchina.coordinate.x = ZERO;
-
-        macchina.id = CAMION0 + numeroMacchina;
-    }
-
-    usleep(10000);
-    return macchina;
-}
-
-*/
