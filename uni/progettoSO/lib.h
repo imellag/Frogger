@@ -134,6 +134,7 @@ typedef struct
     pid_t pid;
 } Oggetto;
 
+// struttura delle statistiche presenti sullo schermo
 typedef struct
 {
     int id;

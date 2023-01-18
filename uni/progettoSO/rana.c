@@ -13,7 +13,7 @@ void funzRana(int p[], int pRana[])
     if (pidRana < ZERO)
     {
         printw("Error");
-        exit(-1);
+        exit(-UNO);
     }
     else if (pidRana == ZERO)
     {
@@ -37,10 +37,11 @@ void movimentoRana(int p[], int pRana[])
     close(pRana[WRITE]);
     _Bool move;
     time(&inizio);
+
     while (true)
     {
 
-        timeout(1);
+        timeout(UNO);
         inputMovimento = getch();
         read(pRana[READ], &rana, sizeof(Oggetto));
         move = true;
@@ -76,19 +77,19 @@ void movimentoRana(int p[], int pRana[])
             move = false;
 
             time(&fine);
-            if (difftime(fine, inizio) > 1 )
+            if (difftime(fine, inizio) > UNO )
             {
                 time(&inizio);
                 pidProiettile = fork();
                 if (pidProiettile < ZERO)
                 {
                     perror("error");
-                    exit(1);
+                    exit(UNO);
                 }
                 else if (pidProiettile == ZERO)
                 {
                     funzProiettile(rana, p);
-                    exit(0);
+                    exit(ZERO);
                 }
             }
             break;
@@ -112,6 +113,9 @@ void funzProiettile(Oggetto rana, int p[DUE])
     proiettile.coordinate.x = rana.coordinate.x + DUE;
     proiettile.coordinate.y = rana.coordinate.y - UNO;
     proiettile.pid = getpid();
+
+    // close(p[READ]);
+
     while (true)
     {
         if (controlloLimiti(proiettile.coordinate, PROIETTILE))

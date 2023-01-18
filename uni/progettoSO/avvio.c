@@ -22,11 +22,11 @@ int menuIniziale() {
     attron(COLOR_PAIR(UNO));
 
     // stampa nome con scritta di caricamento
-    stampaFrogger(LARGHEZZA_SCHERMO / 2 - 23, 10);
+    stampaFrogger(LARGHEZZA_SCHERMO / DUE - 23, 10);
 
     mvprintw(25, 63, "Caricamento");
 
-    for (i = 0; i < 3; i++) {
+    for (i = ZERO; i < TRE; i++) {
         refresh();
         usleep(500000);
         mvprintw(25, 74+i, ".");
@@ -58,7 +58,7 @@ int menuIniziale() {
     attroff(COLOR_PAIR(DUE));
     attron(COLOR_PAIR(UNO));
 
-    stampaFrogger(LARGHEZZA_SCHERMO / 2 - 23, 5);
+    stampaFrogger(LARGHEZZA_SCHERMO / DUE - 23, CINQUE);
 
     attroff(COLOR_PAIR(UNO));
 
@@ -80,7 +80,7 @@ int menuIniziale() {
                     
                     if (event.x > 50 && event.x < 90 && event.y > 29 && event.y < 34){ // USCITA
                         clear();
-                        mvprintw(ALTEZZA_SCHERMO/2, LARGHEZZA_SCHERMO/2-7, "Uscita in corso");
+                        mvprintw(ALTEZZA_SCHERMO/DUE, LARGHEZZA_SCHERMO/DUE-SETTE, "Uscita in corso");
                         refresh();
                         // sleep(1);
                         endwin();
@@ -99,7 +99,7 @@ int menuIniziale() {
                         attroff(COLOR_PAIR(DUE));
                         attron(COLOR_PAIR(UNO));
 
-                        stampaFrogger(LARGHEZZA_SCHERMO / 2 - 23, 5);
+                        stampaFrogger(LARGHEZZA_SCHERMO / DUE - 23, CINQUE);
 
                         attroff(COLOR_PAIR(UNO));
 
@@ -135,18 +135,18 @@ int menuIniziale() {
 void stampaRettangoli() {
     int i, j;
 
-    for (i = 0; i < 5; i++) {
-        for (j = 0; j < 36; j++) {
+    for (i = ZERO; i < CINQUE; i++) {
+        for (j = ZERO; j < 36; j++) {
             mvprintw(15+i, 52+j, " ");
         }
     }
-    for (i = 0; i < 5; i++) {
-        for (j = 0; j < 36; j++) {
+    for (i = ZERO; i < CINQUE; i++) {
+        for (j = ZERO; j < 36; j++) {
             mvprintw(22+i, 52+j, " ");
         }
     }
-    for (i = 0; i < 5; i++) {
-        for (j = 0; j < 36; j++) {
+    for (i = ZERO; i < CINQUE; i++) {
+        for (j = ZERO; j < 36; j++) {
             mvprintw(29+i, 52+j, " ");
         }
     }
@@ -155,8 +155,8 @@ void stampaRettangoli() {
 void stampaFrogger(int iniziox, int inizioy) {
     int i, j;
 
-    for (i = 0; i < 5; i++) {
-        for (j = 0; j < 45; j++) {
+    for (i = ZERO; i < CINQUE; i++) {
+        for (j = ZERO; j < 45; j++) {
             mvaddch(inizioy + i, iniziox + j, frogger[i][j]);
         }
     }

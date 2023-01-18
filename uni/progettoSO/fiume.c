@@ -4,7 +4,7 @@
 #include "autostrada.h"
 
 char spriteTronchi[ALTEZZA_RANA][LARGHEZZA_TRONCHI] = {"<~~~~~~~~~~~~~>", "<~~~~~~~~~~~~~>", "<~~~~~~~~~~~~~>"};
-char spriteNemicosulTronco[ALTEZZA_NEMICO][LARGHEZZA_TRONCHI] = {"<~~~~~o\\/o~~~~>", "<~~~~~:||:~~~~>", "<~~~~~./\\.~~~~>"};
+char spriteNemicosulTronco[ALTEZZA_NEMICO][LARGHEZZA_TRONCHI] = {"<~~~~~o\\/o~~~~>", "<~~~~~:||:~~~~>", "<~~~~~^  ^~~~~>"};
 
 void funzFiume()
 {
@@ -26,22 +26,22 @@ void funzFiume()
 int funzTronchi(int p[DUE], int pRana[])
 {
     int i;
-    pid_t tronco[3];
+    pid_t tronco[TRE];
 
-    int velocita[3];
+    int velocita[TRE];
     int spostamento;
 
-    for (i = 0; i < 3; i++)
+    for (i = ZERO; i < TRE; i++)
         velocita[i] = UNO;
 
     spostamento = rand() % 2;
 
-    if (spostamento == 0)
-        spostamento = -1;
+    if (spostamento == ZERO)
+        spostamento = -UNO;
     else
-        spostamento = 1;
+        spostamento = UNO;
 
-    for (i = 0; i < 3; i++)
+    for (i = ZERO; i < TRE; i++)
     {
         tronco[i] = fork();
         if (tronco[i] < ZERO)
@@ -61,7 +61,7 @@ void funzTronco(int p[DUE], int numeroTronco, int velocita, int pRana[])
 
     srand(getpid());
 
-    tronco[numeroTronco].coordinate.y = 8 + numeroTronco * 3;
+    tronco[numeroTronco].coordinate.y = OTTO + numeroTronco * TRE;
     tronco[numeroTronco].coordinate.x = rand() % (LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI);
     tronco[numeroTronco].id = TRONCO0 + numeroTronco;
     tronco[numeroTronco].velocita = velocita;
@@ -113,35 +113,35 @@ void stampaNemico(Coordinate nemico)
     attroff(COLOR_PAIR(UNO));
 }
 
-void funzProiettileNemico(Coordinate tronco, int p[],int i)
+void funzProiettileNemico(Coordinate tronco, int p[], int i)
 {
     pid_t proiettileNemico;
     
     proiettileNemico = fork();
-    if (proiettileNemico < 0)
+    if (proiettileNemico < ZERO)
     {
         printw("Error");
-        exit(0);
+        exit(-UNO);
     }
-    else if(proiettileNemico==0)
+    else if(proiettileNemico == ZERO)
     {
-        movimentoProiettileNemico(tronco, p,i);
-        exit(0);
+        movimentoProiettileNemico(tronco, p, i);
+        exit(-UNO);
     }
-   
 }
 
-void movimentoProiettileNemico(Coordinate tronco, int p[],int i)
+void movimentoProiettileNemico(Coordinate tronco, int p[], int i)
 {
     Oggetto proiettile;
-    proiettile.coordinate.x = tronco.x + LARGHEZZA_TRONCHI / 2;
-    proiettile.coordinate.y = tronco.y + 2;
-    proiettile.id=PROIETTILE_NEMICO0+i;
+    proiettile.coordinate.x = tronco.x + LARGHEZZA_TRONCHI / DUE;
+    proiettile.coordinate.y = tronco.y + DUE;
+    proiettile.id = PROIETTILE_NEMICO0 + i;
     proiettile.pid = getpid();
-    close(p[READ]);
+    
+    // close(p[READ]);    
     while (true)
     {
-
+        
         if (proiettile.coordinate.y>=ALTEZZA_SCHERMO)
         {
             proiettile.id = PROIETTILE_NEMICO0_OUT+i;
@@ -150,8 +150,7 @@ void movimentoProiettileNemico(Coordinate tronco, int p[],int i)
         }
 
         write(p[WRITE], &proiettile, sizeof(Oggetto));
-        proiettile.coordinate.y++;
         usleep(40000);
+        proiettile.coordinate.y++;
     }
 }
-
