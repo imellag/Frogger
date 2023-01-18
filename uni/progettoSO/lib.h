@@ -8,14 +8,56 @@
 #include <fcntl.h>
 
 // enumerazione utilizzata per gli id dei vari oggetti presenti sullo schermo
-enum oggetti {RANA, PROIETTILE, PROIETTILE_OUT, TRONCO0, TRONCO1, TRONCO2, MACCHINA0, 
-MACCHINA1, MACCHINA2, MACCHINA3, MACCHINA4, CAMION0, CAMION1,CAMION2,TRONCONEMICO0,TRONCONEMICO1,TRONCONEMICO2};
+enum oggetti
+{
+    RANA,
+    PROIETTILE,
+    PROIETTILE_OUT,
+    TRONCO0,
+    TRONCO1,
+    TRONCO2,
+    MACCHINA0,
+    MACCHINA1,
+    MACCHINA2,
+    MACCHINA3,
+    MACCHINA4,
+    CAMION0,
+    CAMION1,
+    CAMION2,
+    TRONCONEMICO0,
+    TRONCONEMICO1,
+    TRONCONEMICO2,
+    PROIETTILE_NEMICO0,
+    PROIETTILE_NEMICO1,
+    PROIETTILE_NEMICO2,
+    PROIETTILE_NEMICO0_OUT,
+    PROIETTILE_NEMICO1_OUT,
+    PROIETTILE_NEMICO2_OUT
+};
 
 // serve per togliere vari magic numbers
-enum numeri {ZERO, UNO, DUE, TRE, QUATTRO, CINQUE, SEI, SETTE, OTTO, NOVE, DIECI};
+enum numeri
+{
+    ZERO,
+    UNO,
+    DUE,
+    TRE,
+    QUATTRO,
+    CINQUE,
+    SEI,
+    SETTE,
+    OTTO,
+    NOVE,
+    DIECI
+};
 
 // difficoltà di gioco disponibili
-enum gameDifficulty {EASY, MEDIUM, HARD};
+enum gameDifficulty
+{
+    EASY,
+    MEDIUM,
+    HARD
+};
 
 // input da tastiera
 #define q 113
@@ -77,15 +119,25 @@ enum gameDifficulty {EASY, MEDIUM, HARD};
 #define WRITE 1
 
 // struttura per le coordinate
-typedef struct {
+typedef struct
+{
     int x;
     int y;
 } Coordinate;
 
 // struttura degli oggetti presenti nello schermo
-typedef struct {
+typedef struct
+{
     int id;
     Coordinate coordinate;
     int velocita;
     pid_t pid;
 } Oggetto;
+
+typedef struct
+{
+    int id;
+    int tempo;
+    int punteggio;
+    pid_t pid;
+} Schermo;

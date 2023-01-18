@@ -59,30 +59,21 @@ void funzTronco(int p[DUE], int numeroTronco, int velocita, int pRana[])
     Oggetto tronco[TRE];
     Oggetto rana;
 
- 
-
-    double diff;
-    int spawnNemico;
-
     srand(getpid());
 
     tronco[numeroTronco].coordinate.y = 8 + numeroTronco * 3;
     tronco[numeroTronco].coordinate.x = rand() % (LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI);
-
+    tronco[numeroTronco].id = TRONCO0 + numeroTronco;
     tronco[numeroTronco].velocita = velocita;
     tronco[numeroTronco].pid = getpid();
 
-    
     close(p[READ]);
 
     close(pRana[READ]);
     while (true)
     {
 
-    
-            tronco[numeroTronco].id = TRONCO0 + numeroTronco;
-            write(p[WRITE], &tronco[numeroTronco], sizeof(Oggetto));
-        
+        write(p[WRITE], &tronco[numeroTronco], sizeof(Oggetto));
 
         tronco[numeroTronco].coordinate.x += tronco[numeroTronco].velocita;
 
@@ -121,3 +112,46 @@ void stampaNemico(Coordinate nemico)
 
     attroff(COLOR_PAIR(UNO));
 }
+
+void funzProiettileNemico(Coordinate tronco, int p[],int i)
+{
+    pid_t proiettileNemico;
+    
+    proiettileNemico = fork();
+    if (proiettileNemico < 0)
+    {
+        printw("Error");
+        exit(0);
+    }
+    else if(proiettileNemico==0)
+    {
+        movimentoProiettileNemico(tronco, p,i);
+        exit(0);
+    }
+   
+}
+
+void movimentoProiettileNemico(Coordinate tronco, int p[],int i)
+{
+    Oggetto proiettile;
+    proiettile.coordinate.x = tronco.x + LARGHEZZA_TRONCHI / 2;
+    proiettile.coordinate.y = tronco.y + 2;
+    proiettile.id=PROIETTILE_NEMICO0+i;
+    proiettile.pid = getpid();
+    close(p[READ]);
+    while (true)
+    {
+
+        if (proiettile.coordinate.y>=ALTEZZA_SCHERMO)
+        {
+            proiettile.id = PROIETTILE_NEMICO0_OUT+i;
+            write(p[WRITE], &proiettile, sizeof(Oggetto));
+            break;
+        }
+
+        write(p[WRITE], &proiettile, sizeof(Oggetto));
+        proiettile.coordinate.y++;
+        usleep(40000);
+    }
+}
+
