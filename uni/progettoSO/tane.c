@@ -54,3 +54,4 @@ void stampaTane(bool arrayTane[]) {
         pos.x += LARGHEZZA_TANE;
     }
 }
+
