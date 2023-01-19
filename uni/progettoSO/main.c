@@ -283,8 +283,8 @@ int main()
             do
             {
                 troncoNemico = rand() % TRE;
-
             } while (tronchino[troncoNemico].coordinate.y == ranocchio.coordinate.y);
+
             nemico[troncoNemico] = true;
             time(&inizio_nemico);
         }
@@ -298,7 +298,8 @@ int main()
                 time(&fine_proiettile[i]);
 
                 if (proiettilino.coordinate.x >= tronchino[i].coordinate.x &&
-                    proiettilino.coordinate.x <= tronchino[i].coordinate.x + LARGHEZZA_TRONCHI && proiettilino.coordinate.y == tronchino[i].coordinate.y + 2 && nemico[i] == true)
+                    proiettilino.coordinate.x <= tronchino[i].coordinate.x + LARGHEZZA_TRONCHI && 
+                    proiettilino.coordinate.y == tronchino[i].coordinate.y + 2 && nemico[i] == true)
                 {
                     nemico[i] = false;
                     kill(proiettilino.pid, SIGKILL);
@@ -333,7 +334,9 @@ int main()
                 pidCamion[i] = camioncino[i].pid;
 
                 // controllo se la rana è salita sul tronco
-                if (tronchino[i].coordinate.x <= ranocchio.coordinate.x && (tronchino[i].coordinate.x + LARGHEZZA_TRONCHI) >= ranocchio.coordinate.x && ranocchio.coordinate.y == tronchino[i].coordinate.y)
+                if (tronchino[i].coordinate.x <= ranocchio.coordinate.x && 
+                    (tronchino[i].coordinate.x + LARGHEZZA_TRONCHI) >= ranocchio.coordinate.x && 
+                    ranocchio.coordinate.y == tronchino[i].coordinate.y)
                 {
                     if (nemico[i])
                     {

@@ -20,6 +20,7 @@ void funzRana(int p[], int pRana[])
         movimentoRana(p, pRana);
     }
 }
+
 void movimentoRana(int p[], int pRana[])
 {
     time_t inizio, fine;
@@ -77,7 +78,7 @@ void movimentoRana(int p[], int pRana[])
             move = false;
 
             time(&fine);
-            if (difftime(fine, inizio) > UNO )
+            if (difftime(fine, inizio) > UNO)
             {
                 time(&inizio);
                 pidProiettile = fork();

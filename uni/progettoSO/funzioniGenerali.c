@@ -34,7 +34,6 @@ int controlloLimiti(Coordinate entita, int tipo)
                 flag = SEI;
         }
 
-        /* necessario? */ // si
         else if (entita.x < ZERO || entita.x >= LARGHEZZA_SCHERMO || entita.y <= SEI || entita.y >= ALTEZZA_SCHERMO - CINQUE)
         {
             flag = SEI;
@@ -123,7 +122,6 @@ int controlloPosizione(Coordinate rana, _Bool coloreRanaTronco)
 
 void funzTempo(int pOrologio[])
 {
-
     pid_t pidTempo;
 
     pidTempo = fork();
@@ -140,19 +138,18 @@ void funzTempo(int pOrologio[])
     }
 }
 
-void orologio(int pOrologio[]) {
-
+void orologio(int pOrologio[])
+{
     Schermo schermo;
-    schermo.punteggio=2000;
-    schermo.tempo=50;
-    schermo.pid=getpid();
+    schermo.punteggio = 2000;
+    schermo.tempo = 50;
+    schermo.pid = getpid();
     close(pOrologio[READ]);
     while (true)
     {
-
         write(pOrologio[WRITE], &schermo, sizeof(Schermo));
         schermo.tempo--;
-        schermo.punteggio= schermo.punteggio- DIECI;
+        schermo.punteggio = schermo.punteggio - DIECI;
         sleep(UNO);
     }
 }
@@ -164,7 +161,6 @@ Oggetto posizioneInizialeRana(int pRana[], Oggetto rana)
     rana.coordinate.y = ALTEZZA_SCHERMO - SEI;
     write(pRana[WRITE], &rana, sizeof(Oggetto));
     clear();
-    
 }
 
 bool controlloCollisioneOggetti(Oggetto entita, Coordinate rana, int LARGHEZZA_ENTITA)
@@ -178,8 +174,7 @@ bool controlloCollisioneOggetti(Oggetto entita, Coordinate rana, int LARGHEZZA_E
     else
     {
         if (entita.coordinate.x < rana.x && (entita.coordinate.x + LARGHEZZA_ENTITA) > rana.x && entita.coordinate.y == rana.y)
-          flag = true;
-        
+            flag = true;
     }
     return flag;
 }
