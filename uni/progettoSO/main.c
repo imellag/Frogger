@@ -15,31 +15,53 @@ char spriteProiettile = '^';
 int main()
 {
     srand(time(NULL));
+    pid_t pidRana, pidMacchine[CINQUE], pidTronchi[TRE],
+        pidNemici, pidProiettile, pidCamion[TRE], pidSchermo;
 
     int maxx, maxy;
     int differenza[3];
     int maxx_precedente, maxy_precedente;
     int vite = TRE;
+    int risultato;
+    int direzione;
+    int gameDifficulty;
+    int spawnNemico;
+    int troncoNemico;
 
     double diff_nemico, diff_proiettile[3];
-    int spawnNemico;
 
     bool arrayTane[NUMERO_TANE] = {false, false, false, false, false};
 
     bool nemico[3] = {false, false, false};
-    int risultato;
-    int gameDifficulty;
-    _Bool coloreTroncoRana = false;
-    _Bool sulTronco[3] = {false, false, false};
+
+    bool coloreTroncoRana = false;
+    bool sulTronco[3] = {false, false, false};
+
     time_t inizio_nemico, fine_nemico, inizio_proiettile[3], fine_proiettile[3];
+
     Oggetto proiettileNemico[3];
     Oggetto ranocchio;
+
     Schermo statistiche;
+
+    int i;
+    Oggetto pacchetto;
+    Oggetto proiettilino;
+
+    Coordinate nuoveCoordinate;
+
+    Oggetto tronchino[TRE];
+    Oggetto macchinina[CINQUE];
+    Oggetto camioncino[TRE];
+    // Oggetto nemico[TRE];
+    Coordinate vecchieNemico[TRE];
+    int j;
+
     statistiche.tempo = 50;
     statistiche.punteggio = 0;
     ranocchio.coordinate.x = ZERO;
     ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
-    int troncoNemico;
+
     initscr();
     noecho();
     curs_set(false);
@@ -104,29 +126,13 @@ int main()
     funzFiume();
     stampaRana(ranocchio.coordinate, coloreTroncoRana);
 
-    // mvwprintw(stdscr, UNO, LARGHEZZA_SCHERMO / DUE - QUATTRO, "Score: %d", punteggio);
-    // mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %d", tempo);
     refresh();
-
-    pid_t pidRana, pidMacchine[CINQUE], pidTronchi[TRE], pidNemici, pidProiettile, pidCamion[TRE], pidSchermo;
 
     funzRana(p, pRana);
     funzAuto(p);
     funzTronchi(p, pRana);
     funzTempo(pOrologio);
 
-    int i;
-    Oggetto pacchetto;
-    Oggetto proiettilino;
-
-    Coordinate nuoveCoordinate;
-
-    Oggetto tronchino[TRE];
-    Oggetto macchinina[CINQUE];
-    Oggetto camioncino[TRE];
-    // Oggetto nemico[TRE];
-    Coordinate vecchieNemico[TRE];
-    int j;
     for (i = 0; i < 5; i++)
     {
         if (i < 3)
@@ -146,12 +152,10 @@ int main()
 
     proiettilino.coordinate.x = -UNO;
     proiettilino.coordinate.y = -UNO;
-    _Bool fuorischermo = false;
 
-    int direzione;
     time(&inizio_nemico);
-    for(i=0;i<3;i++)
-    time(&inizio_proiettile[i]);
+    for (i = 0; i < 3; i++)
+        time(&inizio_proiettile[i]);
 
     close(p[WRITE]);
     close(pRana[READ]);
@@ -169,11 +173,13 @@ int main()
 
         case PROIETTILE:
             proiettilino = pacchetto;
-            fuorischermo = false;
+
             break;
 
         case PROIETTILE_NEMICO0:
             proiettileNemico[ZERO] = pacchetto;
+            printw("sium");
+            refresh();
             break;
         case PROIETTILE_NEMICO1:
             proiettileNemico[UNO] = pacchetto;
@@ -276,7 +282,7 @@ int main()
 
         coloreTroncoRana = false;
         time(&fine_nemico);
-       
+
         if ((diff_nemico = difftime(fine_nemico, inizio_nemico)) >= 5)
         {
             do
@@ -294,7 +300,7 @@ int main()
         {
             if (i < 3)
             {
-                 time(&fine_proiettile[i]);
+                time(&fine_proiettile[i]);
 
                 if (proiettilino.coordinate.x >= tronchino[i].coordinate.x &&
                     proiettilino.coordinate.x <= tronchino[i].coordinate.x + LARGHEZZA_TRONCHI && proiettilino.coordinate.y == tronchino[i].coordinate.y + 2 && nemico[i] == true)
@@ -302,7 +308,6 @@ int main()
 
                     nemico[i] = false;
                     kill(proiettilino.pid, SIGKILL);
-                    fuorischermo = true;
                     proiettilino.coordinate.x = -CINQUE;
                 }
                 if (nemico[i])
@@ -310,9 +315,8 @@ int main()
                     stampaNemico(tronchino[i].coordinate);
 
                     time(&fine_proiettile[i]);
-                    if ((diff_proiettile[i] = difftime(fine_proiettile[i], inizio_proiettile[i])) >= 5)
+                    if ((diff_proiettile[i] = difftime(fine_proiettile[i], inizio_proiettile[i])) >= 1)
                     {
-
                         time(&inizio_proiettile[i]);
                         funzProiettileNemico(tronchino[i].coordinate, p, i);
                     }
@@ -345,7 +349,6 @@ int main()
                         // così facendo la rana salirà sul tronco nel punto esatto
                         if (!sulTronco[i])
                         {
-
                             differenza[i] = ranocchio.coordinate.x - tronchino[i].coordinate.x;
                             sulTronco[i] = true;
                         }
@@ -390,8 +393,8 @@ int main()
 
         stampaVite(vite);
         mvwprintw(stdscr, proiettilino.coordinate.y, proiettilino.coordinate.x, "%c", spriteProiettile);
-        for(i=0;i<3;i++)
-        mvwprintw(stdscr, proiettileNemico[i].coordinate.y, proiettileNemico[i].coordinate.x, "%c", spriteProiettile);
+        for (i = 0; i < 3; i++)
+            mvwprintw(stdscr, proiettileNemico[i].coordinate.y, proiettileNemico[i].coordinate.x, "%c", spriteProiettile);
 
         mvwprintw(stdscr, UNO, LARGHEZZA_SCHERMO / DUE - QUATTRO, "Score: %d", statistiche.punteggio);
         mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %-20d", statistiche.tempo);
