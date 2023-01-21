@@ -19,7 +19,7 @@ int main()
         pidNemici, pidProiettile, pidCamion[TRE], pidSchermo;
 
     int maxx, maxy;
-    int differenza[3];
+    int differenza;
     int maxx_precedente, maxy_precedente;
     int vite = TRE;
     int risultato;
@@ -35,12 +35,13 @@ int main()
     bool nemico[3] = {false, false, false};
 
     bool coloreTroncoRana = false;
-    bool sulTronco[3] = {false, false, false};
+    bool sulTronco = false;
 
     time_t inizio_nemico, fine_nemico, inizio_proiettile[3], fine_proiettile[3];
 
     Oggetto proiettileNemico[3];
     Oggetto ranocchio;
+    Oggetto vecchiaRana, vecchiaRana2;
 
     Schermo statistiche;
 
@@ -169,6 +170,7 @@ int main()
         {
         case RANA:
             ranocchio = pacchetto;
+            vecchiaRana = pacchetto;
             break;
 
         case PROIETTILE:
@@ -318,7 +320,7 @@ int main()
                     if ((diff_proiettile[i] = difftime(fine_proiettile[i], inizio_proiettile[i])) >= 1)
                     {
                         time(&inizio_proiettile[i]);
-                        funzProiettileNemico(tronchino[i].coordinate, p, i);
+                       // funzProiettileNemico(tronchino[i].coordinate, p, i);
                     }
                 }
                 else
@@ -334,7 +336,11 @@ int main()
                 // mi prendo i pid dei camion per poi utilizzare questo array per
                 // killare correttamente i vari processi camion
                 pidCamion[i] = camioncino[i].pid;
-
+                if (vecchiaRana.coordinate.x != vecchiaRana2.coordinate.x || vecchiaRana.coordinate.y != vecchiaRana2.coordinate.y)
+                {
+                    vecchiaRana2 = vecchiaRana;
+                    sulTronco = false;
+                }
                 // controllo se la rana è salita sul tronco
                 if (tronchino[i].coordinate.x <= ranocchio.coordinate.x && (tronchino[i].coordinate.x + LARGHEZZA_TRONCHI) >= ranocchio.coordinate.x && ranocchio.coordinate.y == tronchino[i].coordinate.y)
                 {
@@ -345,14 +351,15 @@ int main()
                     }
                     else
                     {
+
                         // appena salita la rana mi calcolo la differenza tra l'inizio del tronco e la posizione della rana
                         // così facendo la rana salirà sul tronco nel punto esatto
-                        if (!sulTronco[i])
+                        if (!sulTronco)
                         {
-                            differenza[i] = ranocchio.coordinate.x - tronchino[i].coordinate.x;
-                            sulTronco[i] = true;
+                            differenza = ranocchio.coordinate.x - tronchino[i].coordinate.x;
+                            sulTronco = true;
                         }
-                        ranocchio.coordinate.x = tronchino[i].coordinate.x + differenza[i];
+                        ranocchio.coordinate.x = tronchino[i].coordinate.x + differenza;
                         coloreTroncoRana = true;
 
                         // comunico la posizione al processo rana
@@ -367,7 +374,7 @@ int main()
                 {
                     vite--;
                     ranocchio = posizioneInizialeRana(pRana, ranocchio);
-                    sulTronco[i] = false;
+                    sulTronco = false;
                 }
 
                 if (controlloCollisioneOggetti(camioncino[i], ranocchio.coordinate, LARGHEZZA_CAMION))
