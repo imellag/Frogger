@@ -15,59 +15,31 @@ char spriteProiettile = '^';
 int main()
 {
     srand(time(NULL));
-    pid_t pidRana, pidMacchine[CINQUE], pidTronchi[TRE],
-        pidNemici, pidProiettile, pidCamion[TRE], pidSchermo;
 
-  int i;
     int maxx, maxy;
-    int differenza;
+    int differenza[3];
     int maxx_precedente, maxy_precedente;
     int vite = TRE;
-    int risultato;
-    int direzione;
-    int gameDifficulty;
-    int spawnNemico;
-    int troncoNemico;
 
     double diff_nemico, diff_proiettile[3];
+    int spawnNemico;
 
     bool arrayTane[NUMERO_TANE] = {false, false, false, false, false};
 
     bool nemico[3] = {false, false, false};
-
-    bool coloreTroncoRana = false;
-    bool sulTronco = false;
-
-    time_t inizio_nemico, fine_nemico, inizio_proiettile, fine_proiettile;
-
+    int risultato;
+    int gameDifficulty;
+    _Bool coloreTroncoRana = false;
+    _Bool sulTronco[3] = {false, false, false};
+    time_t inizio_nemico, fine_nemico, inizio_proiettile[3], fine_proiettile[3];
     Oggetto proiettileNemico[3];
-    for(i=0;i<3;i++){
-        proiettileNemico[i].coordinate.x=0;
-        proiettileNemico[i].coordinate.y=0;
-    }
     Oggetto ranocchio;
-    Oggetto vecchiaRana, vecchiaRana2;
-
     Schermo statistiche;
-
-  
-    Oggetto pacchetto;
-    Oggetto proiettilino;
-
-    Coordinate nuoveCoordinate;
-
-    Oggetto tronchino[TRE];
-    Oggetto macchinina[CINQUE];
-    Oggetto camioncino[TRE];
-    // Oggetto nemico[TRE];
-    Coordinate vecchieNemico[TRE];
-    int j;
-
     statistiche.tempo = 50;
     statistiche.punteggio = 0;
     ranocchio.coordinate.x = ZERO;
     ranocchio.coordinate.y = ALTEZZA_SCHERMO - SEI;
-
+    int troncoNemico;
     initscr();
     noecho();
     curs_set(false);
@@ -132,13 +104,29 @@ int main()
     funzFiume();
     stampaRana(ranocchio.coordinate, coloreTroncoRana);
 
+    // mvwprintw(stdscr, UNO, LARGHEZZA_SCHERMO / DUE - QUATTRO, "Score: %d", punteggio);
+    // mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %d", tempo);
     refresh();
+
+    pid_t pidRana, pidMacchine[CINQUE], pidTronchi[TRE], pidNemici, pidProiettile, pidCamion[TRE], pidSchermo;
 
     funzRana(p, pRana);
     funzAuto(p);
     funzTronchi(p, pRana);
     funzTempo(pOrologio);
 
+    int i;
+    Oggetto pacchetto;
+    Oggetto proiettilino;
+
+    Coordinate nuoveCoordinate;
+
+    Oggetto tronchino[TRE];
+    Oggetto macchinina[CINQUE];
+    Oggetto camioncino[TRE];
+    // Oggetto nemico[TRE];
+    Coordinate vecchieNemico[TRE];
+    int j;
     for (i = 0; i < 5; i++)
     {
         if (i < 3)
@@ -158,10 +146,12 @@ int main()
 
     proiettilino.coordinate.x = -UNO;
     proiettilino.coordinate.y = -UNO;
+    _Bool fuorischermo = false;
 
+    int direzione;
     time(&inizio_nemico);
-    for (i = 0; i < 3; i++)
-        time(&inizio_proiettile);
+    for(i=0;i<3;i++)
+    time(&inizio_proiettile[i]);
 
     close(p[WRITE]);
     close(pRana[READ]);
@@ -175,12 +165,11 @@ int main()
         {
         case RANA:
             ranocchio = pacchetto;
-            vecchiaRana = pacchetto;
             break;
 
         case PROIETTILE:
             proiettilino = pacchetto;
-
+            fuorischermo = false;
             break;
 
         case PROIETTILE_NEMICO0:
@@ -194,22 +183,23 @@ int main()
             break;
 
         case PROIETTILE_NEMICO0_OUT:
-          //  proiettileNemico[ZERO].coordinate.x = -20;
-            //proiettileNemico[ZERO].coordinate.y = -20;
+            proiettileNemico[ZERO].coordinate.x = -20;
+            proiettileNemico[ZERO].coordinate.y = -20;
             break;
         case PROIETTILE_NEMICO1_OUT:
-           // proiettileNemico[UNO].coordinate.x = -20;
-         //   proiettileNemico[UNO].coordinate.y = -20;
+            proiettileNemico[UNO].coordinate.x = -20;
+            proiettileNemico[UNO].coordinate.y = -20;
 
             break;
         case PROIETTILE_NEMICO2_OUT:
-    //  proiettileNemico[DUE].coordinate.x = -20;
-        //    proiettileNemico[DUE].coordinate.y = -20;
+            proiettileNemico[DUE].coordinate.x = -20;
+            proiettileNemico[DUE].coordinate.y = -20;
+
             break;
         case PROIETTILE_OUT:
             //   fuorischermo = true;
-        //    proiettilino.coordinate.x = -20;
-          //  proiettilino.coordinate.y = -20;
+            proiettilino.coordinate.x = -20;
+            proiettilino.coordinate.y = -20;
             break;
 
         case TRONCO0:
@@ -286,7 +276,7 @@ int main()
 
         coloreTroncoRana = false;
         time(&fine_nemico);
-
+       
         if ((diff_nemico = difftime(fine_nemico, inizio_nemico)) >= 5)
         {
             do
@@ -304,7 +294,7 @@ int main()
         {
             if (i < 3)
             {
-                time(&fine_proiettile);
+                 time(&fine_proiettile[i]);
 
                 if (proiettilino.coordinate.x >= tronchino[i].coordinate.x &&
                     proiettilino.coordinate.x <= tronchino[i].coordinate.x + LARGHEZZA_TRONCHI && proiettilino.coordinate.y == tronchino[i].coordinate.y + 2 && nemico[i] == true)
@@ -312,16 +302,18 @@ int main()
 
                     nemico[i] = false;
                     kill(proiettilino.pid, SIGKILL);
+                    fuorischermo = true;
                     proiettilino.coordinate.x = -CINQUE;
                 }
                 if (nemico[i])
                 {
                     stampaNemico(tronchino[i].coordinate);
 
-                    time(&fine_proiettile);
-                    if ((diff_proiettile[i] = difftime(fine_proiettile, inizio_proiettile)) >= 1)
+                    time(&fine_proiettile[i]);
+                    if ((diff_proiettile[i] = difftime(fine_proiettile[i], inizio_proiettile[i])) >= 5)
                     {
-                        time(&inizio_proiettile);
+
+                        time(&inizio_proiettile[i]);
                         funzProiettileNemico(tronchino[i].coordinate, p, i);
                     }
                 }
@@ -338,11 +330,7 @@ int main()
                 // mi prendo i pid dei camion per poi utilizzare questo array per
                 // killare correttamente i vari processi camion
                 pidCamion[i] = camioncino[i].pid;
-                if (vecchiaRana.coordinate.x != vecchiaRana2.coordinate.x || vecchiaRana.coordinate.y != vecchiaRana2.coordinate.y)
-                {
-                    vecchiaRana2 = vecchiaRana;
-                    sulTronco = false;
-                }
+
                 // controllo se la rana è salita sul tronco
                 if (tronchino[i].coordinate.x <= ranocchio.coordinate.x && (tronchino[i].coordinate.x + LARGHEZZA_TRONCHI) >= ranocchio.coordinate.x && ranocchio.coordinate.y == tronchino[i].coordinate.y)
                 {
@@ -353,15 +341,15 @@ int main()
                     }
                     else
                     {
-
                         // appena salita la rana mi calcolo la differenza tra l'inizio del tronco e la posizione della rana
                         // così facendo la rana salirà sul tronco nel punto esatto
-                        if (!sulTronco)
+                        if (!sulTronco[i])
                         {
-                            differenza = ranocchio.coordinate.x - tronchino[i].coordinate.x;
-                            sulTronco = true;
+
+                            differenza[i] = ranocchio.coordinate.x - tronchino[i].coordinate.x;
+                            sulTronco[i] = true;
                         }
-                        ranocchio.coordinate.x = tronchino[i].coordinate.x + differenza;
+                        ranocchio.coordinate.x = tronchino[i].coordinate.x + differenza[i];
                         coloreTroncoRana = true;
 
                         // comunico la posizione al processo rana
@@ -376,7 +364,7 @@ int main()
                 {
                     vite--;
                     ranocchio = posizioneInizialeRana(pRana, ranocchio);
-                    sulTronco = false;
+                    sulTronco[i] = false;
                 }
 
                 if (controlloCollisioneOggetti(camioncino[i], ranocchio.coordinate, LARGHEZZA_CAMION))
@@ -402,10 +390,8 @@ int main()
 
         stampaVite(vite);
         mvwprintw(stdscr, proiettilino.coordinate.y, proiettilino.coordinate.x, "%c", spriteProiettile);
-       
-        for (i = 0; i < 3; i++){
-            mvprintw(proiettileNemico[i].coordinate.y, proiettileNemico[i].coordinate.x, "%c", '^');
-             printw("%d %d",proiettileNemico[i].coordinate.x,proiettileNemico[i].coordinate.y);}
+        for(i=0;i<3;i++)
+        mvwprintw(stdscr, proiettileNemico[i].coordinate.y, proiettileNemico[i].coordinate.x, "%c", spriteProiettile);
 
         mvwprintw(stdscr, UNO, LARGHEZZA_SCHERMO / DUE - QUATTRO, "Score: %d", statistiche.punteggio);
         mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %-20d", statistiche.tempo);

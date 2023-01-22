@@ -58,10 +58,8 @@ void funzTronco(int p[DUE], int numeroTronco, int velocita, int pRana[])
 {
     Oggetto tronco[TRE];
     Oggetto rana;
-    
-    srand(getpid());
 
-    int tempoRandom= TEMPO_TRONCO_MIN +rand()%(TEMPO_TRONCO_MIN+TEMPO_TRONCO_MAX);
+    srand(getpid());
 
     tronco[numeroTronco].coordinate.y = 8 + numeroTronco * 3;
     tronco[numeroTronco].coordinate.x = rand() % (LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI);
@@ -81,7 +79,7 @@ void funzTronco(int p[DUE], int numeroTronco, int velocita, int pRana[])
 
         if (controlloLimiti(tronco[numeroTronco].coordinate, TRONCO0))
             tronco[numeroTronco].velocita = tronco[numeroTronco].velocita * -UNO;
-        usleep(tempoRandom);
+        usleep(40000);
     }
 }
 

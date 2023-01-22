@@ -42,9 +42,9 @@ void gameOver()
 {
 
     clear();
-    mvprintw(ALTEZZA_SCHERMO / 2, LARGHEZZA_SCHERMO / 2, "Hai perso!");
+    mvprintw(ALTEZZA_SCHERMO / DUE, LARGHEZZA_SCHERMO / DUE, "Hai perso!");
     refresh();
-    sleep(2);
+    sleep(DUE);
 
     getch();
 }

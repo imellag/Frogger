@@ -6,7 +6,7 @@ char spriteTana[TRE][LARGHEZZA_TANE] = {"     _____     ", "    /     \\    ", "
 void funzTane(bool arrayTane[]) {
     int i, j;
 
-    attron(COLOR_PAIR(2));
+    attron(COLOR_PAIR(DUE));
 
     for(i = ZERO; i < ALTEZZA_TANE; i++){
         for(j = ZERO; j < LARGHEZZA_SCHERMO; j++){
@@ -16,7 +16,7 @@ void funzTane(bool arrayTane[]) {
 
     stampaTane(arrayTane);
 
-    attroff(COLOR_PAIR(2));
+    attroff(COLOR_PAIR(DUE));
 }
 
 void stampaTane(bool arrayTane[]) {
@@ -25,32 +25,33 @@ void stampaTane(bool arrayTane[]) {
     pos.x = ZERO;
     pos.y = INIZIO_TANE;
 
-    for (i = 0; i < 5; i++) {
+    for (i = ZERO; i < CINQUE; i++) {
         if (arrayTane[i] == false) { // tana ancora aperta
-            for (j = 0; j < ALTEZZA_TANE; j++) {
-                for (k = 0; k < LARGHEZZA_TANE; k++) {
+            for (j = ZERO; j < ALTEZZA_TANE; j++) {
+                for (k = ZERO; k < LARGHEZZA_TANE; k++) {
                     mvaddch(pos.y + j, pos.x + k, spriteTana[j][k]);
                 }
             }
         }
         else {
-            for (k = 0; k < LARGHEZZA_TANE; k++) {
+            for (k = ZERO; k < LARGHEZZA_TANE; k++) {
                 mvaddch(pos.y+ALTEZZA_TANE-UNO, pos.x + k, '_');
             }
         }
         
         pos.x += LARGHEZZA_TANE;
 
-        if (i != 4) {
-            for (k = 0; k < 15; k++) {
+        if (i != QUATTRO) {
+            for (k = ZERO; k < 15; k++) {
                 mvaddch(INIZIO_TANE+ALTEZZA_TANE-UNO, pos.x + k, '_');
             }
         }
         else {
-            for (k = 0; k < 5; k++) {
+            for (k = ZERO; k < CINQUE; k++) {
                 mvaddch(INIZIO_TANE+ALTEZZA_TANE-UNO, pos.x + k, '_');
             }
         }
         pos.x += LARGHEZZA_TANE;
     }
 }
+

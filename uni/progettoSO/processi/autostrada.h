@@ -9,7 +9,7 @@ void funzAutostrada();
 // crea per ogni macchina unn processo
 void funzAuto(int p[]);
 
-void funzCamion(int p[2], int velocitaCorsie[],int spostamento);
+void funzCamion(int p[], int velocitaCorsie[],int spostamento);
 
 // gestisce il movimento della macchina che successivamente viene inviato al main
 void movimentoMacchina(int p[], int numeroMacchina, int velocita[]);
