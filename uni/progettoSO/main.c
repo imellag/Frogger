@@ -18,6 +18,7 @@ int main()
     pid_t pidRana, pidMacchine[CINQUE], pidTronchi[TRE],
         pidNemici, pidProiettile, pidCamion[TRE], pidSchermo;
 
+  int i;
     int maxx, maxy;
     int differenza;
     int maxx_precedente, maxy_precedente;
@@ -37,15 +38,19 @@ int main()
     bool coloreTroncoRana = false;
     bool sulTronco = false;
 
-    time_t inizio_nemico, fine_nemico, inizio_proiettile[3], fine_proiettile[3];
+    time_t inizio_nemico, fine_nemico, inizio_proiettile, fine_proiettile;
 
     Oggetto proiettileNemico[3];
+    for(i=0;i<3;i++){
+        proiettileNemico[i].coordinate.x=0;
+        proiettileNemico[i].coordinate.y=0;
+    }
     Oggetto ranocchio;
     Oggetto vecchiaRana, vecchiaRana2;
 
     Schermo statistiche;
 
-    int i;
+  
     Oggetto pacchetto;
     Oggetto proiettilino;
 
@@ -156,7 +161,7 @@ int main()
 
     time(&inizio_nemico);
     for (i = 0; i < 3; i++)
-        time(&inizio_proiettile[i]);
+        time(&inizio_proiettile);
 
     close(p[WRITE]);
     close(pRana[READ]);
@@ -180,8 +185,6 @@ int main()
 
         case PROIETTILE_NEMICO0:
             proiettileNemico[ZERO] = pacchetto;
-            printw("sium");
-            refresh();
             break;
         case PROIETTILE_NEMICO1:
             proiettileNemico[UNO] = pacchetto;
@@ -191,23 +194,22 @@ int main()
             break;
 
         case PROIETTILE_NEMICO0_OUT:
-            proiettileNemico[ZERO].coordinate.x = -20;
-            proiettileNemico[ZERO].coordinate.y = -20;
+          //  proiettileNemico[ZERO].coordinate.x = -20;
+            //proiettileNemico[ZERO].coordinate.y = -20;
             break;
         case PROIETTILE_NEMICO1_OUT:
-            proiettileNemico[UNO].coordinate.x = -20;
-            proiettileNemico[UNO].coordinate.y = -20;
+           // proiettileNemico[UNO].coordinate.x = -20;
+         //   proiettileNemico[UNO].coordinate.y = -20;
 
             break;
         case PROIETTILE_NEMICO2_OUT:
-            proiettileNemico[DUE].coordinate.x = -20;
-            proiettileNemico[DUE].coordinate.y = -20;
-
+    //  proiettileNemico[DUE].coordinate.x = -20;
+        //    proiettileNemico[DUE].coordinate.y = -20;
             break;
         case PROIETTILE_OUT:
             //   fuorischermo = true;
-            proiettilino.coordinate.x = -20;
-            proiettilino.coordinate.y = -20;
+        //    proiettilino.coordinate.x = -20;
+          //  proiettilino.coordinate.y = -20;
             break;
 
         case TRONCO0:
@@ -302,7 +304,7 @@ int main()
         {
             if (i < 3)
             {
-                time(&fine_proiettile[i]);
+                time(&fine_proiettile);
 
                 if (proiettilino.coordinate.x >= tronchino[i].coordinate.x &&
                     proiettilino.coordinate.x <= tronchino[i].coordinate.x + LARGHEZZA_TRONCHI && proiettilino.coordinate.y == tronchino[i].coordinate.y + 2 && nemico[i] == true)
@@ -316,11 +318,11 @@ int main()
                 {
                     stampaNemico(tronchino[i].coordinate);
 
-                    time(&fine_proiettile[i]);
-                    if ((diff_proiettile[i] = difftime(fine_proiettile[i], inizio_proiettile[i])) >= 1)
+                    time(&fine_proiettile);
+                    if ((diff_proiettile[i] = difftime(fine_proiettile, inizio_proiettile)) >= 1)
                     {
-                        time(&inizio_proiettile[i]);
-                       // funzProiettileNemico(tronchino[i].coordinate, p, i);
+                        time(&inizio_proiettile);
+                        funzProiettileNemico(tronchino[i].coordinate, p, i);
                     }
                 }
                 else
@@ -400,8 +402,10 @@ int main()
 
         stampaVite(vite);
         mvwprintw(stdscr, proiettilino.coordinate.y, proiettilino.coordinate.x, "%c", spriteProiettile);
-        for (i = 0; i < 3; i++)
-            mvwprintw(stdscr, proiettileNemico[i].coordinate.y, proiettileNemico[i].coordinate.x, "%c", spriteProiettile);
+       
+        for (i = 0; i < 3; i++){
+            mvprintw(proiettileNemico[i].coordinate.y, proiettileNemico[i].coordinate.x, "%c", '^');
+             printw("%d %d",proiettileNemico[i].coordinate.x,proiettileNemico[i].coordinate.y);}
 
         mvwprintw(stdscr, UNO, LARGHEZZA_SCHERMO / DUE - QUATTRO, "Score: %d", statistiche.punteggio);
         mvwprintw(stdscr, ALTEZZA_SCHERMO - DUE, LARGHEZZA_SCHERMO / DUE - NOVE, "Tempo rimanente: %-20d", statistiche.tempo);
