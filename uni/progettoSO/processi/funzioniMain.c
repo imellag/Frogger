@@ -28,46 +28,46 @@ void dimensioneFinestra(int maxx, int maxy)
     refresh();
 }
 
-void stampaVite(int vite)
+void stampaVite(WINDOW *finestraGioco, int vite)
 {
     Coordinate vita;
     vita.x = LARGHEZZA_SCHERMO - TRE;
-    vita.y = ALTEZZA_SCHERMO - DUE;
+    vita.y = DUE;
     /* inizio a stamparle da in basso a destra, poi mi sposto
     verso sinistra */
     init_pair(OTTO, COLOR_RED, COLOR_BLACK);
-    attron(COLOR_PAIR(OTTO));
+    wattron(finestraGioco, COLOR_PAIR(OTTO));
     for (int i = ZERO; i < vite; i++)
     {
         for (int j = ZERO; j < DUE; j++)
-            mvprintw(vita.y, vita.x + j, "%c", spriteCuore[j]);
+            mvwprintw(finestraGioco, vita.y, vita.x + j, "%c", spriteCuore[j]);
 
         vita.x -= TRE; // lascio 1 di spazio tra le varie vite
     }
-    attroff(COLOR_PAIR(OTTO));
+    wattroff(finestraGioco, COLOR_PAIR(OTTO));
 }
 
-void gameOver()
+void gameOver(WINDOW *finestraGioco)
 {
-    mvprintw(ALTEZZA_SCHERMO / DUE, LARGHEZZA_SCHERMO / DUE, "Hai perso!");
-    refresh();
+    mvwprintw(finestraGioco, ALTEZZA_SCHERMO / DUE, LARGHEZZA_SCHERMO / DUE, "Hai perso!");
+    wrefresh(finestraGioco);
     sleep(2);
 
     getch();
 }
 
-void vittoria(int punteggio)
+void vittoria(WINDOW *finestraGioco, int punteggio)
 {
-    stampaScrittaFinale(LARGHEZZA_SCHERMO / DUE - LARGHEZZA_SPRITE_FINE / DUE, CINQUE);
-    mvprintw(13, LARGHEZZA_SCHERMO / DUE - DIECI, "Punteggio finale: %d!", punteggio);
+    stampaScrittaFinale(finestraGioco, LARGHEZZA_SCHERMO / DUE - LARGHEZZA_SPRITE_FINE / DUE, CINQUE);
+    mvwprintw(finestraGioco, 13, LARGHEZZA_SCHERMO / DUE - DIECI, "Punteggio finale: %d!", punteggio);
 
-    refresh();
+    wrefresh(finestraGioco);
     sleep(2);
 
     getch();
 }
 
-void stampaScrittaFinale(int iniziox, int inizioy)
+void stampaScrittaFinale(WINDOW *finestraGioco, int iniziox, int inizioy)
 {
     int i, j;
 
@@ -75,7 +75,7 @@ void stampaScrittaFinale(int iniziox, int inizioy)
     {
         for (j = ZERO; j < LARGHEZZA_SPRITE_FINE; j++)
         {
-            mvaddch(inizioy + i, iniziox + j, spriteVittoria[i][j]);
+            mvwaddch(finestraGioco, inizioy + i, iniziox + j, spriteVittoria[i][j]);
         }
     }
 }

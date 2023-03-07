@@ -8,11 +8,13 @@ char frogger[CINQUE][45] = {
     "|  _| |  _ <| |_| | |_| | |_| | |___|  _ <|_|",
     "|_|   |_| \\\\_\\___/ \\____|\\____|_____|_| \\_(_)"};
 
-int menuIniziale()
+Avvio menuIniziale(char *Nomeutente)
 {
-    int gameDifficulty;
+    // int gameDifficulty;
+    Avvio info;
 
     mousemask(BUTTON1_PRESSED | REPORT_MOUSE_POSITION, NULL);
+    mouseinterval(0);
 
     int i, j;
 
@@ -22,6 +24,8 @@ int menuIniziale()
 
     // stampa nome con scritta di caricamento
     stampaFrogger(LARGHEZZA_SCHERMO / 2 - 23, 10);
+
+    // printf("\033[?1003h\n"); // Makes the terminal report mouse movement events
 
     mvprintw(25, 63, "Caricamento");
 
@@ -35,9 +39,17 @@ int menuIniziale()
     attroff(COLOR_PAIR(UNO));
     attron(COLOR_PAIR(DUE));
 
+    clear();
     refresh();
     usleep(500000);
-    erase();
+
+    //  printw("Inserisci nome utente");
+    // scanw("%s", info.nome);
+    // printw("%s", info.nome);
+    refresh();
+    //   usleep(500000);
+    clear();
+    refresh();
 
     /*
     15-20   nuova partita
@@ -48,9 +60,7 @@ int menuIniziale()
     /*
     36 larghezza
     */
-
     stampaRettangoli();
-
     mvprintw(17, 58, "Inizia una nuova partita");
     mvprintw(24, 64, "Impostazioni");
     mvprintw(31, 62, "Esci dal gioco");
@@ -73,6 +83,7 @@ int menuIniziale()
             MEVENT event;
             if (getmouse(&event) == OK)
             {
+
                 if (event.bstate & BUTTON1_PRESSED)
                 { // click sinistro
 
@@ -82,6 +93,7 @@ int menuIniziale()
                     if (event.x > 50 && event.x < 90 && event.y > 29 && event.y < 34)
                     { // USCITA
                         clear();
+
                         mvprintw(ALTEZZA_SCHERMO / 2, LARGHEZZA_SCHERMO / 2 - 7, "Uscita in corso");
                         refresh();
                         // sleep(1);
@@ -114,15 +126,18 @@ int menuIniziale()
 
                             if (event.x > 50 && event.x < 90 && event.y > 15 && event.y < 20)
                             {
-                                return EASY;
+                                info.difficolta = EASY;
+                                return info;
                             }
                             else if (event.x > 50 && event.x < 90 && event.y > 22 && event.y < 27)
                             {
-                                return MEDIUM;
+                                info.difficolta = MEDIUM;
+                                return info;
                             }
                             else if (event.x > 50 && event.x < 90 && event.y > 29 && event.y < 34)
                             {
-                                return HARD;
+                                info.difficolta = HARD;
+                                return info;
                             }
                         }
                     }
@@ -134,6 +149,7 @@ int menuIniziale()
             }
         }
     }
+    // printf("\033[?1003l\n"); // Disable mouse movement events, as l = low
 
     curs_set(false);
     clear();

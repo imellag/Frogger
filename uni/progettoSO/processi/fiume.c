@@ -6,30 +6,29 @@
 char spriteTronchi[ALTEZZA_RANA][LARGHEZZA_TRONCHI] = {"<~~~~~~~~~~~~~>", "<~~~~~~~~~~~~~>", "<~~~~~~~~~~~~~>"};
 char spriteNemicosulTronco[ALTEZZA_NEMICO][LARGHEZZA_TRONCHI] = {"<~~~~~o\\/o~~~~>", "<~~~~~:||:~~~~>", "<~~~~~./\\.~~~~>"};
 
-void funzFiume()
+void funzFiume(WINDOW *finestraGioco, int gameDifficulty)
 {
     int i, j;
-    attron(COLOR_PAIR(CINQUE));
-    // alto 9
-    for (i = ZERO; i < ALTEZZA_FIUME; i++)
+    wattron(finestraGioco, COLOR_PAIR(CINQUE));
+    for (i = ZERO; i < ALTEZZA_FIUME + (gameDifficulty * 3); i++)
     {
         for (j = ZERO; j < LARGHEZZA_SCHERMO; j++)
         {
-            mvprintw(INIZIO_FIUME + i, ZERO + j, " ");
+            mvwprintw(finestraGioco, INIZIO_FIUME + i, ZERO + j, " ");
         }
     }
-    attroff(COLOR_PAIR(CINQUE));
+    wattroff(finestraGioco, COLOR_PAIR(CINQUE));
 }
 
-int funzTronchi(int p[DUE])
+int funzTronchi(int p[DUE], int gameDifficulty)
 {
     int i;
-    pid_t tronco[NUMERO_TRONCHI];
+    pid_t tronco[MAX_TRONCHI];
 
-    int velocita[NUMERO_TRONCHI];
+    int velocita[MAX_TRONCHI];
     int spostamento;
 
-    for (i = ZERO; i < NUMERO_TRONCHI; i++)
+    for (i = ZERO; i < NUMERO_TRONCHI + gameDifficulty; i++)
         velocita[i] = UNO;
 
     spostamento = rand() % DUE;
@@ -39,7 +38,7 @@ int funzTronchi(int p[DUE])
     else
         spostamento = UNO;
 
-    for (i = ZERO; i < NUMERO_TRONCHI; i++)
+    for (i = ZERO; i < NUMERO_TRONCHI + gameDifficulty; i++)
     {
         tronco[i] = fork();
         if (tronco[i] < ZERO)
@@ -48,20 +47,20 @@ int funzTronchi(int p[DUE])
         }
         else if (tronco[i] == ZERO)
         {
-            funzTronco(p, i, velocita[i] * spostamento);
+            funzTronco(p, i, velocita[i] * spostamento, gameDifficulty);
         }
     }
 }
 
-void funzTronco(int p[DUE], int numeroTronco, int velocita)
+void funzTronco(int p[DUE], int numeroTronco, int velocita, int gameDifficulty)
 {
     Oggetto tronco;
 
     srand(getpid());
 
-    int tempoRandom = TEMPO_TRONCO_MIN + rand() % (TEMPO_TRONCO_MIN + TEMPO_TRONCO_MAX);
+    int tempoRandom = TEMPO_TRONCO_MIN + rand() % (TEMPO_TRONCO_MIN + TEMPO_TRONCO_MAX) - 2500 * gameDifficulty;
 
-    tronco.coordinate.y = INIZIO_FIUME + numeroTronco * 3;
+    tronco.coordinate.y = INIZIO_FIUME + numeroTronco * ALTEZZA_TRONCHI;
     tronco.coordinate.x = rand() % (LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI);
     tronco.id = TRONCO0 + numeroTronco;
     tronco.velocita = velocita;
@@ -81,41 +80,41 @@ void funzTronco(int p[DUE], int numeroTronco, int velocita)
     }
 }
 
-void stampaTronco(Coordinate tronco)
+void stampaTronco(WINDOW *finestraGioco, Coordinate tronco)
 {
     int i, j;
 
-    attron(COLOR_PAIR(SEI));
+    wattron(finestraGioco, COLOR_PAIR(SEI));
 
-    for (i = ZERO; i < ALTEZZA_RANA; i++)
+    for (i = ZERO; i < ALTEZZA_TRONCHI; i++)
     {
         for (j = ZERO; j < LARGHEZZA_TRONCHI; j++)
-            mvaddch(tronco.y + i, tronco.x + j, spriteTronchi[i][j]);
+            mvwprintw(finestraGioco, tronco.y + i, tronco.x + j, "%c", spriteTronchi[i][j]);
     }
 
-    attroff(COLOR_PAIR(SEI));
+    wattroff(finestraGioco, COLOR_PAIR(SEI));
 }
 
-void stampaNemico(Coordinate nemico)
+void stampaNemico(WINDOW *finestraGioco, Coordinate nemico)
 {
     int i, j;
 
-    attron(COLOR_PAIR(UNO)); // ROSSO
+    wattron(finestraGioco, COLOR_PAIR(UNO)); // ROSSO
 
     for (i = ZERO; i < ALTEZZA_NEMICO; i++)
     {
         for (j = ZERO; j < LARGHEZZA_TRONCHI; j++)
-            mvaddch(nemico.y + i, nemico.x + j, spriteNemicosulTronco[i][j]);
+            mvwprintw(finestraGioco, nemico.y + i, nemico.x + j, "%c", spriteNemicosulTronco[i][j]);
     }
 
-    attroff(COLOR_PAIR(UNO));
+    wattroff(finestraGioco, COLOR_PAIR(UNO));
 }
 
-void funzProiettileNemico(Coordinate tronco, int p[], int i)
+void funzProiettileNemico(Coordinate tronco, int p[], int i, int gameDifficulty)
 {
     pid_t proiettileNemico;
 
-    // system("ffplay ../file_audio/sparo.mp3 2> /dev/null &");
+    // system("ffplay -nodisp ../file_audio/sparo.mp3 2> /dev/null &");
     proiettileNemico = fork();
     if (proiettileNemico < 0)
     {
@@ -124,12 +123,12 @@ void funzProiettileNemico(Coordinate tronco, int p[], int i)
     }
     else if (proiettileNemico == 0)
     {
-        movimentoProiettileNemico(tronco, p, i);
+        movimentoProiettileNemico(tronco, p, i, gameDifficulty);
         exit(EXIT_FAILURE);
     }
 }
 
-void movimentoProiettileNemico(Coordinate tronco, int p[], int i)
+void movimentoProiettileNemico(Coordinate tronco, int p[], int i, int gameDifficulty)
 {
     Oggetto proiettile;
     proiettile.coordinate.x = tronco.x + LARGHEZZA_TRONCHI / DUE;
@@ -139,7 +138,7 @@ void movimentoProiettileNemico(Coordinate tronco, int p[], int i)
     close(p[READ]);
     while (true)
     {
-        if (proiettile.coordinate.y > ALTEZZA_SCHERMO - QUATTRO)
+        if (proiettile.coordinate.y >= ALTEZZA_SCHERMO)
         {
             proiettile.id = PROIETTILE_NEMICO0_OUT + i;
             write(p[WRITE], &proiettile, sizeof(Oggetto));
@@ -147,7 +146,7 @@ void movimentoProiettileNemico(Coordinate tronco, int p[], int i)
         }
 
         write(p[WRITE], &proiettile, sizeof(Oggetto));
+        usleep(50000);
         proiettile.coordinate.y++;
-        usleep(60000);
     }
 }

@@ -1,0 +1,8 @@
+[
+  {
+    "name": "GCC 7.5.0 x86_64-linux-gnu",
+    "compilers": {
+      "C": "/usr/bin/c89-gcc"
+    }
+  }
+]

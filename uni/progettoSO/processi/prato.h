@@ -1,2 +1,2 @@
 // stampa il prato
-void funzPrato();
+void funzPrato(WINDOW* finestraGioco,int gameDifficulty);

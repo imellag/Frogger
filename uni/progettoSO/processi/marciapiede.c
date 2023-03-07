@@ -1,14 +1,16 @@
 #include "lib.h"
 #include "marciapiede.h"
 
-void funzMarciapiede() {
-    int i,j;
-    
-    attron( COLOR_PAIR(DUE));
+void funzMarciapiede(WINDOW *finestraGioco, int gameDifficulty)
+{
+    int i, j;
 
-    for(i = ZERO; i < ALTEZZA_MARCIAPIEDE; i++){
-        for(j = ZERO; j < LARGHEZZA_SCHERMO; j++)
-        mvprintw(INIZIO_MARCIAPIEDE + i, ZERO + j, " ");
+    wattron(finestraGioco, COLOR_PAIR(DUE));
+
+    for (i = ZERO; i < ALTEZZA_MARCIAPIEDE; i++)
+    {
+        for (j = ZERO; j < LARGHEZZA_SCHERMO; j++)
+            mvwprintw(finestraGioco, INIZIO_MARCIAPIEDE + (gameDifficulty * 6) + i, j, " ");
     }
-    attroff( COLOR_PAIR(DUE));   
+    wattroff(finestraGioco, COLOR_PAIR(DUE));
 }

@@ -1,2 +1,2 @@
 // stampa il marciapiede
-void funzMarciapiede();
+void funzMarciapiede(WINDOW* finestraGioco,int gameDifficulty);

@@ -1,15 +1,15 @@
 #include "lib.h"
 #include "prato.h"
 
-void funzPrato() {
+void funzPrato(WINDOW* finestraGioco,int gameDifficulty) {
    
     // alto 3
     int i,j;
-    attron( COLOR_PAIR(QUATTRO));
+    wattron(finestraGioco, COLOR_PAIR(QUATTRO));
     for(i = ZERO; i < ALTEZZA_PRATO; i++){
         for(j = ZERO; j < LARGHEZZA_SCHERMO; j++){
-            mvprintw(INIZIO_PRATO + i, ZERO + j, " ");
+            mvwprintw(finestraGioco, INIZIO_PRATO+(gameDifficulty*3) + i, ZERO + j, " ");
         }
     }
-    attroff(COLOR_PAIR(QUATTRO)); 
+    wattroff(finestraGioco, COLOR_PAIR(QUATTRO)); 
 }

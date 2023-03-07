@@ -1,0 +1,132 @@
+2023-03-07T15:09:35.526Z [debug] [main] Safe constructing new CMakeProject instance
+2023-03-07T15:09:35.527Z [debug] [variant] Constructing VariantManager
+2023-03-07T15:09:35.529Z [debug] [main] Constructing new CMakeProject instance
+2023-03-07T15:09:35.529Z [debug] [main] Starting CMake Tools second-phase init
+2023-03-07T15:09:35.681Z [info] [variant] Loaded new set of variants
+2023-03-07T15:09:35.693Z [debug] [kit] Not reading non-existent kits file: /home/emi/.local/share/CMakeTools/cmake-tools-kits.json
+2023-03-07T15:09:35.806Z [debug] [kit] Not reading non-existent kits file: /home/emi/.vscode/cmake-kits.json
+2023-03-07T15:09:35.903Z [debug] [main] CMakeProject instance initialization complete.
+2023-03-07T15:09:36.008Z [info] [kit] Detected kits definition version change from undefined to 2. Silently scanning for kits.
+2023-03-07T15:09:36.101Z [debug] [kitsController] Rescanning for kits
+2023-03-07T15:09:36.102Z [debug] [kit] Scanning for Kits on system
+2023-03-07T15:09:36.106Z [debug] [kit] Scanning directory /usr/local/sbin for compilers
+2023-03-07T15:09:36.106Z [debug] [kit] Scanning directory /home/emi/.vscode-server/bin/92da9481c0904c6adfe372c12da3b7748d74bdcb/bin/remote-cli for compilers
+2023-03-07T15:09:36.107Z [debug] [kit] Scanning directory /usr/local/bin for compilers
+2023-03-07T15:09:36.107Z [debug] [kit] Scanning directory /usr/sbin for compilers
+2023-03-07T15:09:36.108Z [debug] [kit] Scanning directory /usr/bin for compilers
+2023-03-07T15:09:36.108Z [debug] [kit] Scanning directory /sbin for compilers
+2023-03-07T15:09:36.109Z [debug] [kit] Scanning directory /bin for compilers
+2023-03-07T15:09:36.109Z [debug] [kit] Scanning directory /usr/games for compilers
+2023-03-07T15:09:36.116Z [debug] [kit] Scanning directory /usr/local/games for compilers
+2023-03-07T15:09:36.118Z [debug] [kit] Scanning directory /usr/lib/wsl/lib for compilers
+2023-03-07T15:09:36.132Z [debug] [main] Not starting CMake driver: no kit selected
+2023-03-07T15:09:36.134Z [debug] [main] Not starting CMake driver: no kit selected
+2023-03-07T15:09:36.139Z [debug] [kit] Scanning directory /mnt/c/Windows for compilers
+2023-03-07T15:09:36.140Z [debug] [kit] Scanning directory /mnt/c/Windows/system32 for compilers
+2023-03-07T15:09:36.140Z [debug] [kit] Scanning directory /mnt/c/Windows/System32/Wbem for compilers
+2023-03-07T15:09:36.140Z [debug] [kit] Scanning directory /mnt/c/Windows/System32/OpenSSH/ for compilers
+2023-03-07T15:09:36.141Z [debug] [kit] Scanning directory /mnt/c/Windows/System32/WindowsPowerShell/v1.0/ for compilers
+2023-03-07T15:09:36.141Z [debug] [kit] Scanning directory /mnt/c/Program Files (x86)/Common Files/Oracle/Java/javapath for compilers
+2023-03-07T15:09:36.142Z [debug] [kit] Scanning directory /mnt/c/WINDOWS/system32 for compilers
+2023-03-07T15:09:36.142Z [debug] [kit] Scanning directory /mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR for compilers
+2023-03-07T15:09:36.143Z [debug] [kit] Scanning directory /mnt/c/WINDOWS for compilers
+2023-03-07T15:09:36.144Z [debug] [kit] Scanning directory /mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common for compilers
+2023-03-07T15:09:36.145Z [debug] [kit] Scanning directory /mnt/c/WINDOWS/System32/OpenSSH/ for compilers
+2023-03-07T15:09:36.147Z [debug] [kit] Scanning directory /mnt/c/WINDOWS/System32/Wbem for compilers
+2023-03-07T15:09:36.147Z [debug] [kit] Scanning directory /mnt/c/Program Files/dotnet/ for compilers
+2023-03-07T15:09:36.148Z [debug] [kit] Scanning directory /mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/ for compilers
+2023-03-07T15:09:36.149Z [debug] [kit] Scanning directory /mnt/c/Users/galle/AppData/Local/Microsoft/WindowsApps for compilers
+2023-03-07T15:09:36.149Z [debug] [kit] Scanning directory /mnt/e/Python/Python310/ for compilers
+2023-03-07T15:09:36.149Z [debug] [kit] Skipping scan of not existing path /snap/bin
+2023-03-07T15:09:36.150Z [debug] [kit] Found 0 kits in directory /snap/bin
+2023-03-07T15:09:36.150Z [debug] [kit] Skipping scan of not existing path undefined\LLVM\bin
+2023-03-07T15:09:36.151Z [debug] [kit] Found 0 kits in directory undefined\LLVM\bin
+2023-03-07T15:09:36.154Z [debug] [kit] Scanning directory /mnt/c/Users/galle/AppData/Local/Programs/Microsoft VS Code/bin for compilers
+2023-03-07T15:09:36.154Z [debug] [kit] Scanning directory /mnt/e/Python/Python310/Scripts/ for compilers
+2023-03-07T15:09:36.155Z [debug] [kit] Scanning directory /mnt/c/Program Files/JetBrains/CLion 2021.2.3/bin for compilers
+2023-03-07T15:09:36.166Z [debug] [kit] Found 0 kits in directory /usr/local/sbin
+2023-03-07T15:09:36.167Z [debug] [kit] Found 0 kits in directory /home/emi/.vscode-server/bin/92da9481c0904c6adfe372c12da3b7748d74bdcb/bin/remote-cli
+2023-03-07T15:09:36.167Z [debug] [kit] Found 0 kits in directory /usr/local/bin
+2023-03-07T15:09:36.173Z [debug] [kit] Found 0 kits in directory /usr/sbin
+2023-03-07T15:09:36.213Z [debug] [kit] Found 0 kits in directory /sbin
+2023-03-07T15:09:36.221Z [debug] [kit] Found 0 kits in directory /bin
+2023-03-07T15:09:36.224Z [debug] [kit] Testing GCC binary: /usr/bin/c89-gcc
+2023-03-07T15:09:36.225Z [info] [proc] Executing command: /usr/bin/c89-gcc -v
+2023-03-07T15:09:36.234Z [debug] [kit] Testing GCC binary: /usr/bin/c99-gcc
+2023-03-07T15:09:36.235Z [info] [proc] Executing command: /usr/bin/c99-gcc -v
+2023-03-07T15:09:36.255Z [debug] [kit] Testing GCC binary: /usr/bin/gcc
+2023-03-07T15:09:36.256Z [info] [proc] Executing command: /usr/bin/gcc -v
+2023-03-07T15:09:36.273Z [debug] [kit] Testing GCC binary: /usr/bin/gcc-7
+2023-03-07T15:09:36.273Z [info] [proc] Executing command: /usr/bin/gcc-7 -v
+2023-03-07T15:09:36.302Z [debug] [kit] Testing GCC binary: /usr/bin/x86_64-linux-gnu-gcc
+2023-03-07T15:09:36.303Z [info] [proc] Executing command: /usr/bin/x86_64-linux-gnu-gcc -v
+2023-03-07T15:09:36.309Z [debug] [kit] Testing GCC binary: /usr/bin/x86_64-linux-gnu-gcc-7
+2023-03-07T15:09:36.309Z [info] [proc] Executing command: /usr/bin/x86_64-linux-gnu-gcc-7 -v
+2023-03-07T15:09:36.319Z [debug] [kit] Found 0 kits in directory /usr/games
+2023-03-07T15:09:36.319Z [debug] [kit] Found 0 kits in directory /usr/local/games
+2023-03-07T15:09:36.450Z [debug] [kit] Found 0 kits in directory /usr/lib/wsl/lib
+2023-03-07T15:09:36.460Z [debug] [kit] Found 0 kits in directory /mnt/c/Windows
+2023-03-07T15:09:36.460Z [debug] [kit] Found 0 kits in directory /mnt/c/Windows/System32/OpenSSH/
+2023-03-07T15:09:36.475Z [debug] [kit] Found 0 kits in directory /mnt/c/Windows/System32/Wbem
+2023-03-07T15:09:36.476Z [debug] [kit] Found 0 kits in directory /mnt/c/Windows/System32/WindowsPowerShell/v1.0/
+2023-03-07T15:09:36.482Z [debug] [kit] Found 0 kits in directory /mnt/c/WINDOWS
+2023-03-07T15:09:36.483Z [debug] [kit] Found 0 kits in directory /mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR
+2023-03-07T15:09:36.483Z [debug] [kit] Found 0 kits in directory /mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common
+2023-03-07T15:09:36.484Z [debug] [kit] Found 0 kits in directory /mnt/c/WINDOWS/System32/OpenSSH/
+2023-03-07T15:09:36.498Z [debug] [kit] Found 0 kits in directory /mnt/c/WINDOWS/System32/Wbem
+2023-03-07T15:09:36.742Z [debug] [kit] Found 0 kits in directory /mnt/c/Windows/system32
+2023-03-07T15:09:36.743Z [debug] [kit] Found 0 kits in directory /mnt/c/Program Files/dotnet/
+2023-03-07T15:09:36.743Z [debug] [kit] Found 0 kits in directory /mnt/c/Program Files (x86)/Common Files/Oracle/Java/javapath
+2023-03-07T15:09:36.744Z [debug] [kit] Found 0 kits in directory /mnt/c/Users/galle/AppData/Local/Microsoft/WindowsApps
+2023-03-07T15:09:36.900Z [debug] [kit] Found 0 kits in directory /mnt/c/WINDOWS/system32
+2023-03-07T15:09:36.901Z [debug] [kit] Found 0 kits in directory /mnt/c/Users/galle/AppData/Local/Programs/Microsoft VS Code/bin
+2023-03-07T15:09:36.901Z [debug] [kit] Found 0 kits in directory /mnt/e/Python/Python310/
+2023-03-07T15:09:36.902Z [debug] [kit] Found 0 kits in directory /mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/
+2023-03-07T15:09:36.920Z [debug] [kit] Detected GCC compiler: /usr/bin/x86_64-linux-gnu-gcc-7
+2023-03-07T15:09:36.922Z [debug] [kit] Detected GCC compiler: /usr/bin/x86_64-linux-gnu-gcc
+2023-03-07T15:09:36.923Z [debug] [kit] Detected GCC compiler: /usr/bin/gcc-7
+2023-03-07T15:09:36.924Z [debug] [kit] Detected GCC compiler: /usr/bin/gcc
+2023-03-07T15:09:36.926Z [debug] [kit] Detected GCC compiler: /usr/bin/c99-gcc
+2023-03-07T15:09:36.927Z [debug] [kit] Detected GCC compiler: /usr/bin/c89-gcc
+2023-03-07T15:09:36.928Z [debug] [kit] Found 0 kits in directory /mnt/e/Python/Python310/Scripts/
+2023-03-07T15:09:36.928Z [debug] [kit] Testing Clang binary: /mnt/c/Program Files/JetBrains/CLion 2021.2.3/bin/clang
+2023-03-07T15:09:36.929Z [info] [proc] Executing command: "/mnt/c/Program Files/JetBrains/CLion 2021.2.3/bin/clang" -v
+2023-03-07T15:09:36.944Z [warning] [proc] The command: "/mnt/c/Program Files/JetBrains/CLion 2021.2.3/bin/clang" -v failed with error: Error: spawn /mnt/c/Program Files/JetBrains/CLion 2021.2.3/bin/clang EACCES
+2023-03-07T15:09:36.946Z [debug] [kit] Testing GCC binary: /usr/bin/x86_64-linux-gnu-gcc
+2023-03-07T15:09:36.946Z [info] [proc] Executing command: /usr/bin/x86_64-linux-gnu-gcc -v
+2023-03-07T15:09:36.960Z [debug] [kit] Testing GCC binary: /usr/bin/x86_64-linux-gnu-gcc
+2023-03-07T15:09:36.961Z [info] [proc] Executing command: /usr/bin/x86_64-linux-gnu-gcc -v
+2023-03-07T15:09:36.984Z [debug] [kit] Testing GCC binary: /usr/bin/gcc
+2023-03-07T15:09:36.985Z [info] [proc] Executing command: /usr/bin/gcc -v
+2023-03-07T15:09:37.002Z [debug] [kit] Testing GCC binary: /usr/bin/gcc
+2023-03-07T15:09:37.002Z [info] [proc] Executing command: /usr/bin/gcc -v
+2023-03-07T15:09:37.010Z [debug] [kit] Testing GCC binary: /usr/bin/c99-gcc
+2023-03-07T15:09:37.010Z [info] [proc] Executing command: /usr/bin/c99-gcc -v
+2023-03-07T15:09:37.018Z [debug] [kit] Testing GCC binary: /usr/bin/c89-gcc
+2023-03-07T15:09:37.018Z [info] [proc] Executing command: /usr/bin/c89-gcc -v
+2023-03-07T15:09:37.030Z [debug] [kit] Bad Clang binary ("-v" returns -13): /mnt/c/Program Files/JetBrains/CLion 2021.2.3/bin/clang
+2023-03-07T15:09:37.030Z [debug] [kit] Found 0 kits in directory /mnt/c/Program Files/JetBrains/CLion 2021.2.3/bin
+2023-03-07T15:09:37.037Z [debug] [kit] Detected GCC compiler: /usr/bin/c89-gcc
+2023-03-07T15:09:37.038Z [debug] [kit] Detected GCC compiler: /usr/bin/c99-gcc
+2023-03-07T15:09:37.039Z [debug] [kit] Detected GCC compiler: /usr/bin/gcc
+2023-03-07T15:09:37.040Z [debug] [kit] Detected GCC compiler: /usr/bin/gcc
+2023-03-07T15:09:37.041Z [debug] [kit] Detected GCC compiler: /usr/bin/x86_64-linux-gnu-gcc
+2023-03-07T15:09:37.042Z [debug] [kit] Detected GCC compiler: /usr/bin/x86_64-linux-gnu-gcc
+2023-03-07T15:09:37.043Z [debug] [kit] Found 6 kits in directory /usr/bin
+2023-03-07T15:09:37.044Z [info] [kit] Found Kit: GCC 7.5.0 x86_64-linux-gnu
+2023-03-07T15:09:37.044Z [info] [kit] Found Kit: GCC 7.5.0 x86_64-linux-gnu
+2023-03-07T15:09:37.044Z [info] [kit] Found Kit: GCC 7.5.0 x86_64-linux-gnu
+2023-03-07T15:09:37.044Z [info] [kit] Found Kit: GCC 7.5.0 x86_64-linux-gnu
+2023-03-07T15:09:37.044Z [info] [kit] Found Kit: GCC 7.5.0 x86_64-linux-gnu
+2023-03-07T15:09:37.044Z [info] [kit] Found Kit: GCC 7.5.0 x86_64-linux-gnu
+2023-03-07T15:09:37.045Z [debug] [kitsController] Saving kits to /home/emi/.local/share/CMakeTools/cmake-tools-kits.json
+2023-03-07T15:09:37.045Z [debug] [kitsController] Saving new kits to /home/emi/.local/share/CMakeTools/cmake-tools-kits.json
+2023-03-07T15:14:12.916Z [debug] [main] Not starting CMake driver: no kit selected
+2023-03-07T15:14:14.377Z [debug] [main] Not starting CMake driver: no kit selected
+2023-03-07T15:14:29.807Z [debug] [main] Not starting CMake driver: no kit selected
+2023-03-07T15:14:46.189Z [debug] [main] Not starting CMake driver: no kit selected
+2023-03-07T15:14:47.824Z [debug] [main] Not starting CMake driver: no kit selected
+2023-03-07T15:14:52.827Z [debug] [main] Not starting CMake driver: no kit selected
+2023-03-07T15:14:57.936Z [debug] [main] Not starting CMake driver: no kit selected
+2023-03-07T15:15:24.029Z [debug] [main] Not starting CMake driver: no kit selected
+2023-03-07T15:15:42.172Z [debug] [main] Not starting CMake driver: no kit selected
