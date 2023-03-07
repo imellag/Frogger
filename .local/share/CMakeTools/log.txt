@@ -136,3 +136,4 @@
 2023-03-07T15:17:50.438Z [debug] [main] Not starting CMake driver: no kit selected
 2023-03-07T15:18:00.220Z [debug] [main] Not starting CMake driver: no kit selected
 2023-03-07T15:18:05.616Z [debug] [main] Not starting CMake driver: no kit selected
+2023-03-07T15:21:22.031Z [debug] [extension] Deactivate CMakeTools
