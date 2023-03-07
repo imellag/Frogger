@@ -33,10 +33,10 @@ int funzTronchi(int p[DUE], int gameDifficulty)
 
     spostamento = rand() % DUE;
 
-    if (spostamento == ZERO)
-        spostamento = -UNO;
+    if (spostamento == 0)
+        spostamento = -1;
     else
-        spostamento = UNO;
+        spostamento = 1;
 
     for (i = ZERO; i < NUMERO_TRONCHI + gameDifficulty; i++)
     {
@@ -126,6 +126,7 @@ void funzProiettileNemico(Coordinate tronco, int p[], int i, int gameDifficulty)
         movimentoProiettileNemico(tronco, p, i, gameDifficulty);
         exit(EXIT_FAILURE);
     }
+   
 }
 
 void movimentoProiettileNemico(Coordinate tronco, int p[], int i, int gameDifficulty)
@@ -148,5 +149,6 @@ void movimentoProiettileNemico(Coordinate tronco, int p[], int i, int gameDiffic
         write(p[WRITE], &proiettile, sizeof(Oggetto));
         usleep(50000);
         proiettile.coordinate.y++;
+        usleep(40000);
     }
 }
