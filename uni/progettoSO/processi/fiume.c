@@ -4,14 +4,12 @@
 #include "autostrada.h"
 
 char spriteTronchi[ALTEZZA_RANA][LARGHEZZA_TRONCHI] = {"<~~~~~~~~~~~~~>", "<~~~~~~~~~~~~~>", "<~~~~~~~~~~~~~>"};
-char spriteNemicosulTronco[ALTEZZA_NEMICO][LARGHEZZA_TRONCHI] = {"<~~~~~o\\/o~~~~>", "<~~~~~:||:~~~~>", "<~~~~~^  ^~~~~>"};
+char spriteNemicosulTronco[ALTEZZA_NEMICO][LARGHEZZA_TRONCHI] = {"<~~~~~o\\/o~~~~>", "<~~~~~:||:~~~~>", "<~~~~~./\\.~~~~>"};
 
 void funzFiume()
 {
     int i, j;
     attron(COLOR_PAIR(CINQUE));
-    int ondina = '~';
-    int random;
     // alto 9
     for (i = ZERO; i < ALTEZZA_FIUME; i++)
     {
@@ -23,25 +21,25 @@ void funzFiume()
     attroff(COLOR_PAIR(CINQUE));
 }
 
-int funzTronchi(int p[DUE], int pRana[])
+int funzTronchi(int p[DUE])
 {
     int i;
-    pid_t tronco[TRE];
+    pid_t tronco[NUMERO_TRONCHI];
 
-    int velocita[TRE];
+    int velocita[NUMERO_TRONCHI];
     int spostamento;
 
-    for (i = ZERO; i < TRE; i++)
+    for (i = ZERO; i < NUMERO_TRONCHI; i++)
         velocita[i] = UNO;
 
-    spostamento = rand() % 2;
+    spostamento = rand() % DUE;
 
     if (spostamento == ZERO)
         spostamento = -UNO;
     else
         spostamento = UNO;
 
-    for (i = ZERO; i < TRE; i++)
+    for (i = ZERO; i < NUMERO_TRONCHI; i++)
     {
         tronco[i] = fork();
         if (tronco[i] < ZERO)
@@ -50,36 +48,36 @@ int funzTronchi(int p[DUE], int pRana[])
         }
         else if (tronco[i] == ZERO)
         {
-            funzTronco(p, i, velocita[i] * spostamento, pRana);
+            funzTronco(p, i, velocita[i] * spostamento);
         }
     }
 }
-void funzTronco(int p[DUE], int numeroTronco, int velocita, int pRana[])
+
+void funzTronco(int p[DUE], int numeroTronco, int velocita)
 {
-    Oggetto tronco[TRE];
-    Oggetto rana;
+    Oggetto tronco;
 
     srand(getpid());
 
-    tronco[numeroTronco].coordinate.y = OTTO + numeroTronco * TRE;
-    tronco[numeroTronco].coordinate.x = rand() % (LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI);
-    tronco[numeroTronco].id = TRONCO0 + numeroTronco;
-    tronco[numeroTronco].velocita = velocita;
-    tronco[numeroTronco].pid = getpid();
+    int tempoRandom = TEMPO_TRONCO_MIN + rand() % (TEMPO_TRONCO_MIN + TEMPO_TRONCO_MAX);
+
+    tronco.coordinate.y = INIZIO_FIUME + numeroTronco * 3;
+    tronco.coordinate.x = rand() % (LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI);
+    tronco.id = TRONCO0 + numeroTronco;
+    tronco.velocita = velocita;
+    tronco.pid = getpid();
 
     close(p[READ]);
 
-    close(pRana[READ]);
     while (true)
     {
+        write(p[WRITE], &tronco, sizeof(Oggetto));
 
-        write(p[WRITE], &tronco[numeroTronco], sizeof(Oggetto));
+        tronco.coordinate.x += tronco.velocita;
 
-        tronco[numeroTronco].coordinate.x += tronco[numeroTronco].velocita;
-
-        if (controlloLimiti(tronco[numeroTronco].coordinate, TRONCO0))
-            tronco[numeroTronco].velocita = tronco[numeroTronco].velocita * -UNO;
-        usleep(40000);
+        if (controlloLimiti(tronco.coordinate, TRONCO0))
+            tronco.velocita = tronco.velocita * -UNO;
+        usleep(tempoRandom);
     }
 }
 
@@ -116,17 +114,18 @@ void stampaNemico(Coordinate nemico)
 void funzProiettileNemico(Coordinate tronco, int p[], int i)
 {
     pid_t proiettileNemico;
-    
+
+    // system("ffplay ../file_audio/sparo.mp3 2> /dev/null &");
     proiettileNemico = fork();
-    if (proiettileNemico < ZERO)
+    if (proiettileNemico < 0)
     {
         printw("Error");
-        exit(-UNO);
+        exit(EXIT_FAILURE);
     }
-    else if(proiettileNemico == ZERO)
+    else if (proiettileNemico == 0)
     {
         movimentoProiettileNemico(tronco, p, i);
-        exit(-UNO);
+        exit(EXIT_FAILURE);
     }
 }
 
@@ -134,23 +133,21 @@ void movimentoProiettileNemico(Coordinate tronco, int p[], int i)
 {
     Oggetto proiettile;
     proiettile.coordinate.x = tronco.x + LARGHEZZA_TRONCHI / DUE;
-    proiettile.coordinate.y = tronco.y + DUE;
+    proiettile.coordinate.y = tronco.y + UNO;
     proiettile.id = PROIETTILE_NEMICO0 + i;
     proiettile.pid = getpid();
-    
-    // close(p[READ]);    
+    close(p[READ]);
     while (true)
     {
-        
-        if (proiettile.coordinate.y>=ALTEZZA_SCHERMO)
+        if (proiettile.coordinate.y > ALTEZZA_SCHERMO - QUATTRO)
         {
-            proiettile.id = PROIETTILE_NEMICO0_OUT+i;
+            proiettile.id = PROIETTILE_NEMICO0_OUT + i;
             write(p[WRITE], &proiettile, sizeof(Oggetto));
             break;
         }
 
         write(p[WRITE], &proiettile, sizeof(Oggetto));
-        usleep(40000);
         proiettile.coordinate.y++;
+        usleep(60000);
     }
 }

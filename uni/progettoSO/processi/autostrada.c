@@ -34,16 +34,16 @@ void funzAuto(int p[DUE])
     int i;
 
     // pid delle macchine
-    pid_t macchina[CINQUE];
+    pid_t macchina[NUMERO_MACCHINE];
 
-    int velocitaCorsie[TRE];
+    int velocitaCorsie[NUMERO_CORSIE];
     // velocità di ciascuna macchina
-    int velocita[CINQUE];
+    int velocita[NUMERO_MACCHINE];
 
     // direzione della macchina(se -1 va da destra verso sinistra se 1 il contrario)
     int spostamento;
 
-    // randomizzo anche
+    // randomizzo anche la direzione
     spostamento = rand() % DUE;
 
     if (spostamento == ZERO)
@@ -52,19 +52,18 @@ void funzAuto(int p[DUE])
         spostamento = UNO;
 
     // randomizzo la velocità
-    for (i = ZERO; i < TRE; i++)
+    for (i = ZERO; i < NUMERO_CORSIE; i++)
         velocitaCorsie[i] = UNO;
-    for (i = ZERO; i < CINQUE; i++)
+    for (i = ZERO; i < NUMERO_MACCHINE; i++)
     {
-        if (!(i % TRE == ZERO))
+        if (!(i % 3 == ZERO))
             spostamento *= -UNO;
 
-        velocita[i] = velocitaCorsie[i % TRE] * spostamento;
+        velocita[i] = velocitaCorsie[i % 3] * spostamento;
     }
 
     // genero i processi macchina
-
-    for (i = ZERO; i < CINQUE; i++)
+    for (i = ZERO; i < NUMERO_MACCHINE; i++)
     {
         macchina[i] = fork();
         if (macchina[i] < ZERO)
@@ -72,7 +71,7 @@ void funzAuto(int p[DUE])
         else if (macchina[i] == ZERO)
         {
 
-            movimentoMacchina(p, i, velocita);
+            movimentoMacchina(p, i, velocita[i]);
         }
     }
 
@@ -81,26 +80,24 @@ void funzAuto(int p[DUE])
 
 void funzCamion(int p[DUE], int velocitaCorsie[], int spostamento)
 {
-
     // contatore
     int i;
 
-    // pid delle macchine
-    pid_t camion[TRE];
+    // pid dei camion
+    pid_t camion[NUMERO_CAMION];
 
-    // velocità di ciascuna macchina
-    int velocita[TRE];
+    // velocità di ciascun camion
+    int velocita[NUMERO_CAMION];
 
-    for (i = ZERO; i < TRE; i++)
+    for (i = ZERO; i < NUMERO_CAMION; i++)
     {
-        spostamento *= -UNO;
+        spostamento *= -1;
 
         velocita[i] = velocitaCorsie[i] * spostamento;
     }
 
-    // genero i processi macchina
-
-    for (i = ZERO; i < TRE; i++)
+    // genero i processi camion
+    for (i = ZERO; i < NUMERO_CAMION; i++)
     {
         camion[i] = fork();
 
@@ -109,97 +106,101 @@ void funzCamion(int p[DUE], int velocitaCorsie[], int spostamento)
         else if (camion[i] == ZERO)
         {
 
-            movimentoCamion(p, i, velocita);
+            movimentoCamion(p, i, velocita[i]);
         }
     }
 }
 
-void movimentoMacchina(int p[DUE], int numeroMacchina, int velocita[])
+void movimentoMacchina(int p[DUE], int numeroMacchina, int velocita)
 {
-    Oggetto macchina[CINQUE];
+    Oggetto macchina;
 
-    int velocitaRandom = MIN_TEMPO_MACCHINA + rand() % (MAX_TEMPO_MACCHINA - MIN_TEMPO_MACCHINA);
+    int velocitaRandom = MIN_VELOCITA_VEICOLI + rand() % (MAX_VELOCITA_VEICOLI - MIN_VELOCITA_VEICOLI);
     srand(getpid());
-    int tempoRandom = 20000 + rand() % (3000000 - 1000000);
+    int tempoRandom = (MIN_ATTESA + rand() % (MAX_ATTESA - MIN_ATTESA));
     usleep(tempoRandom);
 
-    if (velocita[numeroMacchina] < ZERO)
-        macchina[numeroMacchina].coordinate.x = LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA;
+    if (velocita < ZERO)
+        macchina.coordinate.x = LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA;
     else
+        macchina.coordinate.x = ZERO;
 
-    macchina[numeroMacchina].coordinate.x = ZERO;
-    macchina[numeroMacchina].coordinate.y = 20 + (numeroMacchina % TRE) * TRE;
-    macchina[numeroMacchina].id = MACCHINA0 + numeroMacchina;
-    macchina[numeroMacchina].velocita = velocita[numeroMacchina];
-    macchina[numeroMacchina].pid = getpid();
+    macchina.coordinate.y = INIZIO_AUTOSTRADA + (numeroMacchina % TRE) * TRE;
+    macchina.id = MACCHINA0 + numeroMacchina;
+    macchina.velocita = velocita;
+    macchina.pid = getpid();
 
     close(p[READ]);
     while (true)
     {
-        write(p[WRITE], &macchina[numeroMacchina], sizeof(Oggetto));
+        write(p[WRITE], &macchina, sizeof(Oggetto));
 
-        if (velocita[numeroMacchina] < ZERO)
-            macchina[numeroMacchina].coordinate.x--;
+        if (velocita < ZERO)
+            macchina.coordinate.x--;
         else
-            macchina[numeroMacchina].coordinate.x++;
-        if (controlloLimiti(macchina[numeroMacchina].coordinate, MACCHINA0) == DUE)
-            macchina[numeroMacchina].coordinate.x = ZERO;
-
-        else if (controlloLimiti(macchina[numeroMacchina].coordinate, MACCHINA0) == UNO)
-            macchina[numeroMacchina].coordinate.x = LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA;
-
-        usleep(velocitaRandom);
-    }
-}
-
-void movimentoCamion(int p[DUE], int numeroCamion, int velocita[])
-{
-    Oggetto camion[3];
-    int tempoRandom;
-    int velocitaRandom = MIN_TEMPO_CAMION + rand() % (MAX_TEMPO_CAMION - MIN_TEMPO_CAMION);
-    srand(getpid());
-    tempoRandom = 1000000 + rand() % (1000000 - 200000),
-    usleep(tempoRandom);
-
-    if (velocita[numeroCamion] < UNO)
-        camion[numeroCamion].coordinate.x = LARGHEZZA_SCHERMO - LARGHEZZA_CAMION;
-    else
-        camion[numeroCamion].coordinate.x = UNO;
-
-    camion[numeroCamion].coordinate.y = 20 + (numeroCamion % TRE) * TRE;
-    camion[numeroCamion].id = CAMION0 + numeroCamion;
-    camion[numeroCamion].velocita = velocita[numeroCamion];
-    camion[numeroCamion].pid = getpid();
-
-    close(p[READ]);
-    while (true)
-    {
-        write(p[WRITE], &camion[numeroCamion], sizeof(Oggetto));
-
-        if (velocita[numeroCamion] < ZERO)
-            camion[numeroCamion].coordinate.x--;
-        else
-            camion[numeroCamion].coordinate.x++;
-
-        if (controlloLimiti(camion[numeroCamion].coordinate, CAMION0) == DUE)
+            macchina.coordinate.x++;
+        if (controlloLimiti(macchina.coordinate, MACCHINA0) == DUE)
         {
-
-            camion[numeroCamion].coordinate.x = ZERO;
+            macchina.coordinate.x = ZERO;
         }
-        else if (controlloLimiti(camion[numeroCamion].coordinate, CAMION0) == UNO)
+
+        else if (controlloLimiti(macchina.coordinate, MACCHINA0) == UNO)
         {
-            camion[numeroCamion].coordinate.x = LARGHEZZA_SCHERMO - LARGHEZZA_CAMION;
+            macchina.coordinate.x = LARGHEZZA_SCHERMO - LARGHEZZA_MACCHINA;
         }
 
         usleep(velocitaRandom);
     }
 }
 
-void stampaMacchina(Oggetto macchina)
+void movimentoCamion(int p[DUE], int numeroCamion, int velocita)
+{
+    Oggetto camion;
+    int velocitaRandom = MIN_VELOCITA_VEICOLI + rand() % (MAX_VELOCITA_VEICOLI - MIN_VELOCITA_VEICOLI);
+    srand(getpid());
+    int tempoRandom = (MIN_ATTESA + rand() % (MAX_ATTESA - MIN_ATTESA));
+    usleep(tempoRandom);
+
+    if (velocita < ZERO)
+        camion.coordinate.x = LARGHEZZA_SCHERMO - LARGHEZZA_CAMION;
+    else
+        camion.coordinate.x = ZERO;
+
+    camion.coordinate.y = INIZIO_AUTOSTRADA + (numeroCamion % TRE) * TRE;
+    camion.id = CAMION0 + numeroCamion;
+    camion.velocita = velocita;
+    camion.pid = getpid();
+
+    close(p[READ]);
+    while (true)
+    {
+        write(p[WRITE], &camion, sizeof(Oggetto));
+
+        if (velocita < ZERO)
+            camion.coordinate.x--;
+        else
+            camion.coordinate.x++;
+
+        if (controlloLimiti(camion.coordinate, CAMION0) == DUE)
+        {
+            camion.coordinate.x = ZERO;
+        }
+        else if (controlloLimiti(camion.coordinate, CAMION0) == UNO)
+        {
+            camion.coordinate.x = LARGHEZZA_SCHERMO - LARGHEZZA_CAMION;
+        }
+        usleep(velocitaRandom);
+    }
+    usleep(tempoRandom);
+}
+
+// stampa le macchine in modo diverso in base alla loro direzione
+void stampaMacchina(Oggetto macchina, int indice)
 {
     int i, j;
-    init_pair(DIECI, COLOR_WHITE, COLORE_AUTOSTRADA);
-    attron(COLOR_PAIR(DIECI));
+    init_pair(COLORE_MACCHINA0 + indice, COLORE_MACCHINA0 + indice, COLORE_AUTOSTRADA);
+
+    attron(COLOR_PAIR(COLORE_MACCHINA0 + indice));
 
     if (macchina.velocita < ZERO)
     {
@@ -209,7 +210,7 @@ void stampaMacchina(Oggetto macchina)
             {
                 if ((macchina.coordinate.x - j) < ZERO)
                     break;
-                mvprintw(macchina.coordinate.y + i, macchina.coordinate.x - j, "%c", spriteMacchineContrario[i][LARGHEZZA_MACCHINA - UNO - j]);
+                mvprintw(macchina.coordinate.y + i, macchina.coordinate.x - j, "%c", spriteMacchineContrario[i][LARGHEZZA_MACCHINA - 1 - j]);
             }
         }
     }
@@ -226,15 +227,17 @@ void stampaMacchina(Oggetto macchina)
         }
     }
 
-    attroff(COLOR_PAIR(DIECI));
+    attroff(COLOR_PAIR(COLORE_MACCHINA0 + indice));
 }
 
-void stampaCamion(Oggetto camion)
+// stampa i camion in modo diverso in base alla loro direzione
+void stampaCamion(Oggetto camion, int indice)
 {
-
     int i, j;
-    init_pair(DIECI, COLOR_WHITE, COLORE_AUTOSTRADA);
-    attron(COLOR_PAIR(DIECI));
+
+    init_pair(COLORE_CAMION0 + indice, COLORE_CAMION0 + indice, COLORE_AUTOSTRADA);
+
+    attron(COLOR_PAIR(COLORE_CAMION0 + indice));
 
     if (camion.velocita < ZERO)
     {
@@ -244,7 +247,7 @@ void stampaCamion(Oggetto camion)
             {
                 if ((camion.coordinate.x - j) < ZERO)
                     break;
-                mvprintw(camion.coordinate.y + i, camion.coordinate.x - j, "%c", spriteCamionContrario[i][LARGHEZZA_CAMION - UNO - j]);
+                mvprintw(camion.coordinate.y + i, camion.coordinate.x - j, "%c", spriteCamionContrario[i][LARGHEZZA_CAMION - 1 - j]);
             }
         }
     }
@@ -261,5 +264,23 @@ void stampaCamion(Oggetto camion)
         }
     }
 
-    attroff(COLOR_PAIR(DIECI));
+    attroff(COLOR_PAIR(COLORE_CAMION0 + indice));
+}
+
+Colore coloreVeicolo()
+{
+    Colore rgb;
+
+    /* mi assicuro che il colore non sia troppo simile a quello
+    dell'autostrada per evitare che la macchina sia invisibile */
+    do
+    {
+        rgb.r = rand() % 1000;
+        rgb.g = rand() % 1000;
+        rgb.b = rand() % 1000;
+    } while (rgb.r > 120 && rgb.r < 180 &&
+             rgb.r > 120 && rgb.r < 180 &&
+             rgb.r > 120 && rgb.r < 180);
+
+    return rgb;
 }

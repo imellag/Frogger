@@ -1,14 +1,21 @@
 #include "lib.h"
 
-#define TEMPO_TRONCO_MIN 25000
-#define TEMPO_TRONCO_MAX 40000
+#define TEMPO_TRONCO_MIN 40000
+#define TEMPO_TRONCO_MAX 60000
 
+// stampo lo sfondo del fiume
 void funzFiume();
-
-int funzTronchi(int p[DUE],int pRana[]);
-void funzTronco(int p[DUE],int numeroTronco,int velocita,int pRana[]);
+// creo un processo per ogni tronco e la direzione di ognuno
+int funzTronchi(int p[2]);
+/* controlla la posizione dei tronchi, la aggiorna e eventualmente cambia la loro direzione 
+ se sono arrivati al bordo, e infine invia la posizione aggiornata al main */
+void funzTronco(int p[2], int numeroTronco, int velocita);
+// stampa la sprite del tronco
 void stampaTronco(Coordinate tronco);
+// stampa la sprite del nemico
 void stampaNemico(Coordinate nemico);
-
-void funzProiettileNemico(Coordinate tronco,int p[],int i);
-void movimentoProiettileNemico(Coordinate tronco, int p[],int i);
+// crea il processo del proiettile nemico
+void funzProiettileNemico(Coordinate tronco, int p[], int i);
+/* controlla la posizione attuale del proiettile nemico, la aggiorna e eventualmente 
+ invia al main un segnale speciale se il proiettile esce fuori dallo schermo */
+void movimentoProiettileNemico(Coordinate tronco, int p[], int i);

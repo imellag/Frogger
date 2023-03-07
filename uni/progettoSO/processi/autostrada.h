@@ -1,28 +1,36 @@
-#define MIN_TEMPO_MACCHINA 20000
-#define MAX_TEMPO_MACCHINA 40000
-#define MIN_TEMPO_CAMION 20000
-#define MAX_TEMPO_CAMION 40000
+// intervalli min e max per la generazione randomica della velocità
+#define MIN_VELOCITA_VEICOLI 20000
+#define MAX_VELOCITA_VEICOLI 50000
+
+// intervalli min e max per la generazione randomica dei veicoli
+#define MIN_ATTESA 1000000
+#define MAX_ATTESA 5000000
 
 // stampa lo sfondo dell'autostrada
 void funzAutostrada();
 
-// crea per ogni macchina unn processo
+// crea per ogni macchina un processo
 void funzAuto(int p[]);
 
-void funzCamion(int p[], int velocitaCorsie[],int spostamento);
+// crea un camion per ogni processo
+void funzCamion(int p[DUE], int velocitaCorsie[], int spostamento);
 
-// gestisce il movimento della macchina che successivamente viene inviato al main
-void movimentoMacchina(int p[], int numeroMacchina, int velocita[]);
+/* gestisce il movimento della macchina che viene successivamente inviato al main
+ e il cambio delle corsie */
+void movimentoMacchina(int p[], int numeroMacchina, int velocita);
 
-void movimentoCamion(int p[DUE], int numeroCamion, int velocita[]);
+/* gestisce il movimento dei camion che viene successivamente inviato al main
+ e il cambio delle corsie */
+void movimentoCamion(int p[DUE], int numeroCamion, int velocita);
 
-// dopo che la macchina arriva a uno dei due bordi 
-//viene rigenerata in una corsia random
+/* dopo che la macchina arriva a uno dei due bordi
+ viene rigenerata in una corsia random */
 Oggetto cambioCorsia();
 
-// funziona per stampare la macchina
-void stampaMacchina(Oggetto macchina);
+// funzione per stampare la macchina
+void stampaMacchina(Oggetto macchina, int indice);
 
-void stampaCamion(Oggetto camion);
+// funzione per stampare i camion
+void stampaCamion(Oggetto camion, int indice);
 
-_Bool postoOccupato(Coordinate veicolo, int corsia, int velocita[], int veicol);
+Colore coloreVeicolo();

@@ -1,11 +1,12 @@
 #pragma once
-#include <ncurses.h>
+#include <ncursesw/curses.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <time.h>
 #include <signal.h>
 #include <fcntl.h>
+#include <pthread.h>
 
 // enumerazione utilizzata per gli id dei vari oggetti presenti sullo schermo
 enum oggetti
@@ -59,9 +60,26 @@ enum gameDifficulty
     HARD
 };
 
+// posizione dove vengono portati gli oggetti come i proiettili quando non devono essere visualizzati a schermo
+#define FUORI_MAPPA -5
+
 // input da tastiera
+#define A 65
+#define a 97
+#define D 68
+#define d 100
+#define Q 81
 #define q 113
+#define S 83
+#define s 115
+#define W 87
+#define w 119
 #define SPACEBAR ' '
+
+// dimensioni delle sprite delle scritte di inizio e fine partita
+#define ALTEZZA_SPRITE 5
+#define LARGHEZZA_SPRITE_INIZIO 45
+#define LARGHEZZA_SPRITE_FINE 52
 
 // dimensioni rana
 #define ALTEZZA_RANA 3
@@ -74,49 +92,69 @@ enum gameDifficulty
 // dimensioni tronco
 #define ALTEZZA_TRONCHI 3
 #define LARGHEZZA_TRONCHI 15
+#define NUMERO_TRONCHI 3
 
-// dimensioni macchina
+// vale sia per i camion che per le macchine
+#define ALTEZZA_VEICOLI 3
+
+// dimensioni macchina e numero di macchine
 #define LARGHEZZA_MACCHINA 6
+#define NUMERO_MACCHINE 5
 
-// dimensioni camion
+// dimensioni camion e numero di camion
 #define LARGHEZZA_CAMION 13
+#define NUMERO_CAMION 3
 
-// dimensioni autostrada
+// dimensioni autostrada e coordinate nello schermo
 #define ALTEZZA_AUTOSTRADA 9
 #define INIZIO_AUTOSTRADA 20
+#define NUMERO_CORSIE 3
 
-// dimensioni prato
+// dimensioni prato e coordinate nello schermo
 #define ALTEZZA_PRATO 3
 #define INIZIO_PRATO 17
 
-// dimensioni fiume
+// dimensioni fiume e coordinate nello schermo
 #define ALTEZZA_FIUME 9
 #define INIZIO_FIUME 8
 
-// dimensioni marciapiede
+// dimensioni marciapiede e coordinate nello schermo
 #define INIZIO_MARCIAPIEDE 29
 #define ALTEZZA_MARCIAPIEDE 3
 
-// dimensioni tane
+// dimensioni tane e coordinate nello schermo
 #define ALTEZZA_TANE 3
 #define LARGHEZZA_TANE 15
 #define INIZIO_TANE 5
 #define NUMERO_TANE 5
 
-// dimensioni nemici
+// dimensioni e numero di nemici
 #define ALTEZZA_NEMICO 3
 #define LARGHEZZA_NEMICO 5
+#define NUMERO_NEMICI 3
+#define NUMERO_TRONCHI 3
 
 // definisco un numero per ciascuno colore che viene utilizzato
-#define COLORE_RANA 10
-#define COLORE_MARCIAPIEDE 20
-#define COLORE_AUTOSTRADA 30
-#define COLORE_TRONCHI 40
-#define COLORE_TANA 50
+#define COLORE_RANA 11
+#define COLORE_MARCIAPIEDE 12
+#define COLORE_AUTOSTRADA 13
+#define COLORE_TRONCHI 14
+#define COLORE_TANA 15
+#define COLORE_MACCHINA0 20
+#define COLORE_CAMION0 40
 
 // lettura/scrittura della pipe
 #define READ 0
 #define WRITE 1
+
+// variabili utili per il le statistiche e il controllo della partita
+#define MAX_VITE 5
+#define TEMPO_INIZIALE 60
+#define TEMPO_TANA 5
+#define PUNTEGGIO_INIZIALE 2000
+#define PUNTEGGIO_UCCISIONE 50
+#define PUNTEGGIO_TANA 150
+#define SPAWN_NEMICO 6
 
 // struttura per le coordinate
 typedef struct
@@ -134,11 +172,18 @@ typedef struct
     pid_t pid;
 } Oggetto;
 
-// struttura delle statistiche presenti sullo schermo
+// struttura per il controllo del tempo di gioco
 typedef struct
 {
     int id;
-    int tempo;
-    int punteggio;
+    bool tempo;
     pid_t pid;
-} Schermo;
+} Tempo;
+
+// struttura usata per restituire un colore da una funzione
+typedef struct
+{
+    int r;
+    int g;
+    int b;
+} Colore;

@@ -13,7 +13,7 @@ void funzRana(int p[], int pRana[])
     if (pidRana < ZERO)
     {
         printw("Error");
-        exit(-UNO);
+        exit(-1);
     }
     else if (pidRana == ZERO)
     {
@@ -23,52 +23,62 @@ void funzRana(int p[], int pRana[])
 
 void movimentoRana(int p[], int pRana[])
 {
-    time_t inizio, fine;
+    int proiettile_sparato = ZERO;
+    int inputMovimento;
+    int lettura;
     double diff;
+    _Bool move;
+    time_t inizio, fine;
+    pid_t pidProiettile;
     Oggetto rana;
     Oggetto proiettile;
     rana.id = RANA;
     rana.coordinate.x = ZERO;
     rana.coordinate.y = ALTEZZA_SCHERMO - SEI;
-    pid_t pidProiettile;
-    int proiettile_sparato = ZERO;
-    int inputMovimento;
-    int lettura;
+
     close(p[READ]);
     close(pRana[WRITE]);
-    _Bool move;
+
     time(&inizio);
 
     while (true)
     {
-
         timeout(UNO);
         inputMovimento = getch();
+
         read(pRana[READ], &rana, sizeof(Oggetto));
         move = true;
         switch (inputMovimento)
         {
+        case w:
+        case W:
         case KEY_UP:
             rana.coordinate.y -= ALTEZZA_RANA;
             if (controlloLimiti(rana.coordinate, RANA) == SEI)
                 rana.coordinate.y += ALTEZZA_RANA;
             break;
+        case s:
+        case S:
         case KEY_DOWN:
             rana.coordinate.y += ALTEZZA_RANA;
             if (controlloLimiti(rana.coordinate, RANA) == SEI)
                 rana.coordinate.y -= ALTEZZA_RANA;
             break;
+        case d:
+        case D:
         case KEY_RIGHT:
             rana.coordinate.x += LARGHEZZA_RANA;
             if (controlloLimiti(rana.coordinate, RANA) == SEI)
                 rana.coordinate.x -= LARGHEZZA_RANA;
             break;
+        case a:
+        case A:
         case KEY_LEFT:
             rana.coordinate.x -= LARGHEZZA_RANA;
             if (controlloLimiti(rana.coordinate, RANA) == SEI)
                 rana.coordinate.x += LARGHEZZA_RANA;
             break;
-
+        case Q:
         case q:
             rana.id = q;
             write(p[WRITE], &rana, sizeof(Oggetto));
@@ -76,21 +86,21 @@ void movimentoRana(int p[], int pRana[])
 
         case SPACEBAR:
             move = false;
-
+            // system("ffplay ../file_audio/sparo.mp3 2> /dev/null &");
             time(&fine);
-            if (difftime(fine, inizio) > UNO)
+            if (difftime(fine, inizio) > 1)
             {
                 time(&inizio);
                 pidProiettile = fork();
                 if (pidProiettile < ZERO)
                 {
                     perror("error");
-                    exit(UNO);
+                    exit(1);
                 }
                 else if (pidProiettile == ZERO)
                 {
                     funzProiettile(rana, p);
-                    exit(ZERO);
+                    exit(0);
                 }
             }
             break;
@@ -104,7 +114,6 @@ void movimentoRana(int p[], int pRana[])
         if (move)
             write(p[WRITE], &rana, sizeof(Oggetto));
     }
-    usleep(10000);
 }
 
 void funzProiettile(Oggetto rana, int p[DUE])
@@ -114,9 +123,6 @@ void funzProiettile(Oggetto rana, int p[DUE])
     proiettile.coordinate.x = rana.coordinate.x + DUE;
     proiettile.coordinate.y = rana.coordinate.y - UNO;
     proiettile.pid = getpid();
-
-    // close(p[READ]);
-
     while (true)
     {
         if (controlloLimiti(proiettile.coordinate, PROIETTILE))
@@ -148,13 +154,5 @@ void stampaRana(Coordinate rana, _Bool coloreRanaTronco)
             mvaddch(rana.y + i, rana.x + j, spriteRana[i][j]);
         }
     }
-    attroff(COLOR_PAIR(7));
-}
-
-bool controlloCollisioniProiettile(Coordinate proiettile, Coordinate entita, int LARGHEZZA_ENTITA, int ALTEZZA_ENTITA)
-{
-
-    bool flag = false;
-
-    //        if()
+    attroff(COLOR_PAIR(SETTE));
 }

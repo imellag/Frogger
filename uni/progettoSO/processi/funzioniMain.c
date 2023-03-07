@@ -1,5 +1,14 @@
 #include "funzioniMain.h"
+
 char spriteCuore[] = {"<3"};
+char spriteVittoria[CINQUE][52] = {
+    " _   _    _    ___  __     _____ _   _ _____ ___  _ ",
+    "| | | |  / \\  |_ _| \\ \\   / /_ _| \\ | |_   _/ _ \\| |",
+    "| |_| | / _ \\  | |   \\ \\ / / | ||  \\| | | || | | | |",
+    "|  _  |/ ___ \\ | |    \\ V /  | || |\\  | | || |_| |_|",
+    "|_| |_/_/   \\_\\___|    \\_/  |___|_| \\_| |_| \\___/(_)",
+};
+
 void dimensioneFinestra(int maxx, int maxy)
 {
     clear();
@@ -40,11 +49,33 @@ void stampaVite(int vite)
 
 void gameOver()
 {
-
-    clear();
     mvprintw(ALTEZZA_SCHERMO / DUE, LARGHEZZA_SCHERMO / DUE, "Hai perso!");
     refresh();
-    sleep(DUE);
+    sleep(2);
 
     getch();
+}
+
+void vittoria(int punteggio)
+{
+    stampaScrittaFinale(LARGHEZZA_SCHERMO / DUE - LARGHEZZA_SPRITE_FINE / DUE, CINQUE);
+    mvprintw(13, LARGHEZZA_SCHERMO / DUE - DIECI, "Punteggio finale: %d!", punteggio);
+
+    refresh();
+    sleep(2);
+
+    getch();
+}
+
+void stampaScrittaFinale(int iniziox, int inizioy)
+{
+    int i, j;
+
+    for (i = ZERO; i < ALTEZZA_SPRITE; i++)
+    {
+        for (j = ZERO; j < LARGHEZZA_SPRITE_FINE; j++)
+        {
+            mvaddch(inizioy + i, iniziox + j, spriteVittoria[i][j]);
+        }
+    }
 }

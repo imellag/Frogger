@@ -8,11 +8,10 @@ char frogger[CINQUE][45] = {
     "|  _| |  _ <| |_| | |_| | |_| | |___|  _ <|_|",
     "|_|   |_| \\\\_\\___/ \\____|\\____|_____|_| \\_(_)"};
 
-
-int menuIniziale() {
+int menuIniziale()
+{
     int gameDifficulty;
 
-    curs_set(true);
     mousemask(BUTTON1_PRESSED | REPORT_MOUSE_POSITION, NULL);
 
     int i, j;
@@ -22,15 +21,16 @@ int menuIniziale() {
     attron(COLOR_PAIR(UNO));
 
     // stampa nome con scritta di caricamento
-    stampaFrogger(LARGHEZZA_SCHERMO / DUE - 23, 10);
+    stampaFrogger(LARGHEZZA_SCHERMO / 2 - 23, 10);
 
     mvprintw(25, 63, "Caricamento");
 
-    for (i = ZERO; i < TRE; i++) {
+    for (i = ZERO; i < TRE; i++)
+    {
         refresh();
         usleep(500000);
-        mvprintw(25, 74+i, ".");
-    } 
+        mvprintw(25, 74 + i, ".");
+    }
 
     attroff(COLOR_PAIR(UNO));
     attron(COLOR_PAIR(DUE));
@@ -58,17 +58,18 @@ int menuIniziale() {
     attroff(COLOR_PAIR(DUE));
     attron(COLOR_PAIR(UNO));
 
-    stampaFrogger(LARGHEZZA_SCHERMO / DUE - 23, CINQUE);
+    stampaFrogger(LARGHEZZA_SCHERMO / DUE - 23, 5);
 
     attroff(COLOR_PAIR(UNO));
 
     refresh();
 
-    while (true) {
+    while (true)
+    {
         int input = getch();
 
         if (input == KEY_MOUSE)
-        {   
+        {
             MEVENT event;
             if (getmouse(&event) == OK)
             {
@@ -77,16 +78,18 @@ int menuIniziale() {
 
                     // mvprintw(0, 0, "Input ricevuto"); debug
                     refresh();
-                    
-                    if (event.x > 50 && event.x < 90 && event.y > 29 && event.y < 34){ // USCITA
+
+                    if (event.x > 50 && event.x < 90 && event.y > 29 && event.y < 34)
+                    { // USCITA
                         clear();
-                        mvprintw(ALTEZZA_SCHERMO/DUE, LARGHEZZA_SCHERMO/DUE-SETTE, "Uscita in corso");
+                        mvprintw(ALTEZZA_SCHERMO / 2, LARGHEZZA_SCHERMO / 2 - 7, "Uscita in corso");
                         refresh();
                         // sleep(1);
                         endwin();
                         exit(EXIT_SUCCESS);
                     }
-                    if (event.x > 50 && event.x < 90 && event.y > 15 && event.y < 20) { // nuova partita
+                    if (event.x > 50 && event.x < 90 && event.y > 15 && event.y < 20)
+                    { // nuova partita
                         clear();
                         attron(COLOR_PAIR(DUE));
 
@@ -99,28 +102,32 @@ int menuIniziale() {
                         attroff(COLOR_PAIR(DUE));
                         attron(COLOR_PAIR(UNO));
 
-                        stampaFrogger(LARGHEZZA_SCHERMO / DUE - 23, CINQUE);
+                        stampaFrogger(LARGHEZZA_SCHERMO / DUE - 23, 5);
 
                         attroff(COLOR_PAIR(UNO));
-
                         refresh();
 
-                        while (true) {
+                        while (true)
+                        {
                             input = getch();
                             getmouse(&event);
 
-                            if (event.x > 50 && event.x < 90 && event.y > 15 && event.y < 20) {
+                            if (event.x > 50 && event.x < 90 && event.y > 15 && event.y < 20)
+                            {
                                 return EASY;
                             }
-                            else if (event.x > 50 && event.x < 90 && event.y > 22 && event.y < 27) {
+                            else if (event.x > 50 && event.x < 90 && event.y > 22 && event.y < 27)
+                            {
                                 return MEDIUM;
                             }
-                            else if (event.x > 50 && event.x < 90 && event.y > 29 && event.y < 34) {
+                            else if (event.x > 50 && event.x < 90 && event.y > 29 && event.y < 34)
+                            {
                                 return HARD;
                             }
                         }
                     }
-                    else if (event.x > 50 && event.x < 90 && event.y > 22 && event.y < 27) { // impostazioni
+                    else if (event.x > 50 && event.x < 90 && event.y > 22 && event.y < 27)
+                    { // impostazioni
                         continue;
                     }
                 }
@@ -132,31 +139,41 @@ int menuIniziale() {
     clear();
 }
 
-void stampaRettangoli() {
+void stampaRettangoli()
+{
     int i, j;
 
-    for (i = ZERO; i < CINQUE; i++) {
-        for (j = ZERO; j < 36; j++) {
-            mvprintw(15+i, 52+j, " ");
+    for (i = 0; i < 5; i++)
+    {
+        for (j = 0; j < 36; j++)
+        {
+            mvprintw(15 + i, 52 + j, " ");
         }
     }
-    for (i = ZERO; i < CINQUE; i++) {
-        for (j = ZERO; j < 36; j++) {
-            mvprintw(22+i, 52+j, " ");
+    for (i = 0; i < 5; i++)
+    {
+        for (j = 0; j < 36; j++)
+        {
+            mvprintw(22 + i, 52 + j, " ");
         }
     }
-    for (i = ZERO; i < CINQUE; i++) {
-        for (j = ZERO; j < 36; j++) {
-            mvprintw(29+i, 52+j, " ");
+    for (i = 0; i < 5; i++)
+    {
+        for (j = 0; j < 36; j++)
+        {
+            mvprintw(29 + i, 52 + j, " ");
         }
     }
 }
 
-void stampaFrogger(int iniziox, int inizioy) {
+void stampaFrogger(int iniziox, int inizioy)
+{
     int i, j;
 
-    for (i = ZERO; i < CINQUE; i++) {
-        for (j = ZERO; j < 45; j++) {
+    for (i = ZERO; i < ALTEZZA_SPRITE; i++)
+    {
+        for (j = ZERO; j < LARGHEZZA_SPRITE_INIZIO; j++)
+        {
             mvaddch(inizioy + i, iniziox + j, frogger[i][j]);
         }
     }
