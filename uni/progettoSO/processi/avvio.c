@@ -1,12 +1,14 @@
 #include "lib.h"
 #include "avvio.h"
 
-char frogger[CINQUE][45] = {
-    " _____ ____   ___   ____  ____ _____ ____  _ ",
-    "|  ___|  _ \\ / _ \\ / ___|/ ___| ____|  _ \\| |",
-    "| |_  | |_) | | | | |  _| |  _|  _| | |_) | |",
-    "|  _| |  _ <| |_| | |_| | |_| | |___|  _ <|_|",
-    "|_|   |_| \\\\_\\___/ \\____|\\____|_____|_| \\_(_)"};
+wchar_t *frogger[ALTEZZA_SPRITE] = {
+    L"███████╗██████╗░░█████╗░░██████╗░░██████╗░███████╗██████╗░██╗",
+    L"██╔════╝██╔══██╗██╔══██╗██╔════╝░██╔════╝░██╔════╝██╔══██╗██║",
+    L"█████╗░░██████╔╝██║░░██║██║░░██╗░██║░░██╗░█████╗░░██████╔╝██║",
+    L"██╔══╝░░██╔══██╗██║░░██║██║░░╚██╗██║░░╚██╗██╔══╝░░██╔══██╗╚═╝",
+    L"██║░░░░░██║░░██║╚█████╔╝╚██████╔╝╚██████╔╝███████╗██║░░██║██╗",
+    L"╚═╝░░░░░╚═╝░░╚═╝░╚════╝░░╚═════╝░░╚═════╝░╚══════╝╚═╝░░╚═╝╚═╝",
+};
 
 Avvio menuIniziale(char *Nomeutente)
 {
@@ -17,131 +19,122 @@ Avvio menuIniziale(char *Nomeutente)
     mouseinterval(0);
 
     int i, j;
+    int input;
+
+    WINDOW *finestraIniziale;
+
+    finestraIniziale = newwin(ALTEZZA_SCHERMO + 2, LARGHEZZA_SCHERMO - 1, INIZIO_ALTEZZA_FINESTRA, INIZIO_LARGHEZZA_FINESTRA);
 
     init_pair(UNO, COLOR_GREEN, COLOR_BLACK);
     init_pair(DUE, COLOR_BLACK, COLOR_GREEN);
-    attron(COLOR_PAIR(UNO));
+
+    wattron(finestraIniziale, COLOR_PAIR(UNO));
 
     // stampa nome con scritta di caricamento
-    stampaFrogger(LARGHEZZA_SCHERMO / 2 - 23, 10);
+    stampaFrogger(LARGHEZZA_SCHERMO / DUE - 30, 9, finestraIniziale);
 
     // printf("\033[?1003h\n"); // Makes the terminal report mouse movement events
 
-    mvprintw(25, 63, "Caricamento");
+    mvwprintw(finestraIniziale, 25, 63, "Caricamento");
 
     for (i = ZERO; i < TRE; i++)
     {
-        refresh();
+
+        mvwprintw(finestraIniziale, 25, 74 + i, ".");
+        wrefresh(finestraIniziale);
         usleep(500000);
-        mvprintw(25, 74 + i, ".");
     }
 
-    attroff(COLOR_PAIR(UNO));
-    attron(COLOR_PAIR(DUE));
+    wattroff(finestraIniziale, COLOR_PAIR(UNO));
 
-    clear();
-    refresh();
-    usleep(500000);
+    wclear(finestraIniziale);
+    wrefresh(finestraIniziale);
+    wattron(finestraIniziale, COLOR_PAIR(DUE));
 
-    //  printw("Inserisci nome utente");
-    // scanw("%s", info.nome);
-    // printw("%s", info.nome);
-    refresh();
-    //   usleep(500000);
-    clear();
-    refresh();
+    for (i = 0; i < 3; i++)
+        stampaRettangolo(finestraIniziale, 52, 15 + i * 7); // tra l'inizio di un rettangolo e l'inizio dell'altro ci sono 7 spazi
 
-    /*
-    15-20   nuova partita
-    22-27  impostazioni
-    29-34  esci
-    */
+    mvwprintw(finestraIniziale, 17, 58, "Inizia una nuova partita");
+    mvwprintw(finestraIniziale, 24, 64, "Impostazioni");
+    mvwprintw(finestraIniziale, 31, 62, "Esci dal gioco");
+    wrefresh(finestraIniziale);
 
-    /*
-    36 larghezza
-    */
-    stampaRettangoli();
-    mvprintw(17, 58, "Inizia una nuova partita");
-    mvprintw(24, 64, "Impostazioni");
-    mvprintw(31, 62, "Esci dal gioco");
+    wattroff(finestraIniziale, COLOR_PAIR(DUE));
+    wattron(finestraIniziale, COLOR_PAIR(UNO));
 
-    attroff(COLOR_PAIR(DUE));
-    attron(COLOR_PAIR(UNO));
+    stampaFrogger(LARGHEZZA_SCHERMO / DUE - 30, 5, finestraIniziale);
 
-    stampaFrogger(LARGHEZZA_SCHERMO / DUE - 23, 5);
+    wattroff(finestraIniziale, COLOR_PAIR(UNO));
 
-    attroff(COLOR_PAIR(UNO));
-
-    refresh();
+    wrefresh(finestraIniziale);
 
     while (true)
     {
-        int input = getch();
+
+        input = getch();
 
         if (input == KEY_MOUSE)
         {
             MEVENT event;
             if (getmouse(&event) == OK)
             {
-
                 if (event.bstate & BUTTON1_PRESSED)
                 { // click sinistro
-
-                    // mvprintw(0, 0, "Input ricevuto"); debug
-                    refresh();
-
-                    if (event.x > 50 && event.x < 90 && event.y > 29 && event.y < 34)
+                    if (event.x > INIZIO_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.x < FINE_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.y > 29 + INIZIO_ALTEZZA_FINESTRA && event.y < 34 + INIZIO_ALTEZZA_FINESTRA)
                     { // USCITA
-                        clear();
+                        wclear(finestraIniziale);
 
-                        mvprintw(ALTEZZA_SCHERMO / 2, LARGHEZZA_SCHERMO / 2 - 7, "Uscita in corso");
-                        refresh();
-                        // sleep(1);
+                        mvwprintw(finestraIniziale, ALTEZZA_SCHERMO / 2, LARGHEZZA_SCHERMO / 2 - 7, "Uscita in corso");
+                        wrefresh(finestraIniziale);
                         endwin();
                         exit(EXIT_SUCCESS);
                     }
-                    if (event.x > 50 && event.x < 90 && event.y > 15 && event.y < 20)
+                    if (event.x > INIZIO_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.x < FINE_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.y > 15 + INIZIO_ALTEZZA_FINESTRA && event.y < 20 + INIZIO_ALTEZZA_FINESTRA)
                     { // nuova partita
-                        clear();
-                        attron(COLOR_PAIR(DUE));
+                        wclear(finestraIniziale);
+                        wattron(finestraIniziale, COLOR_PAIR(DUE));
 
-                        stampaRettangoli();
+                        for (i = ZERO; i < TRE; i++)
+                            stampaRettangolo(finestraIniziale, 52, 15 + i * 7); // tra l'inizio di un rettangolo e l'inizio dell'altro ci sono 7 spazi
 
-                        mvprintw(17, 67, "Facile");
-                        mvprintw(24, 68, "Media");
-                        mvprintw(31, 65, "Difficile");
+                        mvwprintw(finestraIniziale, 17, 67, "Facile");
+                        mvwprintw(finestraIniziale, 24, 68, "Media");
+                        mvwprintw(finestraIniziale, 31, 65, "Difficile");
 
-                        attroff(COLOR_PAIR(DUE));
-                        attron(COLOR_PAIR(UNO));
+                        wattroff(finestraIniziale, COLOR_PAIR(DUE));
+                        wattron(finestraIniziale, COLOR_PAIR(UNO));
 
-                        stampaFrogger(LARGHEZZA_SCHERMO / DUE - 23, 5);
+                        stampaFrogger(LARGHEZZA_SCHERMO / DUE - 30, 5, finestraIniziale);
 
-                        attroff(COLOR_PAIR(UNO));
-                        refresh();
+                        wattroff(finestraIniziale, COLOR_PAIR(UNO));
+                        wrefresh(finestraIniziale);
 
                         while (true)
                         {
                             input = getch();
                             getmouse(&event);
 
-                            if (event.x > 50 && event.x < 90 && event.y > 15 && event.y < 20)
+                            if (event.x > INIZIO_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.x < FINE_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.y > 15 + INIZIO_ALTEZZA_FINESTRA && event.y < 20 + INIZIO_ALTEZZA_FINESTRA)
                             {
+                                delwin(finestraIniziale);
                                 info.difficolta = EASY;
                                 return info;
                             }
-                            else if (event.x > 50 && event.x < 90 && event.y > 22 && event.y < 27)
+                            else if (event.x > INIZIO_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.x < FINE_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.y > 22 + INIZIO_ALTEZZA_FINESTRA && event.y < 27 + INIZIO_ALTEZZA_FINESTRA)
                             {
+                                delwin(finestraIniziale);
                                 info.difficolta = MEDIUM;
                                 return info;
                             }
-                            else if (event.x > 50 && event.x < 90 && event.y > 29 && event.y < 34)
+                            else if (event.x > INIZIO_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.x < FINE_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.y > 29 + INIZIO_ALTEZZA_FINESTRA && event.y < 34 + INIZIO_ALTEZZA_FINESTRA)
                             {
+                                delwin(finestraIniziale);
                                 info.difficolta = HARD;
                                 return info;
                             }
                         }
                     }
-                    else if (event.x > 50 && event.x < 90 && event.y > 22 && event.y < 27)
+                    else if (event.x > INIZIO_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.x < FINE_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.y > 22 + INIZIO_ALTEZZA_FINESTRA && event.y < 27 + INIZIO_ALTEZZA_FINESTRA)
                     { // impostazioni
                         continue;
                     }
@@ -151,46 +144,24 @@ Avvio menuIniziale(char *Nomeutente)
     }
     // printf("\033[?1003l\n"); // Disable mouse movement events, as l = low
 
-    curs_set(false);
-    clear();
+    wclear(finestraIniziale);
 }
 
-void stampaRettangoli()
+void stampaRettangolo(WINDOW *finestra, int iniziox, int inizioy)
 {
     int i, j;
-
-    for (i = 0; i < 5; i++)
+    // ogni rettangolo è alto 5 e largo 36
+    for (i = ZERO; i < CINQUE; i++)
     {
-        for (j = 0; j < 36; j++)
-        {
-            mvprintw(15 + i, 52 + j, " ");
-        }
-    }
-    for (i = 0; i < 5; i++)
-    {
-        for (j = 0; j < 36; j++)
-        {
-            mvprintw(22 + i, 52 + j, " ");
-        }
-    }
-    for (i = 0; i < 5; i++)
-    {
-        for (j = 0; j < 36; j++)
-        {
-            mvprintw(29 + i, 52 + j, " ");
-        }
+        for (j = ZERO; j < 36; j++)
+            mvwprintw(finestra, inizioy + i, iniziox + j, " ");
     }
 }
 
-void stampaFrogger(int iniziox, int inizioy)
+void stampaFrogger(int iniziox, int inizioy, WINDOW *finestraIniziale)
 {
-    int i, j;
+    int i;
 
     for (i = ZERO; i < ALTEZZA_SPRITE; i++)
-    {
-        for (j = ZERO; j < LARGHEZZA_SPRITE_INIZIO; j++)
-        {
-            mvaddch(inizioy + i, iniziox + j, frogger[i][j]);
-        }
-    }
+        mvwprintw(finestraIniziale, inizioy + i, iniziox, "%ls", frogger[i]);
 }

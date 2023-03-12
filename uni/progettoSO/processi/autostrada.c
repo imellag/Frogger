@@ -7,26 +7,7 @@ char spriteMacchineContrario[ALTEZZA_RANA][LARGHEZZA_MACCHINA] = {" _/^\\", "| _
 char spriteCamion[ALTEZZA_RANA][LARGHEZZA_CAMION] = {"/_______/^\\_ ", "|_______|___|", " O O O   O O"};
 char spriteCamionContrario[ALTEZZA_RANA][LARGHEZZA_CAMION] = {" _/^\\_______\\", "|___|_______|", " O O   O O O"};
 
-void funzAutostrada(WINDOW *finestraGioco, int gameDifficulty)
-{
-    // contatori
-    int i, j;
 
-    // attivo il colore della strada quindi grigio scuro
-    wattron(finestraGioco, COLOR_PAIR(TRE));
-
-    // è alto 9 e parte da altezza 20
-    for (i = ZERO; i < ALTEZZA_AUTOSTRADA + (gameDifficulty * 3); i++)
-    {
-        for (j = ZERO; j < LARGHEZZA_SCHERMO; j++)
-        {
-            mvwprintw(finestraGioco, INIZIO_AUTOSTRADA + (gameDifficulty * 3) + i, j, " ");
-        }
-    }
-
-    // spengo il colore
-    wattroff(finestraGioco, COLOR_PAIR(TRE));
-}
 
 void funzAuto(int p[DUE], int gameDifficulty)
 {
@@ -109,7 +90,7 @@ void movimentoMacchina(int p[DUE], int numeroMacchina, int gameDifficulty, int d
 
     int velocitaRandom = velocitaCorsie[numeroMacchina % (NUMERO_CORSIE + gameDifficulty)];
     srand(getpid());
-    int tempoRandom = (MIN_ATTESA + rand() % (MAX_ATTESA - MIN_ATTESA));
+    int tempoRandom = rand() %MAX_ATTESA;
     usleep(tempoRandom);
 
     macchina.coordinate.y = INIZIO_AUTOSTRADA + (numeroMacchina % (NUMERO_CORSIE + gameDifficulty) * 3) + (gameDifficulty * TRE);
@@ -130,14 +111,14 @@ void movimentoMacchina(int p[DUE], int numeroMacchina, int gameDifficulty, int d
         {
 
             macchina.coordinate.x--;
-            if (controlloLimiti(macchina.coordinate, MACCHINA0) == UNO)
+            if (controlloLimitiMacchina(macchina.coordinate) == UNO)
                 macchina.coordinate.x = LARGHEZZA_SCHERMO + LARGHEZZA_MACCHINA;
         }
         else
         {
             macchina.coordinate.x++;
 
-            if (controlloLimiti(macchina.coordinate, MACCHINA0) == DUE)
+            if (controlloLimitiMacchina(macchina.coordinate) == DUE)
                 macchina.coordinate.x = -LARGHEZZA_MACCHINA;
         }
 
@@ -150,7 +131,7 @@ void movimentoCamion(int p[DUE], int numeroCamion, int gameDifficulty, int direz
     Oggetto camion;
     int velocitaRandom = velocitaCorsie[numeroCamion % (NUMERO_CORSIE + gameDifficulty)];
     srand(getpid());
-    int tempoRandom = (MIN_ATTESA + rand() % (MAX_ATTESA - MIN_ATTESA));
+    int tempoRandom =  rand() % MAX_ATTESA;
     usleep(tempoRandom);
 
     camion.coordinate.y = INIZIO_AUTOSTRADA + (gameDifficulty * 3) + (numeroCamion % (NUMERO_CORSIE + gameDifficulty) * 3);
@@ -171,20 +152,19 @@ void movimentoCamion(int p[DUE], int numeroCamion, int gameDifficulty, int direz
         if (camion.velocita < ZERO)
         {
             camion.coordinate.x--;
-            if (controlloLimiti(camion.coordinate, CAMION0) == UNO)
+            if (controlloLimitiCamion(camion.coordinate) == UNO)
                 camion.coordinate.x = LARGHEZZA_SCHERMO + LARGHEZZA_CAMION;
         }
 
         else
         {
             camion.coordinate.x++;
-            if (controlloLimiti(camion.coordinate, CAMION0) == DUE)
+            if (controlloLimitiCamion(camion.coordinate) == DUE)
                 camion.coordinate.x = -LARGHEZZA_CAMION;
         }
 
         usleep(velocitaRandom);
     }
-    usleep(1000000);
 }
 
 // stampa le macchine in modo diverso in base alla loro direzione
@@ -271,9 +251,9 @@ Colore coloreVeicolo()
         rgb.r = rand() % 1000;
         rgb.g = rand() % 1000;
         rgb.b = rand() % 1000;
-    } while (rgb.r > 120 && rgb.r < 180 &&
-             rgb.g > 120 && rgb.g < 180 &&
-             rgb.b > 120 && rgb.b < 180);
+    } while (rgb.r > 100 && rgb.r < 200 &&
+             rgb.g > 100 && rgb.g < 200 &&
+             rgb.b > 100 && rgb.b < 200);
 
     return rgb;
 }

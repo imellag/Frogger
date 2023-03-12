@@ -4,13 +4,12 @@
 
 bool controlloCollisioniRanaProiettile(Coordinate proiettileNemico, Coordinate ranocchio)
 {
+
     if (proiettileNemico.x >= ranocchio.x &&
         proiettileNemico.x <= ranocchio.x + LARGHEZZA_RANA &&
         proiettileNemico.y >= ranocchio.y &&
         proiettileNemico.y <= ranocchio.y + ALTEZZA_RANA)
-    {
         return true;
-    }
 
     return false;
 }
@@ -26,21 +25,29 @@ bool controlloCollisioniProiettili(Coordinate proiettile, Coordinate proiettileN
     return false;
 }
 
-bool controlloCollisioniProiettiliAuto(Coordinate proiettile, Coordinate veicolo, int larghezza)
+bool controlloCollisioniProiettiliAuto(Coordinate proiettile, Oggetto veicolo, int larghezza)
 {
-
-    if (proiettile.x >= veicolo.x &&
-        proiettile.x <= veicolo.x + larghezza &&
-        proiettile.y >= veicolo.y &&
-        proiettile.y <= veicolo.y + ALTEZZA_VEICOLI)
+    if (veicolo.velocita < ZERO)
     {
-        return true;
+        if (proiettile.x <= veicolo.coordinate.x &&
+            proiettile.x >= veicolo.coordinate.x - larghezza &&
+            proiettile.y >= veicolo.coordinate.y &&
+            proiettile.y <= veicolo.coordinate.y + ALTEZZA_VEICOLI)
+            return true;
+    }
+    else
+    {
+        if (proiettile.x >= veicolo.coordinate.x &&
+            proiettile.x <= veicolo.coordinate.x + larghezza &&
+            proiettile.y >= veicolo.coordinate.y &&
+            proiettile.y <= veicolo.coordinate.y + ALTEZZA_VEICOLI)
+            return true;
     }
 
     return false;
 }
 
-void controlloCollisioniMacchine(int pRana[DUE], Oggetto macchinina[], Oggetto ranocchio, int *vite, Oggetto camioncino[],int gameDifficulty)
+void controlloCollisioniMacchine(int pRana[DUE], Oggetto macchinina[], Oggetto ranocchio, int *vite, Oggetto camioncino[], int gameDifficulty)
 {
     int i, invincibilita = CINQUE;
     for (i = 0; i < CINQUE; i++)
@@ -49,7 +56,7 @@ void controlloCollisioniMacchine(int pRana[DUE], Oggetto macchinina[], Oggetto r
         {
             invincibilita = CINQUE;
             (*vite)--;
-            posizioneInizialeRana(pRana, ranocchio,gameDifficulty);
+            posizioneInizialeRana(pRana, ranocchio, gameDifficulty);
             write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
             clear();
         }
@@ -60,29 +67,38 @@ void controlloCollisioniMacchine(int pRana[DUE], Oggetto macchinina[], Oggetto r
         {
             invincibilita = CINQUE;
             (*vite)--;
-            posizioneInizialeRana(pRana, ranocchio,gameDifficulty);
+            posizioneInizialeRana(pRana, ranocchio, gameDifficulty);
             write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
             clear();
         }
     }
 }
 
-bool proiettiliVeicoli(Oggetto proiettile, Oggetto proiettileNemico[], Coordinate veicolo, int larghezza, bool hitProiettile[])
+bool proiettiliVeicoli(Oggetto proiettile, Oggetto proiettileNemico[], Oggetto veicolo, int larghezza, bool hitProiettile[])
 {
     int j;
 
-    for (j = ZERO; j < TRE; j++)
+    // DA RIVEDERE
+    for (j = ZERO; j < MAX_TRONCHI; j++)
     {
         if (controlloCollisioniProiettiliAuto(proiettileNemico[j].coordinate, veicolo, larghezza))
-        {
             hitProiettile[j] = true;
-        }
     }
-
     if (controlloCollisioniProiettiliAuto(proiettile.coordinate, veicolo, larghezza))
-    {
         return true;
-    }
 
     return false;
+}
+
+bool controlloCollisioneNemicoProiettile(Oggetto proiettile, Oggetto tronco, bool nemico)
+{
+    bool flag = false;
+
+    if (proiettile.coordinate.x >= tronco.coordinate.x &&
+        proiettile.coordinate.x <= tronco.coordinate.x + LARGHEZZA_TRONCHI &&
+        proiettile.coordinate.y == tronco.coordinate.y + DUE && nemico)
+
+        flag = true;
+
+    return flag;
 }
