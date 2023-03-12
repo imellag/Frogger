@@ -16,14 +16,14 @@ Avvio menuIniziale(char *Nomeutente)
     Avvio info;
 
     mousemask(BUTTON1_PRESSED | REPORT_MOUSE_POSITION, NULL);
-    mouseinterval(0);
+     mouseinterval(0); 
 
     int i, j;
     int input;
 
     WINDOW *finestraIniziale;
 
-    finestraIniziale = newwin(ALTEZZA_SCHERMO + 2, LARGHEZZA_SCHERMO - 1, INIZIO_ALTEZZA_FINESTRA, INIZIO_LARGHEZZA_FINESTRA);
+    finestraIniziale = newwin(ALTEZZA_SCHERMO+2, LARGHEZZA_SCHERMO - 1, INIZIO_ALTEZZA_FINESTRA, INIZIO_LARGHEZZA_FINESTRA);
 
     init_pair(UNO, COLOR_GREEN, COLOR_BLACK);
     init_pair(DUE, COLOR_BLACK, COLOR_GREEN);
@@ -64,7 +64,6 @@ Avvio menuIniziale(char *Nomeutente)
 
     stampaFrogger(LARGHEZZA_SCHERMO / DUE - 30, 5, finestraIniziale);
 
-    wattroff(finestraIniziale, COLOR_PAIR(UNO));
 
     wrefresh(finestraIniziale);
 
