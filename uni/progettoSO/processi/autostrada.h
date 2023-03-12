@@ -6,8 +6,8 @@
 #define MIN_ATTESA 1000000
 #define MAX_ATTESA 5000000
 
-// stampa lo sfondo dell'autostrada
-void funzAutostrada(WINDOW *finestraGioco, int gameDifficulty);
+
+
 
 // crea per ogni macchina un processo
 void funzAuto(int p[], int gameDifficulty);

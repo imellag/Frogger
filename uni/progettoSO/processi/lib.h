@@ -1,5 +1,5 @@
 #pragma once
-#include <ncursesw/curses.h>
+#include <ncurses.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -7,12 +7,15 @@
 #include <signal.h>
 #include <fcntl.h>
 #include <pthread.h>
+#include <locale.h>
 
 // enumerazione utilizzata per gli id dei vari oggetti presenti sullo schermo
 enum oggetti
 {
     RANA,
+    TEMPO,
     SPAWN_PROIETTILE,
+    PAUSA,
     PROIETTILE0,
     PROIETTILE1,
     PROIETTILE2,
@@ -150,6 +153,7 @@ enum coloriProiettile
 #define FUORI_MAPPA -5
 
 // input da tastiera
+#define ESC 27
 #define A 65
 #define a 97
 #define D 68
@@ -162,8 +166,10 @@ enum coloriProiettile
 #define w 119
 #define SPACEBAR ' '
 
+#define ALTEZZA_CORSIE 3
+
 // dimensioni delle sprite delle scritte di inizio e fine partita
-#define ALTEZZA_SPRITE 5
+#define ALTEZZA_SPRITE 6
 #define LARGHEZZA_SPRITE_INIZIO 45
 #define LARGHEZZA_SPRITE_FINE 52
 
@@ -225,6 +231,7 @@ enum coloriProiettile
 #define LARGHEZZA_NEMICO 5
 #define NUMERO_NEMICI 3
 #define NUMERO_TRONCHI 3
+#define MAX_PROIETTILI_NEMICI 5
 
 // definisco un numero per ciascuno colore che viene utilizzato
 #define COLORE_RANA 11
@@ -243,7 +250,7 @@ enum coloriProiettile
 
 // variabili utili per il le statistiche e il controllo della partita
 #define MAX_VITE 5
-#define TEMPO_INIZIALE 60
+#define TEMPO_INIZIALE 40
 #define TEMPO_TANA 5
 #define PUNTEGGIO_INIZIALE 2000
 #define PUNTEGGIO_UCCISIONE 50
@@ -253,6 +260,9 @@ enum coloriProiettile
 
 #define INIZIO_ALTEZZA_FINESTRA 5
 #define INIZIO_LARGHEZZA_FINESTRA 20
+
+#define INIZIO_RETTANGOLO_AVVIO 50
+#define FINE_RETTANGOLO_AVVIO 90
 
 // struttura per le coordinate
 typedef struct

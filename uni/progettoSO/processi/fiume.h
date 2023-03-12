@@ -3,8 +3,8 @@
 #define TEMPO_TRONCO_MIN 40000
 #define TEMPO_TRONCO_MAX 60000
 
-// stampo lo sfondo del fiume
-void funzFiume(WINDOW *finestraGioco, int gameDifficulty);
+
+
 // creo un processo per ogni tronco e la direzione di ognuno
 int funzTronchi(int p[2], int gameDifficulty);
 /* controlla la posizione dei tronchi, la aggiorna e eventualmente cambia la loro direzione

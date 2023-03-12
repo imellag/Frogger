@@ -1,10 +1,15 @@
 #include "lib.h"
+#include"autostrada.h"
 
 int controlloLimitiRana(Coordinate entita,int gameDifficulty);
 
 /* funzione generale utilizzata per diversi oggetti nel gioco, riconosciuti tramite la variabile tipo,
 e in base al movimento di questo controlla che si comporti correttamente una volta arrivato al bordo dello schermo */
-int controlloLimiti(Coordinate entita, int tipo);
+int controlloLimitiMacchina(Coordinate entita);
+
+int controlloLimitiProiettile(Coordinate entita);
+int controlloLimitiCamion(Coordinate entita);
+int controlloLimitiTronco(Coordinate entita);
 
 // controlla se la rana è sul tronco
 int controlloRanaTronco(Coordinate rana, Oggetto tronco[]);

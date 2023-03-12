@@ -12,7 +12,7 @@ _Bool checkCoordinate(int posizione, int coordinata_da_checkare, int intorni)
 int controlloLimitiRana(Coordinate entita, int gameDifficulty)
 {
 
-    int flag=-1;
+    int flag = -1;
 
     /* prima controllo se le coordinate corrispondono a una tana e restituisco il numero della tana per chiuderla,
     altrimenti restituisco 6 che indica che la rana ha superato il confine */
@@ -31,41 +31,54 @@ int controlloLimitiRana(Coordinate entita, int gameDifficulty)
             flag = SEI;
     }
 
-    else if (entita.x < ZERO || entita.x >= LARGHEZZA_SCHERMO || entita.y <= SEI || entita.y > ALTEZZA_SCHERMO - ALTEZZA_RANA + gameDifficulty*6)
-    {
+    else if (entita.x < ZERO || entita.x >= LARGHEZZA_SCHERMO || entita.y <= SEI ||
+             entita.y > ALTEZZA_SCHERMO - ALTEZZA_RANA + gameDifficulty * 6)
         flag = SEI;
-    }
+
+    return flag;
+}
+int controlloLimitiMacchina(Coordinate entita)
+{
+
+    int flag = 0;
+
+    if (entita.x < -UNO)
+        flag = 1;
+
+    else if (entita.x >= LARGHEZZA_SCHERMO)
+        flag = 2;
+
+    return flag;
+}
+int controlloLimitiCamion(Coordinate entita)
+{
+
+    int flag = 0;
+    if (entita.x < -UNO)
+        flag = 1;
+
+    else if (entita.x >= LARGHEZZA_SCHERMO)
+        flag = 2;
 
     return flag;
 }
 
-int controlloLimiti(Coordinate entita, int tipo)
+int controlloLimitiProiettile(Coordinate entita)
 {
-    int flag = ZERO;
+    bool flag = false;
 
-    if (tipo >= PROIETTILE0 && tipo <= PROIETTILE29)
-    {
-        if (entita.y < 9)
-        {
-            flag = 1;
-        }
-    }
-    else if (tipo == TRONCO0)
-    {
-        if (entita.x < ZERO || entita.x >= LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI)
-            flag = 1;
-    }
-    else if (tipo == MACCHINA0 || tipo == CAMION0) // macchina o camion
-    {
-        if (entita.x < -UNO)
-        {
-            flag = 1;
-        }
-        else if (entita.x >= LARGHEZZA_SCHERMO)
-        {
-            flag = 2;
-        }
-    }
+    if (entita.y < 9)
+        flag = true;
+
+    return flag;
+}
+
+int controlloLimitiTronco(Coordinate entita)
+{
+    bool flag = false;
+    if (entita.x < ZERO || entita.x >= LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI)
+        flag = true;
+
     return flag;
 }
 
@@ -82,9 +95,7 @@ int controlloRanaTronco(Coordinate rana, Oggetto tronco[])
         for (j = ZERO; j < LARGHEZZA_RANA; j++)
         {
             if (rana.x + j == tronco[i].coordinate.x + j && rana.y == tronco[i].coordinate.y)
-            {
                 flag = true;
-            }
         }
         if (flag == true)
         {
@@ -96,7 +107,7 @@ int controlloRanaTronco(Coordinate rana, Oggetto tronco[])
     return rana.x;
 }
 
-void funzTempo(int pOrologio[])
+void funzTempo(int p[])
 {
     pid_t pidTempo;
 
@@ -109,22 +120,21 @@ void funzTempo(int pOrologio[])
         exit(EXIT_FAILURE);
     }
     else if (pidTempo == ZERO)
-    {
-        orologio(pOrologio);
-    }
+        orologio(p);
 }
 
-void orologio(int pOrologio[])
+void orologio(int p[])
 {
-    Tempo secondo;
-    secondo.tempo = false;
+    Oggetto secondo;
+    secondo.id=TEMPO;
+    secondo.velocita = 0;
     secondo.pid = getpid();
-    close(pOrologio[READ]);
+    close(p[READ]);
     while (true)
     {
 
-        write(pOrologio[WRITE], &secondo, sizeof(Tempo));
-        secondo.tempo = true;
+        write(p[WRITE], &secondo, sizeof(Oggetto));
+        secondo.velocita = 1;
 
         sleep(UNO);
     }
@@ -135,8 +145,6 @@ Oggetto posizioneInizialeRana(int pRana[], Oggetto rana, int gameDifficulty)
     rana.coordinate.x = ZERO;
     rana.coordinate.y = POSIZIONE_INIZIALE_RANA_Y + (gameDifficulty * 6);
     write(pRana[WRITE], &rana, sizeof(Oggetto));
-    clear();
-
     return rana;
 }
 
@@ -159,19 +167,23 @@ bool controlloCollisioneOggetti(Oggetto entita, Coordinate rana, int LARGHEZZA_E
 
 void colori()
 {
+
     init_color(COLORE_RANA, 75, 890, 20);          // 19/227/5
     init_color(COLORE_MARCIAPIEDE, 388, 270, 102); // 99/69/26
     init_color(COLORE_AUTOSTRADA, 150, 150, 150);  // grigio (per ora), sarebbe 66/66/66 in rgb, convertito 259 /259/259
     init_color(COLORE_TRONCHI, 459, 298, 102);     // 117/76/26
     init_color(COLORE_TANA, 541, 271, 0);
     init_color(COLORE_NEMICI, 875, 313, 273); // 224, 80, 70
-    init_color(COLORE_FIUME, 59, 699, 996); // 15,179,255
+    init_color(COLORE_FIUME, 59, 699, 996);   // 15,179,255
     init_pair(1, COLOR_BLACK, COLORE_NEMICI);
     init_pair(2, COLOR_BLACK, COLORE_MARCIAPIEDE);
     init_pair(3, COLOR_BLACK, COLORE_AUTOSTRADA);
     init_pair(4, COLOR_BLACK, COLOR_GREEN); // colore prato
-    init_pair(5, COLOR_BLACK, COLORE_FIUME); 
+    init_pair(5, COLOR_BLACK, COLORE_FIUME);
     init_pair(6, COLOR_BLACK, COLORE_TRONCHI);
+    init_pair(10, COLOR_GREEN, COLOR_BLACK); // colore delle scritte
+    init_pair(11, COLOR_BLACK, COLOR_BLACK); // colore nero
+    init_pair(12, COLORE_NEMICI, COLOR_BLACK);
 }
 
 int controlloPosizione(Coordinate oggetto, bool coloriFiume, int gameDifficulty)

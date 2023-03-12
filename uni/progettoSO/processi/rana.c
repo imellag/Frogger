@@ -35,6 +35,7 @@ void movimentoRana(int p[], int pRana[], int gameDifficulty)
 
     rana.coordinate.x = ZERO;
     rana.coordinate.y = POSIZIONE_INIZIALE_RANA_Y + (gameDifficulty)*6;
+    rana.pid=getpid();
 
     close(p[READ]);
     close(pRana[WRITE]);
@@ -55,7 +56,7 @@ void movimentoRana(int p[], int pRana[], int gameDifficulty)
         case W:
         case KEY_UP:
             rana.coordinate.y -= ALTEZZA_RANA;
-            if (controlloLimitiRana(rana.coordinate,gameDifficulty) == SEI)
+            if (controlloLimitiRana(rana.coordinate, gameDifficulty) == SEI)
                 rana.coordinate.y += ALTEZZA_RANA;
             break;
         case s:
@@ -69,19 +70,20 @@ void movimentoRana(int p[], int pRana[], int gameDifficulty)
         case D:
         case KEY_RIGHT:
             rana.coordinate.x += LARGHEZZA_RANA;
-            if (controlloLimitiRana(rana.coordinate,gameDifficulty) == SEI)
+            if (controlloLimitiRana(rana.coordinate, gameDifficulty) == SEI)
                 rana.coordinate.x -= LARGHEZZA_RANA;
             break;
         case a:
         case A:
         case KEY_LEFT:
             rana.coordinate.x -= LARGHEZZA_RANA;
-            if (controlloLimitiRana(rana.coordinate,gameDifficulty) == SEI)
+            if (controlloLimitiRana(rana.coordinate, gameDifficulty) == SEI)
                 rana.coordinate.x += LARGHEZZA_RANA;
             break;
         case Q:
         case q:
             rana.id = q;
+              move = false;
             write(p[WRITE], &rana, sizeof(Oggetto));
             break;
 
@@ -90,6 +92,12 @@ void movimentoRana(int p[], int pRana[], int gameDifficulty)
             rana.id = SPAWN_PROIETTILE;
             write(p[WRITE], &rana, sizeof(Oggetto));
 
+            break;
+
+        case 'p':
+            rana.id = PAUSA;
+              move = false;
+            write(p[WRITE], &rana, sizeof(Oggetto));
             break;
 
         default:
@@ -112,7 +120,7 @@ void funzProiettile(Oggetto rana, int p[DUE], int numeroProiettile)
     proiettile.pid = getpid();
     while (true)
     {
-        if (controlloLimiti(proiettile.coordinate, PROIETTILE0))
+        if (controlloLimitiProiettile(proiettile.coordinate))
         {
             proiettile.id = PROIETTILE0_OUT + numeroProiettile;
             write(p[WRITE], &proiettile, sizeof(Oggetto));

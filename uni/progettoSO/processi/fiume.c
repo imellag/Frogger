@@ -6,19 +6,6 @@
 char spriteTronchi[ALTEZZA_RANA][LARGHEZZA_TRONCHI] = {"<~~~~~~~~~~~~~>", "<~~~~~~~~~~~~~>", "<~~~~~~~~~~~~~>"};
 char spriteNemicosulTronco[ALTEZZA_NEMICO][LARGHEZZA_TRONCHI] = {"<~~~~~o\\/o~~~~>", "<~~~~~:||:~~~~>", "<~~~~~./\\.~~~~>"};
 
-void funzFiume(WINDOW *finestraGioco, int gameDifficulty)
-{
-    int i, j;
-    wattron(finestraGioco, COLOR_PAIR(CINQUE));
-    for (i = ZERO; i < ALTEZZA_FIUME + (gameDifficulty * 3); i++)
-    {
-        for (j = ZERO; j < LARGHEZZA_SCHERMO; j++)
-        {
-            mvwprintw(finestraGioco, INIZIO_FIUME + i, ZERO + j, " ");
-        }
-    }
-    wattroff(finestraGioco, COLOR_PAIR(CINQUE));
-}
 
 int funzTronchi(int p[DUE], int gameDifficulty)
 {
@@ -74,7 +61,7 @@ void funzTronco(int p[DUE], int numeroTronco, int velocita, int gameDifficulty)
 
         tronco.coordinate.x += tronco.velocita;
 
-        if (controlloLimiti(tronco.coordinate, TRONCO0))
+        if (controlloLimitiTronco(tronco.coordinate))
             tronco.velocita = tronco.velocita * -UNO;
         usleep(tempoRandom);
     }
@@ -133,7 +120,7 @@ void movimentoProiettileNemico(Coordinate tronco, int p[], int i, int gameDiffic
 {
     Oggetto proiettile;
     proiettile.coordinate.x = tronco.x + LARGHEZZA_TRONCHI / DUE;
-    proiettile.coordinate.y = tronco.y + UNO;
+    proiettile.coordinate.y = tronco.y + ALTEZZA_CORSIE;
     proiettile.id = PROIETTILE_NEMICO0 + i;
     proiettile.pid = getpid();
     close(p[READ]);
