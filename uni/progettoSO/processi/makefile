@@ -1,5 +1,5 @@
-progetto.out: main.o rana.o autostrada.o fiume.o tane.o funzioniGenerali.o collisioni.o avvio.o funzioniMain.o areaDisegno.o
-	gcc main.o rana.o autostrada.o fiume.o tane.o funzioniGenerali.o collisioni.o avvio.o funzioniMain.o areaDisegno.o -lncursesw -o progetto.out
+progetto.out: main.o rana.o autostrada.o fiume.o funzioniGenerali.o collisioni.o avvio.o funzioniMain.o areaDisegno.o areaGioco.o
+	gcc main.o rana.o autostrada.o fiume.o funzioniGenerali.o collisioni.o avvio.o funzioniMain.o areaDisegno.o areaGioco.o -lncursesw -o progetto.out
 main.o: main.c lib.h
 	gcc -c main.c
 rana.o: rana.c rana.h lib.h
@@ -8,8 +8,6 @@ autostrada.o: autostrada.c autostrada.h lib.h
 	gcc -c autostrada.c
 fiume.o: fiume.c fiume.h lib.h
 	gcc -c fiume.c
-tane.o: tane.c tane.h lib.h
-	gcc -c tane.c
 funzioniGenerali.o: funzioniGenerali.c funzioniGenerali.h lib.h
 	gcc -c funzioniGenerali.c 
 avvio.o: avvio.c avvio.h lib.h
@@ -20,6 +18,8 @@ funzioniMain.o: funzioniMain.c funzioniMain.h lib.h
 	gcc -c funzioniMain.c
 areaDisegno.o: areaDisegno.c areaDisegno.h lib.h
 	gcc -c areaDisegno.c
+areaGioco.o: areaGioco.c areaGioco.h lib.h
+	gcc -c areaGioco.c
 clean:
 	rm *.o
 	rm *.out

@@ -16,102 +16,22 @@ enum oggetti
     TEMPO,
     SPAWN_PROIETTILE,
     PAUSA,
-    PROIETTILE0,
-    PROIETTILE1,
-    PROIETTILE2,
-    PROIETTILE3,
-    PROIETTILE4,
-    PROIETTILE5,
-    PROIETTILE6,
-    PROIETTILE7,
-    PROIETTILE8,
-    PROIETTILE9,
-    PROIETTILE10,
-    PROIETTILE11,
-    PROIETTILE12,
-    PROIETTILE13,
-    PROIETTILE14,
-    PROIETTILE15,
-    PROIETTILE16,
-    PROIETTILE17,
-    PROIETTILE18,
-    PROIETTILE19,
-    PROIETTILE20,
-    PROIETTILE21,
-    PROIETTILE22,
-    PROIETTILE23,
-    PROIETTILE24,
-    PROIETTILE25,
-    PROIETTILE26,
-    PROIETTILE27,
-    PROIETTILE28,
-    PROIETTILE29,
+    PROIETTILE0 = 4,
+    PROIETTILE29 = 33,
     PROIETTILE0_OUT,
-    PROIETTILE1_OUT,
-    PROIETTILE2_OUT,
-    PROIETTILE3_OUT,
-    PROIETTILE4_OUT,
-    PROIETTILE5_OUT,
-    PROIETTILE6_OUT,
-    PROIETTILE7_OUT,
-    PROIETTILE8_OUT,
-    PROIETTILE9_OUT,
-    PROIETTILE10_OUT,
-    PROIETTILE11_OUT,
-    PROIETTILE12_OUT,
-    PROIETTILE13_OUT,
-    PROIETTILE14_OUT,
-    PROIETTILE15_OUT,
-    PROIETTILE16_OUT,
-    PROIETTILE17_OUT,
-    PROIETTILE18_OUT,
-    PROIETTILE19_OUT,
-    PROIETTILE20_OUT,
-    PROIETTILE21_OUT,
-    PROIETTILE22_OUT,
-    PROIETTILE23_OUT,
-    PROIETTILE24_OUT,
-    PROIETTILE25_OUT,
-    PROIETTILE26_OUT,
-    PROIETTILE27_OUT,
-    PROIETTILE28_OUT,
-    PROIETTILE29_OUT,
+    PROIETTILE29_OUT = 63,
     TRONCO0,
-    TRONCO1,
-    TRONCO2,
-    TRONCO3,
-    TRONCO4,
+    TRONCO4 = 68,
     MACCHINA0,
-    MACCHINA1,
-    MACCHINA2,
-    MACCHINA3,
-    MACCHINA4,
-    MACCHINA5,
-    MACCHINA6,
-    MACCHINA7,
-    MACCHINA8,
-    MACCHINA9,
-    MACCHINA10,
+    MACCHINA10 = 79,
     CAMION0,
-    CAMION1,
-    CAMION2,
-    CAMION3,
-    CAMION4,
-    CAMION5,
-    CAMION6,
-    CAMION7,
-    CAMION8,
+    CAMION8 = 88,
     TRONCONEMICO0,
-    TRONCONEMICO1,
-    TRONCONEMICO2,
-    TRONCONEMICO3,
-    TRONCONEMICO4,
+    TRONCONEMICO4 = 93,
     PROIETTILE_NEMICO0,
-    PROIETTILE_NEMICO1,
-    PROIETTILE_NEMICO2,
+    PROIETTILE_NEMICO2 = 96,
     PROIETTILE_NEMICO0_OUT,
-    PROIETTILE_NEMICO1_OUT,
-    PROIETTILE_NEMICO2_OUT
+    PROIETTILE_NEMICO2_OUT = 99
 };
 
 // serve per togliere vari magic numbers
@@ -139,7 +59,7 @@ enum gameDifficulty
 };
 
 // enumerazione per i colori dello sfondo del proiettile
-enum coloriProiettile 
+enum coloriProiettile
 {
     PROIETTILE_NEMICO,
     PROIETTILE_MARCIAPIEDE,
@@ -166,6 +86,7 @@ enum coloriProiettile
 #define w 119
 #define SPACEBAR ' '
 
+// altezza generale di tutte le corsie (fiume, autostrada ecc.)
 #define ALTEZZA_CORSIE 3
 
 // dimensioni delle sprite delle scritte di inizio e fine partita
@@ -255,14 +176,16 @@ enum coloriProiettile
 #define PUNTEGGIO_INIZIALE 2000
 #define PUNTEGGIO_UCCISIONE 50
 #define PUNTEGGIO_TANA 150
-#define SPAWN_NEMICO 6
+#define TEMPO_SPAWN_NEMICO 7
+// numero massimo di proiettili che la rana può avere contemporaneamente a schermo
 #define NUMERO_PROIETTILI 30
 
+// dimensione massima nome utente
+#define MAX_NOMI 64
+
+// offset per spostare la finestra dello schermo pù al centro
 #define INIZIO_ALTEZZA_FINESTRA 5
 #define INIZIO_LARGHEZZA_FINESTRA 20
-
-#define INIZIO_RETTANGOLO_AVVIO 50
-#define FINE_RETTANGOLO_AVVIO 90
 
 // struttura per le coordinate
 typedef struct
@@ -280,14 +203,6 @@ typedef struct
     pid_t pid;
 } Oggetto;
 
-// struttura per il controllo del tempo di gioco
-typedef struct
-{
-    int id;
-    bool tempo;
-    pid_t pid;
-} Tempo;
-
 // struttura usata per restituire un colore da una funzione
 typedef struct
 {
@@ -296,11 +211,10 @@ typedef struct
     int b;
 } Colore;
 
-typedef struct {
+// struttura per i dati restituiti dalla funzione di avvio della partita
+typedef struct
+{
     int difficolta;
     bool audio;
-    char* nome;
+    Colore colore;
 } Avvio;
-
-
-#define LUNGHEZZA_MAX 25

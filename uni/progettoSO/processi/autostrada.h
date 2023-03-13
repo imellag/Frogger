@@ -30,4 +30,5 @@ void stampaMacchina(WINDOW*finestraGioco,Oggetto macchina, int indice);
 // funzione per stampare i camion
 void stampaCamion(WINDOW*finestraGioco,Oggetto camion, int indice);
 
+// crea casualmente e restituisce un colore per un singolo veicolo
 Colore coloreVeicolo();

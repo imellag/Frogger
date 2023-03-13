@@ -23,13 +23,13 @@ void vittoria(WINDOW *finestraGioco, int punteggio);
 Oggetto morteRana(WINDOW *finestraGioco, int *vite, int pRana[], Oggetto ranocchio, int difficolta, int *tempo);
 
 // crea il processo di un proiettile della rana e riproduce il suono dello sparo
-void creaProiettile(int p[],Oggetto ranocchio,int*offset);
+void creaProiettile(int p[], Oggetto ranocchio, int *offset);
 
 /* se l'utente mette in pausa la partita manda un segnale di stop a tutti i processi.
 Se poi l'utente decide di riprendere la partita fa ripartire i processi, altrimenti manda un SIGKILL */
-void funzPausa(WINDOW* fienstraGioco,int difficolta, Oggetto camion[], Oggetto tronchi[], Oggetto macchine[], pid_t pidTempo, pid_t pidRana);
+bool funzPausa(WINDOW *finestraGioco, int difficolta, Oggetto camion[], Oggetto tronchi[], Oggetto macchine[], pid_t pidTempo, pid_t pidRana);
 
-/* stampa l'interfaccia della pausa e della fine della partita. Prende l'input del mouse dell'utente e lo restituisce 
+/* stampa l'interfaccia della pausa e della fine della partita. Prende l'input del mouse dell'utente e lo restituisce
 alla funzione chiamante che poi lo gestisce */
 bool pausaeNuovaPartita(WINDOW *finestraGioco, int chiamata);
 
@@ -38,3 +38,10 @@ Oggetto uccidiProiettile(Oggetto proiettile);
 
 // stampa la scritta "grazie per aver giocato"
 void schermataFinale(WINDOW *finestraGioco);
+
+// time_t spawnNemico(time_t fine_nemico, time_t inizio_nemico, int difficolta,bool sulTronco, bool nemico[],Oggetto tronchino[],time_t inizio_proiettile[],Oggetto rana);
+// Oggetto controlloCollisioneVeicoliProiettile(int i,Oggetto proiettilino[], Oggetto proiettileNemico[], Oggetto macchinina[], bool hitProiettile[]);
+
+bool controlloTaneChiuse(bool arrayTane[]);
+
+bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer, int punteggio, int difficolta, Oggetto tempo, Oggetto macchina[], Oggetto camion[], Oggetto tronco[], bool *partitaInCorso, bool partitaFinita);

@@ -1,6 +1,5 @@
 #include "lib.h"
 #include "funzioniGenerali.h"
-#include "tane.h"
 
 char spriteProiettile = '|';
 
@@ -165,7 +164,7 @@ bool controlloCollisioneOggetti(Oggetto entita, Coordinate rana, int LARGHEZZA_E
     return flag;
 }
 
-void colori()
+void colori(Avvio info)
 {
 
     init_color(COLORE_RANA, 75, 890, 20);          // 19/227/5
