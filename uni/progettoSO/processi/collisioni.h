@@ -7,5 +7,5 @@ bool controlloCollisioniProiettiliAuto(Coordinate proiettile, Oggetto veicolo, i
 bool controlloCollisioniProiettili(Coordinate proiettile, Coordinate proiettileNemico);
 // funzione generale che controlla tutte le collisioni di tutti i proiettili con tutti i veicoli
 bool proiettiliVeicoli(Oggetto proiettile, Oggetto proiettileNemico[], Oggetto veicolo, int larghezza, bool hitProiettile[]);
-
+// controllo collisione proiettile della rana con i nemici
 bool controlloCollisioneNemicoProiettile(Oggetto proiettile, Oggetto tronco, bool nemico);
