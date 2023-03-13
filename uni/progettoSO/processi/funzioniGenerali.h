@@ -7,6 +7,7 @@ int controlloLimitiRana(Coordinate entita,int gameDifficulty);
 e in base al movimento di questo controlla che si comporti correttamente una volta arrivato al bordo dello schermo */
 int controlloLimitiMacchina(Coordinate entita);
 
+// funzioni per controllare che gli oggetti non escano dallo schermo
 int controlloLimitiProiettile(Coordinate entita);
 int controlloLimitiCamion(Coordinate entita);
 int controlloLimitiTronco(Coordinate entita);
@@ -15,7 +16,7 @@ int controlloLimitiTronco(Coordinate entita);
 int controlloRanaTronco(Coordinate rana, Oggetto tronco[]);
 
 // inzializza i colori
-void colori();
+void colori(Avvio info);
 
 // in base alla posizione della rana o del proiettile stampa i colori sottostanti
 int controlloPosizione(Coordinate oggetto, bool coloriFiume, int gameDifficulty);
@@ -39,4 +40,5 @@ Oggetto posizioneInizialeProiettile(int p[], Oggetto proiettile, int i);
 // stampa i proiettili controllando prima il colore di sfondo
 void stampaProiettili(WINDOW *finestraGioco, Oggetto arrayTrochi[], bool nemico[], Coordinate proiettile, int gameDifficulty);
 
+// funzione solo per stampare il proiettile attivando il colore giusto
 void soloStampa(WINDOW *finestraGioco, Coordinate proiettile, int colore);

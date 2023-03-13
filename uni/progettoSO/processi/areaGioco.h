@@ -1,0 +1,1 @@
+bool areaGioco(Avvio info);

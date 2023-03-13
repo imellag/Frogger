@@ -1,5 +1,5 @@
 #include "funzioniMain.h"
-
+#include "collisioni.h"
 wchar_t *spriteSconfitta[ALTEZZA_SPRITE] = {
     L"██╗░░██╗░█████╗░██╗  ██████╗░███████╗██████╗░░██████╗░█████╗░██╗",
     L"██║░░██║██╔══██╗██║  ██╔══██╗██╔════╝██╔══██╗██╔════╝██╔══██╗██║",
@@ -24,8 +24,8 @@ wchar_t *continua[DUE] = {
 };
 
 wchar_t *scrittaFinale[DUE] = {
-L"█▀▀ █▀█ ▄▀█ ▀█ █ █▀▀   █▀█ █▀▀ █▀█   ▄▀█ █░█ █▀▀ █▀█   █▀▀ █ █▀█ █▀▀ ▄▀█ ▀█▀ █▀█ █",
-L"█▄█ █▀▄ █▀█ █▄ █ ██▄   █▀▀ ██▄ █▀▄   █▀█ ▀▄▀ ██▄ █▀▄   █▄█ █ █▄█ █▄▄ █▀█ ░█░ █▄█ ▄",
+    L"█▀▀ █▀█ ▄▀█ ▀█ █ █▀▀   █▀█ █▀▀ █▀█   ▄▀█ █░█ █▀▀ █▀█   █▀▀ █ █▀█ █▀▀ ▄▀█ ▀█▀ █▀█ █",
+    L"█▄█ █▀▄ █▀█ █▄ █ ██▄   █▀▀ ██▄ █▀▄   █▀█ ▀▄▀ ██▄ █▀▄   █▄█ █ █▄█ █▄▄ █▀█ ░█░ █▄█ ▄",
 };
 
 void dimensioneFinestra(int maxx, int maxy)
@@ -52,7 +52,7 @@ void stampaVite(WINDOW *finestraGioco, int vite)
     Coordinate vita;
     vita.x = LARGHEZZA_SCHERMO - TRE;
     vita.y = DUE;
-    /* inizio a stamparle da in basso a destra, poi mi sposto
+    /* inizio a stamparle da in alto a destra, poi mi sposto
     verso sinistra */
     init_pair(OTTO, COLOR_RED, COLOR_BLACK);
     wattron(finestraGioco, COLOR_PAIR(OTTO));
@@ -60,7 +60,7 @@ void stampaVite(WINDOW *finestraGioco, int vite)
     {
         mvwaddstr(finestraGioco, vita.y, vita.x, "\u2665");
 
-        vita.x -= TRE; // lascio 1 di spazio tra le varie vite
+        vita.x -= TRE; // lascio 2 di spazio tra le varie vite
     }
     wattroff(finestraGioco, COLOR_PAIR(OTTO));
 }
@@ -145,13 +145,14 @@ void creaProiettile(int p[], Oggetto ranocchio, int *offset)
     }
 }
 
-void funzPausa(WINDOW *finestraGioco, int difficolta, Oggetto camion[], Oggetto tronchi[], Oggetto macchine[], pid_t pidTempo, pid_t pidRana)
+bool funzPausa(WINDOW *finestraGioco, int difficolta, Oggetto camion[], Oggetto tronchi[], Oggetto macchine[], pid_t pidTempo, pid_t pidRana)
 {
     int i;
 
     bool scelta;
 
     int segnaleInviato;
+    bool partitaFinita=false;
 
     for (i = 0; i < NUMERO_MACCHINE + (3 * difficolta); i++)
         kill(macchine[i].pid, SIGSTOP);
@@ -170,8 +171,10 @@ void funzPausa(WINDOW *finestraGioco, int difficolta, Oggetto camion[], Oggetto 
 
     if (scelta)
         segnaleInviato = SIGCONT;
-    else
+    else{
         segnaleInviato = SIGKILL;
+        partitaFinita=true;
+        }
 
     for (i = 0; i < NUMERO_MACCHINE + (3 * difficolta); i++)
         kill(macchine[i].pid, segnaleInviato);
@@ -185,6 +188,8 @@ void funzPausa(WINDOW *finestraGioco, int difficolta, Oggetto camion[], Oggetto 
     kill(pidTempo, segnaleInviato);
 
     kill(pidRana, segnaleInviato);
+
+    return partitaFinita;
 }
 
 bool pausaeNuovaPartita(WINDOW *finestraGioco, int chiamata)
@@ -195,9 +200,6 @@ bool pausaeNuovaPartita(WINDOW *finestraGioco, int chiamata)
 
     /* Chiamata == 1: pausa
        Chiamata == 2: nuova partita */
-
-    wclear(finestraGioco);
-    wrefresh(finestraGioco);
 
     mousemask(BUTTON1_PRESSED | REPORT_MOUSE_POSITION, NULL);
 
@@ -210,29 +212,25 @@ bool pausaeNuovaPartita(WINDOW *finestraGioco, int chiamata)
     wattron(finestraGioco, COLOR_PAIR(4));
 
     for (i = ZERO; i < DUE; i++)
-    {
-        stampaRettangolo(finestraGioco, 31 + (LARGHEZZA_RETTANGOLO * i + 6 * i), 20);
-    }
+        stampaRettangolo(finestraGioco, 31 + (LARGHEZZA_RETTANGOLO * i + 6 * i), 21);
 
     if (chiamata == UNO)
     {
-        mvwprintw(finestraGioco, 22, 48, "Si");
-        mvwprintw(finestraGioco, 22, 90, "No");
+        mvwprintw(finestraGioco, 23, 48, "Si");
+        mvwprintw(finestraGioco, 23, 90, "No");
     }
     else if (chiamata == DUE)
     {
-        mvwprintw(finestraGioco, 22, 43, "Nuova partita");
-        mvwprintw(finestraGioco, 22, 84, "Esci dal gioco");
+        mvwprintw(finestraGioco, 23, 43, "Nuova partita");
+        mvwprintw(finestraGioco, 23, 84, "Esci dal gioco");
     }
 
     wattroff(finestraGioco, COLOR_PAIR(4));
     wrefresh(finestraGioco);
-
     while (true)
     {
         input = getch();
 
-        mvwprintw(finestraGioco, 0, 0, "Input ricevuto");
         wrefresh(finestraGioco);
 
         if (input == KEY_MOUSE)
@@ -243,29 +241,20 @@ bool pausaeNuovaPartita(WINDOW *finestraGioco, int chiamata)
                 if (event.bstate & BUTTON1_PRESSED)
                 {
                     if (event.x >= 31 + INIZIO_LARGHEZZA_FINESTRA && event.x <= 67 + INIZIO_LARGHEZZA_FINESTRA &&
-                        event.y >= 20 + INIZIO_ALTEZZA_FINESTRA && event.y <= 25 + INIZIO_ALTEZZA_FINESTRA)
-                    {
-                        mvwprintw(finestraGioco, 0, 0, "Input ricevuto 1");
-                        wrefresh(finestraGioco);
-                        sleep(1);
+                        event.y >= 21 + INIZIO_ALTEZZA_FINESTRA && event.y <= 26 + INIZIO_ALTEZZA_FINESTRA)
                         return true;
-                    }
 
                     else if (event.x >= 73 + INIZIO_LARGHEZZA_FINESTRA && event.x <= 109 + INIZIO_LARGHEZZA_FINESTRA &&
-                             event.y >= 20 + INIZIO_ALTEZZA_FINESTRA && event.y <= 25 + INIZIO_ALTEZZA_FINESTRA)
-                    {
-                        mvwprintw(finestraGioco, 0, 0, "Input ricevuto 2");
-                        wrefresh(finestraGioco);
-                        sleep(1);
+                             event.y >= 21 + INIZIO_ALTEZZA_FINESTRA && event.y <= 26 + INIZIO_ALTEZZA_FINESTRA)
                         return false;
-                    }
                 }
             }
         }
     }
 }
 
-void schermataFinale(WINDOW *finestraGioco) {
+void schermataFinale(WINDOW *finestraGioco)
+{
     int i;
 
     wattron(finestraGioco, COLOR_PAIR(10));
@@ -287,4 +276,84 @@ Oggetto uccidiProiettile(Oggetto proiettile)
     proiettile.coordinate.y = FUORI_MAPPA;
 
     return proiettile;
+}
+
+time_t spawnNemico(time_t fine_nemico, time_t inizio_nemico, int difficolta, bool sulTronco,
+                   bool nemico[], Oggetto tronchino[], time_t inizio_proiettile[], Oggetto rana)
+{
+
+    int contaNemici = 0;
+    int i;
+    int troncoNemico = 0;
+}
+
+Oggetto controlloCollisioneVeicoliProiettile(int i, Oggetto proiettilino[], Oggetto proiettileNemico[], Oggetto macchinina[], bool hitProiettile[])
+{
+    int j;
+    for (j = 0; j < NUMERO_PROIETTILI; j++)
+    {
+        if (proiettiliVeicoli(proiettilino[j], proiettileNemico, macchinina[i], LARGHEZZA_MACCHINA, hitProiettile))
+            proiettilino[j] = uccidiProiettile(proiettilino[j]);
+    }
+
+    return proiettilino[j];
+}
+
+bool controlloTaneChiuse(bool arrayTane[])
+{
+    int i;
+    bool buffer = false;
+
+    for (i = ZERO; i < NUMERO_TANE; i++)
+    {
+        if (arrayTane[i] == false)
+        {
+            buffer = true;
+            break;
+        }
+    }
+
+    return buffer;
+}
+
+bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer, int punteggio,
+                 int difficolta, Oggetto tempo, Oggetto macchina[], Oggetto camion[], Oggetto tronco[], bool *partitaInCorso,bool partitaFinita)
+{
+    int i;
+    bool riniziaPartita;
+    if (ranocchio.id == q || vite == 0 || buffer == false || partitaFinita)
+    {
+        (*partitaInCorso) = false;
+        wclear(finestraGioco);
+
+        if (vite == ZERO || partitaFinita)
+            gameOver(finestraGioco);
+
+        else if (buffer == false)
+            vittoria(finestraGioco, punteggio);
+
+        riniziaPartita = pausaeNuovaPartita(finestraGioco, DUE);
+
+        if (!riniziaPartita)
+        {
+            wclear(finestraGioco);
+            schermataFinale(finestraGioco);
+        }
+
+        endwin();
+
+        for (i = ZERO; i < NUMERO_MACCHINE + (difficolta * 3); i++)
+            kill(macchina[i].pid, SIGKILL);
+
+        for (i = ZERO; i < NUMERO_CAMION + (difficolta * 3); i++)
+            kill(camion[i].pid, SIGKILL);
+
+        for (i = ZERO; i < NUMERO_TRONCHI; i++)
+            kill(tronco[i].pid, SIGKILL);
+
+        kill(ranocchio.pid, SIGKILL);
+        kill(tempo.pid, SIGKILL);
+    }
+
+    return riniziaPartita;
 }

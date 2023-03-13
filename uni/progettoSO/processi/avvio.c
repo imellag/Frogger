@@ -10,20 +10,39 @@ wchar_t *frogger[ALTEZZA_SPRITE] = {
     L"╚═╝░░░░░╚═╝░░╚═╝░╚════╝░░╚═════╝░░╚═════╝░╚══════╝╚═╝░░╚═╝╚═╝",
 };
 
-Avvio menuIniziale(char *Nomeutente)
+wchar_t *effettiSonori[DUE] = {
+L"█▀▀ █▀▀ █▀▀ █▀▀ ▀█▀ ▀█▀ █   █▀ █▀█ █▄░█ █▀█ █▀█ █",
+L"██▄ █▀░ █▀░ ██▄ ░█░ ░█░ █   ▄█ █▄█ █░▀█ █▄█ █▀▄ █",
+};
+
+wchar_t *coloreRana[DUE] = {
+L"█▀▀ █▀█ █░░ █▀█ █▀█ █▀▀   █▀▄ █▀▀ █░░ █░░ ▄▀█   █▀█ ▄▀█ █▄░█ ▄▀█",
+L"█▄▄ █▄█ █▄▄ █▄█ █▀▄ ██▄   █▄▀ ██▄ █▄▄ █▄▄ █▀█   █▀▄ █▀█ █░▀█ █▀█",
+};
+
+wchar_t *indietro[DUE] = {
+L"█ █▄░█ █▀▄ █ █▀▀ ▀█▀ █▀█ █▀█",
+L"█ █░▀█ █▄▀ █ ██▄ ░█░ █▀▄ █▄█",
+};
+
+Avvio menuIniziale()
 {
-    // int gameDifficulty;
     Avvio info;
 
+    info.colore.r = 75;
+    info.colore.g = 890;
+    info.colore.b = 20;
+    info.audio = true;
+
     mousemask(BUTTON1_PRESSED | REPORT_MOUSE_POSITION, NULL);
-     mouseinterval(0); 
+    mouseinterval(0);
 
     int i, j;
     int input;
 
     WINDOW *finestraIniziale;
 
-    finestraIniziale = newwin(ALTEZZA_SCHERMO+2, LARGHEZZA_SCHERMO - 1, INIZIO_ALTEZZA_FINESTRA, INIZIO_LARGHEZZA_FINESTRA);
+    finestraIniziale = newwin(ALTEZZA_SCHERMO + 2, LARGHEZZA_SCHERMO - 1, INIZIO_ALTEZZA_FINESTRA, INIZIO_LARGHEZZA_FINESTRA);
 
     init_pair(UNO, COLOR_GREEN, COLOR_BLACK);
     init_pair(DUE, COLOR_BLACK, COLOR_GREEN);
@@ -33,13 +52,10 @@ Avvio menuIniziale(char *Nomeutente)
     // stampa nome con scritta di caricamento
     stampaFrogger(LARGHEZZA_SCHERMO / DUE - 30, 9, finestraIniziale);
 
-    // printf("\033[?1003h\n"); // Makes the terminal report mouse movement events
-
     mvwprintw(finestraIniziale, 25, 63, "Caricamento");
 
     for (i = ZERO; i < TRE; i++)
     {
-
         mvwprintw(finestraIniziale, 25, 74 + i, ".");
         wrefresh(finestraIniziale);
         usleep(500000);
@@ -64,12 +80,10 @@ Avvio menuIniziale(char *Nomeutente)
 
     stampaFrogger(LARGHEZZA_SCHERMO / DUE - 30, 5, finestraIniziale);
 
-
     wrefresh(finestraIniziale);
 
     while (true)
     {
-
         input = getch();
 
         if (input == KEY_MOUSE)
@@ -135,15 +149,94 @@ Avvio menuIniziale(char *Nomeutente)
                     }
                     else if (event.x > INIZIO_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.x < FINE_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.y > 22 + INIZIO_ALTEZZA_FINESTRA && event.y < 27 + INIZIO_ALTEZZA_FINESTRA)
                     { // impostazioni
-                        continue;
+                        wclear(finestraIniziale);
+                        info = impostazioni(finestraIniziale, info);
                     }
                 }
             }
         }
     }
-    // printf("\033[?1003l\n"); // Disable mouse movement events, as l = low
-
     wclear(finestraIniziale);
+
+    delwin(finestraIniziale);
+}
+
+Avvio impostazioni(WINDOW *finestraIniziale, Avvio info)
+{
+    int input, i;
+
+    wattron(finestraIniziale, COLOR_PAIR(UNO));
+    stampaFrogger(LARGHEZZA_SCHERMO / DUE - 30, 3, finestraIniziale);
+
+    for (i = 0; i < 2; i++) {
+        mvwprintw(finestraIniziale, 11 + i, LARGHEZZA_SCHERMO / 2 - 24, "%ls", effettiSonori[i]);
+    }
+    for (i = 0; i < 2; i++) {
+        mvwprintw(finestraIniziale, 20 + i, LARGHEZZA_SCHERMO / 2 - 32, "%ls", coloreRana[i]);
+    }
+    for (i = 0; i < 2; i++) {
+        mvwprintw(finestraIniziale, 31 + i, 2, "%ls", indietro[i]);
+    }
+    wattroff(finestraIniziale, COLOR_PAIR(UNO));
+    wrefresh(finestraIniziale);
+
+    while (true)
+    {
+        if (info.audio) {
+            wattron(finestraIniziale, COLOR_PAIR(DUE));
+            stampaRettangolo(finestraIniziale, 31, 14);
+            mvwprintw(finestraIniziale, 16, 46, "Acceso");
+            wattroff(finestraIniziale, COLOR_PAIR(DUE));
+
+            wattron(finestraIniziale, COLOR_PAIR(UNO));
+            mvwprintw(finestraIniziale, 16, 84, "Spento");
+            wattroff(finestraIniziale, COLOR_PAIR(UNO));
+        }
+        else {
+            wattron(finestraIniziale, COLOR_PAIR(DUE));
+            mvwprintw(finestraIniziale, 16, 46, "Acceso");
+            wattroff(finestraIniziale, COLOR_PAIR(DUE));
+
+            wattron(finestraIniziale, COLOR_PAIR(UNO));
+            stampaRettangolo(finestraIniziale, 67, 14);
+            mvwprintw(finestraIniziale, 16, 84, "Spento");
+            wattroff(finestraIniziale, COLOR_PAIR(UNO));
+        }
+        if (info.colore.g == 890) { // colore verde 
+            // il primo rettangolo dei colori inizia alla x = 16
+            wattron(finestraIniziale, COLOR_PAIR(UNO));
+            mvwprintw(finestraIniziale, 25, 32, "Rosso");
+            wattroff(finestraIniziale, COLOR_PAIR(UNO));
+
+            wattron(finestraIniziale, COLOR_PAIR(DUE));
+            stampaRettangolo(finestraIniziale, 52, 23); // 52 = 16 + 36
+            mvwprintw(finestraIniziale, 25, 68, "Verde"); // 66 = 52 + 18 (metà rettangolo) - 2 (metà parola) stesso ragionamento per centrare tutte le scritte nei rettangoli
+            wattroff(finestraIniziale, COLOR_PAIR(DUE));
+
+            wattron(finestraIniziale, COLOR_PAIR(UNO));
+            mvwprintw(finestraIniziale, 25, 104, "Rosso");
+            wattroff(finestraIniziale, COLOR_PAIR(UNO));
+        }
+        else if (info.colore.b == 999) { // colore blu
+
+        }
+        else if (info.colore.r == 999) { //colore rosso
+
+        }
+        
+        wrefresh(finestraIniziale);
+
+        input = getch();
+
+        if (input == KEY_MOUSE) {
+            MEVENT event;
+            if (getmouse(&event) == OK) {
+
+            }
+        }
+    }
+
+    return info;
 }
 
 void stampaRettangolo(WINDOW *finestra, int iniziox, int inizioy)
