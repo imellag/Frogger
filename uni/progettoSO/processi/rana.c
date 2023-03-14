@@ -140,8 +140,8 @@ void stampaRana(WINDOW *finestraGioco, Coordinate rana, _Bool coloreRanaTronco, 
     int i, j, colorePosizione;
     colorePosizione = controlloPosizione(rana, coloreRanaTronco, gameDifficulty);
 
-    init_pair(SETTE, COLORE_RANA, colorePosizione);
-    wattron(finestraGioco, COLOR_PAIR(SETTE) | A_BOLD);
+    init_pair(COLORE_RANA_SFONDO, COLORE_RANA, colorePosizione);
+    wattron(finestraGioco, COLOR_PAIR(COLORE_RANA_SFONDO) | A_BOLD);
 
     for (i = ZERO; i < ALTEZZA_RANA; i++)
     {
@@ -150,5 +150,5 @@ void stampaRana(WINDOW *finestraGioco, Coordinate rana, _Bool coloreRanaTronco, 
             mvwprintw(finestraGioco, rana.y + i, rana.x + j, "%c", spriteRana[i][j]);
         }
     }
-    wattroff(finestraGioco, COLOR_PAIR(SETTE) | A_BOLD);
+    wattroff(finestraGioco, COLOR_PAIR(COLORE_RANA_SFONDO) | A_BOLD);
 }

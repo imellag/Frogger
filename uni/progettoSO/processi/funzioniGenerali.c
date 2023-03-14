@@ -167,22 +167,22 @@ bool controlloCollisioneOggetti(Oggetto entita, Coordinate rana, int LARGHEZZA_E
 void colori(Avvio info)
 {
 
-    init_color(COLORE_RANA, 75, 890, 20);          // 19/227/5
+    init_color(COLORE_RANA, info.colore.r, info.colore.g, info.colore.b);          // 19/227/5
     init_color(COLORE_MARCIAPIEDE, 388, 270, 102); // 99/69/26
     init_color(COLORE_AUTOSTRADA, 150, 150, 150);  // grigio (per ora), sarebbe 66/66/66 in rgb, convertito 259 /259/259
     init_color(COLORE_TRONCHI, 459, 298, 102);     // 117/76/26
     init_color(COLORE_TANA, 541, 271, 0);
     init_color(COLORE_NEMICI, 875, 313, 273); // 224, 80, 70
     init_color(COLORE_FIUME, 59, 699, 996);   // 15,179,255
-    init_pair(1, COLOR_BLACK, COLORE_NEMICI);
-    init_pair(2, COLOR_BLACK, COLORE_MARCIAPIEDE);
-    init_pair(3, COLOR_BLACK, COLORE_AUTOSTRADA);
-    init_pair(4, COLOR_BLACK, COLOR_GREEN); // colore prato
-    init_pair(5, COLOR_BLACK, COLORE_FIUME);
-    init_pair(6, COLOR_BLACK, COLORE_TRONCHI);
-    init_pair(10, COLOR_GREEN, COLOR_BLACK); // colore delle scritte
-    init_pair(11, COLOR_BLACK, COLOR_BLACK); // colore nero
-    init_pair(12, COLORE_NEMICI, COLOR_BLACK);
+    init_pair(COLORE_NEMICI_TRONCO, COLOR_BLACK, COLORE_NEMICI);
+    init_pair(COLORE_SFONDO_MARCIAPIEDE, COLOR_BLACK, COLORE_MARCIAPIEDE);
+    init_pair(COLORE_SFONDO_AUTOSTRDA, COLOR_BLACK, COLORE_AUTOSTRADA);
+    init_pair(COLORE_SFONDO_PRATO, COLOR_BLACK, COLOR_GREEN); // colore prato
+    init_pair(COLORE_SFONDO_FIUME, COLOR_BLACK, COLORE_FIUME); // colore fiume
+    init_pair(COLORE_SFONDO_TRONCHI, COLOR_BLACK, COLORE_TRONCHI);
+    init_pair(COLORE_VERDE_NERO, COLOR_GREEN, COLOR_BLACK); // colore delle scritte
+    init_pair(COLORE_NERO, COLOR_BLACK, COLOR_BLACK); // colore nero
+    init_pair(COLORE_SCRITTE_INFO, COLORE_NEMICI, COLOR_BLACK); // colore scritte schermata(puntaggio tempo e vite)
 }
 
 int controlloPosizione(Coordinate oggetto, bool coloriFiume, int gameDifficulty)
@@ -214,21 +214,21 @@ void stampaProiettili(WINDOW *finestraGioco, Oggetto arrayTronchi[], bool nemico
                 proiettile.y >= arrayTronchi[j].coordinate.y &&
                 proiettile.y <= arrayTronchi[j].coordinate.y + ALTEZZA_TRONCHI)
             {
-                colore = 6;
+                colore = COLORE_SFONDO_TRONCHI;
                 if (nemico[i] == true)
                 {
-                    colore = 1;
+                    colore = COLORE_NEMICI_TRONCO;
                 }
             }
         }
         soloStampa(finestraGioco, proiettile, colore);
     }
     else if (controlloPosizione(proiettile, false, gameDifficulty) == COLORE_AUTOSTRADA)
-        soloStampa(finestraGioco, proiettile, 3);
+        soloStampa(finestraGioco, proiettile, COLORE_SFONDO_AUTOSTRDA);
     else if (controlloPosizione(proiettile, false, gameDifficulty) == COLORE_MARCIAPIEDE)
-        soloStampa(finestraGioco, proiettile, 2);
+        soloStampa(finestraGioco, proiettile, COLORE_SFONDO_MARCIAPIEDE);
     else if (controlloPosizione(proiettile, false, gameDifficulty) == COLOR_GREEN)
-        soloStampa(finestraGioco, proiettile, 4);
+        soloStampa(finestraGioco, proiettile, COLORE_SFONDO_PRATO);
 }
 
 void soloStampa(WINDOW *finestraGioco, Coordinate proiettile, int colore)

@@ -54,15 +54,14 @@ void stampaVite(WINDOW *finestraGioco, int vite)
     vita.y = DUE;
     /* inizio a stamparle da in alto a destra, poi mi sposto
     verso sinistra */
-    init_pair(OTTO, COLOR_RED, COLOR_BLACK);
-    wattron(finestraGioco, COLOR_PAIR(OTTO));
+    wattron(finestraGioco, COLOR_PAIR(COLORE_SCRITTE_INFO));
     for (int i = ZERO; i < vite; i++)
     {
         mvwaddstr(finestraGioco, vita.y, vita.x, "\u2665");
 
         vita.x -= TRE; // lascio 2 di spazio tra le varie vite
     }
-    wattroff(finestraGioco, COLOR_PAIR(OTTO));
+    wattroff(finestraGioco, COLOR_PAIR(COLORE_SCRITTE_INFO));
 }
 
 void gameOver(WINDOW *finestraGioco)
@@ -84,14 +83,14 @@ void vittoria(WINDOW *finestraGioco, int punteggio)
 
     int i;
 
-    wattron(finestraGioco, COLOR_PAIR(10) | A_BOLD);
+    wattron(finestraGioco, COLOR_PAIR(COLORE_VERDE_NERO | A_BOLD));
 
     for (i = ZERO; i < ALTEZZA_SPRITE; i++)
         mvwprintw(finestraGioco, (ALTEZZA_SCHERMO / DUE - 10) + i, LARGHEZZA_SCHERMO / 2 - 31, "%ls", spriteVittoria[i]);
 
     mvwprintw(finestraGioco, 16, LARGHEZZA_SCHERMO / DUE - 10, "Punteggio finale: %d!", punteggio);
 
-    wattroff(finestraGioco, COLOR_PAIR(10) | A_BOLD);
+    wattroff(finestraGioco, COLOR_PAIR(COLORE_VERDE_NERO) | A_BOLD);
 
     wrefresh(finestraGioco);
     sleep(5);
@@ -115,15 +114,15 @@ void stampaTempo(WINDOW *finestraGioco, int tempo)
     {
         if (i <= tempo)
         {
-            wattron(finestraGioco, COLOR_PAIR(1));
+            wattron(finestraGioco, COLOR_PAIR(COLORE_SCRITTE_INFO));
             mvwprintw(finestraGioco, DUE, ZERO + i, " ");
-            wattroff(finestraGioco, COLOR_PAIR(1));
+            wattroff(finestraGioco, COLOR_PAIR(COLORE_SCRITTE_INFO));
         }
         else
         {
-            wattron(finestraGioco, COLOR_PAIR(11));
+            wattron(finestraGioco, COLOR_PAIR(COLORE_NERO));
             mvwprintw(finestraGioco, DUE, ZERO + i, " ");
-            wattroff(finestraGioco, COLOR_PAIR(11));
+            wattroff(finestraGioco, COLOR_PAIR(COLORE_NERO));
         }
     }
 }
@@ -203,13 +202,13 @@ bool pausaeNuovaPartita(WINDOW *finestraGioco, int chiamata)
 
     mousemask(BUTTON1_PRESSED | REPORT_MOUSE_POSITION, NULL);
 
-    wattron(finestraGioco, COLOR_PAIR(10));
+    wattron(finestraGioco, COLOR_PAIR(COLORE_VERDE_NERO));
 
     for (i = ZERO; i < DUE; i++)
         mvwprintw(finestraGioco, (ALTEZZA_SCHERMO / DUE - 10) + i, LARGHEZZA_SCHERMO / 2 - 29, "%ls", continua[i]);
 
-    wattroff(finestraGioco, COLOR_PAIR(10));
-    wattron(finestraGioco, COLOR_PAIR(4));
+    wattroff(finestraGioco, COLOR_PAIR(COLORE_VERDE_NERO));
+    wattron(finestraGioco, COLOR_PAIR(COLORE_NERO_VERDE));
 
     for (i = ZERO; i < DUE; i++)
         stampaRettangolo(finestraGioco, 31 + (LARGHEZZA_RETTANGOLO * i + 6 * i), 21);
@@ -225,7 +224,7 @@ bool pausaeNuovaPartita(WINDOW *finestraGioco, int chiamata)
         mvwprintw(finestraGioco, 23, 84, "Esci dal gioco");
     }
 
-    wattroff(finestraGioco, COLOR_PAIR(4));
+    wattroff(finestraGioco, COLOR_PAIR(COLORE_NERO_VERDE));
     wrefresh(finestraGioco);
     while (true)
     {
@@ -257,12 +256,12 @@ void schermataFinale(WINDOW *finestraGioco)
 {
     int i;
 
-    wattron(finestraGioco, COLOR_PAIR(10));
+    wattron(finestraGioco, COLOR_PAIR(COLORE_VERDE_NERO));
 
     for (i = ZERO; i < DUE; i++)
         mvwprintw(finestraGioco, (ALTEZZA_SCHERMO / DUE - 1) + i, LARGHEZZA_SCHERMO / 2 - 41, "%ls", scrittaFinale[i]);
 
-    wattroff(finestraGioco, COLOR_PAIR(10));
+    wattroff(finestraGioco, COLOR_PAIR(COLORE_VERDE_NERO));
 
     wrefresh(finestraGioco);
     sleep(2);

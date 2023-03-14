@@ -71,7 +71,7 @@ void stampaTronco(WINDOW *finestraGioco, Coordinate tronco)
 {
     int i, j;
 
-    wattron(finestraGioco, COLOR_PAIR(SEI));
+    wattron(finestraGioco, COLOR_PAIR(COLORE_SFONDO_TRONCHI));
 
     for (i = ZERO; i < ALTEZZA_TRONCHI; i++)
     {
@@ -79,14 +79,14 @@ void stampaTronco(WINDOW *finestraGioco, Coordinate tronco)
             mvwprintw(finestraGioco, tronco.y + i, tronco.x + j, "%c", spriteTronchi[i][j]);
     }
 
-    wattroff(finestraGioco, COLOR_PAIR(SEI));
+    wattroff(finestraGioco, COLOR_PAIR(COLORE_SFONDO_TRONCHI));
 }
 
 void stampaNemico(WINDOW *finestraGioco, Coordinate nemico)
 {
     int i, j;
 
-    wattron(finestraGioco, COLOR_PAIR(UNO)); // ROSSO
+    wattron(finestraGioco, COLOR_PAIR(COLORE_NEMICI_TRONCO)); // ROSSO
 
     for (i = ZERO; i < ALTEZZA_NEMICO; i++)
     {
@@ -94,7 +94,7 @@ void stampaNemico(WINDOW *finestraGioco, Coordinate nemico)
             mvwprintw(finestraGioco, nemico.y + i, nemico.x + j, "%c", spriteNemicosulTronco[i][j]);
     }
 
-    wattroff(finestraGioco, COLOR_PAIR(UNO));
+    wattroff(finestraGioco, COLOR_PAIR(COLORE_NEMICI_TRONCO));
 }
 
 void funzProiettileNemico(Coordinate tronco, int p[], int i, int gameDifficulty)

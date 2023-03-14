@@ -10,17 +10,17 @@ wchar_t *frogger[ALTEZZA_SPRITE] = {
     L"╚═╝░░░░░╚═╝░░╚═╝░╚════╝░░╚═════╝░░╚═════╝░╚══════╝╚═╝░░╚═╝╚═╝",
 };
 
-wchar_t *effettiSonori[DUE] = {
+wchar_t *effettiSonori[COLORE_NERO_VERDE] = {
     L"█▀▀ █▀▀ █▀▀ █▀▀ ▀█▀ ▀█▀ █   █▀ █▀█ █▄░█ █▀█ █▀█ █",
     L"██▄ █▀░ █▀░ ██▄ ░█░ ░█░ █   ▄█ █▄█ █░▀█ █▄█ █▀▄ █",
 };
 
-wchar_t *coloreRana[DUE] = {
+wchar_t *coloreRana[COLORE_NERO_VERDE] = {
     L"█▀▀ █▀█ █░░ █▀█ █▀█ █▀▀   █▀▄ █▀▀ █░░ █░░ ▄▀█   █▀█ ▄▀█ █▄░█ ▄▀█",
     L"█▄▄ █▄█ █▄▄ █▄█ █▀▄ ██▄   █▄▀ ██▄ █▄▄ █▄▄ █▀█   █▀▄ █▀█ █░▀█ █▀█",
 };
 
-wchar_t *indietro[DUE] = {
+wchar_t *indietro[COLORE_NERO_VERDE] = {
     L"█ █▄░█ █▀▄ █ █▀▀ ▀█▀ █▀█ █▀█",
     L"█ █░▀█ █▄▀ █ ██▄ ░█░ █▀▄ █▄█",
 };
@@ -44,13 +44,13 @@ Avvio menuIniziale()
 
     finestraIniziale = newwin(ALTEZZA_SCHERMO + 2, LARGHEZZA_SCHERMO - 1, INIZIO_ALTEZZA_FINESTRA, INIZIO_LARGHEZZA_FINESTRA);
 
-    init_pair(UNO, COLOR_GREEN, COLOR_BLACK);
-    init_pair(DUE, COLOR_BLACK, COLOR_GREEN);
+    init_pair(COLORE_VERDE_NERO, COLOR_GREEN, COLOR_BLACK);
+    init_pair(COLORE_NERO_VERDE, COLOR_BLACK, COLOR_GREEN);
 
-    wattron(finestraIniziale, COLOR_PAIR(UNO));
+    wattron(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
 
     // stampa nome con scritta di caricamento
-    stampaFrogger(LARGHEZZA_SCHERMO / DUE - 30, 9, finestraIniziale);
+    stampaFrogger(LARGHEZZA_SCHERMO / 2 - 30, 9, finestraIniziale);
 
     mvwprintw(finestraIniziale, 25, 63, "Caricamento");
 
@@ -61,7 +61,7 @@ Avvio menuIniziale()
         usleep(500000);
     }
 
-    wattroff(finestraIniziale, COLOR_PAIR(UNO));
+    wattroff(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
 
     wclear(finestraIniziale);
     wrefresh(finestraIniziale);
@@ -92,7 +92,7 @@ Avvio menuIniziale()
                     if (event.x > INIZIO_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.x < FINE_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.y > 15 + INIZIO_ALTEZZA_FINESTRA && event.y < 20 + INIZIO_ALTEZZA_FINESTRA)
                     { // nuova partita
                         wclear(finestraIniziale);
-                        wattron(finestraIniziale, COLOR_PAIR(DUE));
+                        wattron(finestraIniziale, COLOR_PAIR(COLORE_NERO_VERDE));
 
                         for (i = ZERO; i < TRE; i++)
                             stampaRettangolo(finestraIniziale, 52, 15 + i * 7); // tra l'inizio di un rettangolo e l'inizio dell'altro ci sono 7 spazi
@@ -101,12 +101,12 @@ Avvio menuIniziale()
                         mvwprintw(finestraIniziale, 24, 68, "Media");
                         mvwprintw(finestraIniziale, 31, 65, "Difficile");
 
-                        wattroff(finestraIniziale, COLOR_PAIR(DUE));
-                        wattron(finestraIniziale, COLOR_PAIR(UNO));
+                        wattroff(finestraIniziale, COLOR_PAIR(COLORE_NERO_VERDE));
+                        wattron(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
 
-                        stampaFrogger(LARGHEZZA_SCHERMO / DUE - 30, 5, finestraIniziale);
+                        stampaFrogger(LARGHEZZA_SCHERMO / 2 - 30, 5, finestraIniziale);
 
-                        wattroff(finestraIniziale, COLOR_PAIR(UNO));
+                        wattroff(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
                         wrefresh(finestraIniziale);
 
                         while (true)
@@ -155,32 +155,13 @@ Avvio impostazioni(WINDOW *finestraIniziale, Avvio info)
 {
     int input, i;
 
-    wattron(finestraIniziale, COLOR_PAIR(UNO));
-    stampaFrogger(LARGHEZZA_SCHERMO / DUE - 30, 3, finestraIniziale);
-
-    for (i = 0; i < 2; i++)
-    {
-        mvwprintw(finestraIniziale, 11 + i, LARGHEZZA_SCHERMO / 2 - 24, "%ls", effettiSonori[i]);
-    }
-    for (i = 0; i < 2; i++)
-    {
-        mvwprintw(finestraIniziale, 20 + i, LARGHEZZA_SCHERMO / 2 - 32, "%ls", coloreRana[i]);
-    }
-    for (i = 0; i < 2; i++)
-    {
-        mvwprintw(finestraIniziale, 31 + i, 2, "%ls", indietro[i]);
-    }
-    wattroff(finestraIniziale, COLOR_PAIR(UNO));
-    wrefresh(finestraIniziale);
-
     while (true)
     { // fare dei define per tutti questi magic numbers
 
-        // wclear(finestraIniziale);
-        stampaColoriGiusti(finestraIniziale, info);
-        wrefresh(finestraIniziale);
+        stampaSprite(finestraIniziale, info);
 
         input = getch();
+
 
         if (input == KEY_MOUSE)
         {
@@ -197,17 +178,35 @@ Avvio impostazioni(WINDOW *finestraIniziale, Avvio info)
                          event.y >= 14 + INIZIO_ALTEZZA_FINESTRA && event.y <= 19 + INIZIO_ALTEZZA_FINESTRA) // audio on
                 {
                     info.audio = true;
-                    mvwprintw(finestraIniziale, 0, 0, "Audio acceso");
-                    wrefresh(finestraIniziale);
                 }
                 else if (event.x >= 67 + INIZIO_LARGHEZZA_FINESTRA && event.x <= 104 + INIZIO_LARGHEZZA_FINESTRA &&
                          event.y >= 14 + INIZIO_ALTEZZA_FINESTRA && event.y <= 19 + INIZIO_ALTEZZA_FINESTRA) // audio off
                 {
                     info.audio = false;
-                    mvwprintw(finestraIniziale, 0, 0, "Audio spento");
-                    wrefresh(finestraIniziale);
                 }
-                else { // debug
+                else if (event.y >= 23 + INIZIO_ALTEZZA_FINESTRA && event.y <= 28 + INIZIO_ALTEZZA_FINESTRA &&
+                         event.x >= 16 + INIZIO_LARGHEZZA_FINESTRA && event.x < 52 + INIZIO_LARGHEZZA_FINESTRA) // colore rosso
+                {
+                    info.colore.r = 999,
+                    info.colore.g = 1;
+                    info.colore.b = 1;
+                }
+                else if (event.y >= 23 + INIZIO_ALTEZZA_FINESTRA && event.y <= 28 + INIZIO_ALTEZZA_FINESTRA &&
+                         event.x >= 52 + INIZIO_LARGHEZZA_FINESTRA && event.x < 88 + INIZIO_LARGHEZZA_FINESTRA) // colore verde
+                {
+                    info.colore.r = 75,
+                    info.colore.g = 890;
+                    info.colore.b = 20;
+                }
+                else if (event.y >= 23 + INIZIO_ALTEZZA_FINESTRA && event.y <= 28 + INIZIO_ALTEZZA_FINESTRA &&
+                         event.x >= 88 + INIZIO_LARGHEZZA_FINESTRA && event.x < 124 + INIZIO_LARGHEZZA_FINESTRA) // colore blu
+                {
+                    info.colore.r = 1,
+                    info.colore.g = 1;
+                    info.colore.b = 999;
+                }
+                else
+                { // debug
                     mvwprintw(finestraIniziale, 0, 0, "Input generico");
                     wrefresh(finestraIniziale);
                 }
@@ -241,7 +240,7 @@ void stampaIniziale(WINDOW *finestraIniziale)
 {
     int i;
 
-    wattron(finestraIniziale, COLOR_PAIR(DUE));
+    wattron(finestraIniziale, COLOR_PAIR(COLORE_NERO_VERDE));
 
     for (i = 0; i < 3; i++)
         stampaRettangolo(finestraIniziale, 52, 15 + i * 7); // tra l'inizio di un rettangolo e l'inizio dell'altro ci sono 7 spazi
@@ -251,80 +250,110 @@ void stampaIniziale(WINDOW *finestraIniziale)
     mvwprintw(finestraIniziale, 31, 62, "Esci dal gioco");
     wrefresh(finestraIniziale);
 
-    wattroff(finestraIniziale, COLOR_PAIR(DUE));
-    wattron(finestraIniziale, COLOR_PAIR(UNO));
+    wattroff(finestraIniziale, COLOR_PAIR(COLORE_NERO_VERDE));
+    wattron(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
 
-    stampaFrogger(LARGHEZZA_SCHERMO / DUE - 30, 5, finestraIniziale);
+    stampaFrogger(LARGHEZZA_SCHERMO / 2 - 30, 5, finestraIniziale);
+}
+
+void stampaSprite(WINDOW *finestraIniziale, Avvio info)
+{
+    int i;
+
+    werase(finestraIniziale);
+
+    wattron(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
+    stampaFrogger(LARGHEZZA_SCHERMO / 2 - 30, 3, finestraIniziale);
+
+    for (i = 0; i < 2; i++)
+    {
+        mvwprintw(finestraIniziale, 11 + i, LARGHEZZA_SCHERMO / 2 - 24, "%ls", effettiSonori[i]);
+    }
+    for (i = 0; i < 2; i++)
+    {
+        mvwprintw(finestraIniziale, 20 + i, LARGHEZZA_SCHERMO / 2 - 32, "%ls", coloreRana[i]);
+    }
+    for (i = 0; i < 2; i++)
+    {
+        mvwprintw(finestraIniziale, 31 + i, 2, "%ls", indietro[i]);
+    }
+    wattroff(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
+
+    stampaColoriGiusti(finestraIniziale, info);
+
+    wrefresh(finestraIniziale);
 }
 
 void stampaColoriGiusti(WINDOW *finestraIniziale, Avvio info)
 {
     if (info.audio)
     {
-        wattron(finestraIniziale, COLOR_PAIR(DUE));
+        wattron(finestraIniziale, COLOR_PAIR(COLORE_NERO_VERDE));
         stampaRettangolo(finestraIniziale, 31, 14);
         mvwprintw(finestraIniziale, 16, 46, "Acceso");
-        wattroff(finestraIniziale, COLOR_PAIR(DUE));
+        wattroff(finestraIniziale, COLOR_PAIR(COLORE_NERO_VERDE));
 
-        wattron(finestraIniziale, COLOR_PAIR(UNO));
+        wattron(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
         mvwprintw(finestraIniziale, 16, 84, "Spento");
-        wattroff(finestraIniziale, COLOR_PAIR(UNO));
+        wattroff(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
     }
     else
     {
-        wattron(finestraIniziale, COLOR_PAIR(DUE));
+        wattron(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
         mvwprintw(finestraIniziale, 16, 46, "Acceso");
-        wattroff(finestraIniziale, COLOR_PAIR(DUE));
+        wattroff(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
 
-        wattron(finestraIniziale, COLOR_PAIR(UNO));
+        wattron(finestraIniziale, COLOR_PAIR(COLORE_NERO_VERDE));
         stampaRettangolo(finestraIniziale, 67, 14);
         mvwprintw(finestraIniziale, 16, 84, "Spento");
-        wattroff(finestraIniziale, COLOR_PAIR(UNO));
+        wattroff(finestraIniziale, COLOR_PAIR(COLORE_NERO_VERDE));
     }
     if (info.colore.g == 890)
     { // colore verde
         // il primo rettangolo dei colori inizia alla x = 16
-        wattron(finestraIniziale, COLOR_PAIR(UNO));
+        wattron(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
         mvwprintw(finestraIniziale, 25, 32, "Rosso");
-        wattroff(finestraIniziale, COLOR_PAIR(UNO));
+        wattroff(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
 
-        wattron(finestraIniziale, COLOR_PAIR(DUE));
+        wattron(finestraIniziale, COLOR_PAIR(COLORE_NERO_VERDE));
         stampaRettangolo(finestraIniziale, 52, 23);   // 52 = 16 + 36
         mvwprintw(finestraIniziale, 25, 68, "Verde"); // 66 = 52 + 18 (metà rettangolo) - 2 (metà parola) stesso ragionamento per centrare tutte le scritte nei rettangoli
-        wattroff(finestraIniziale, COLOR_PAIR(DUE));
+        wattroff(finestraIniziale, COLOR_PAIR(COLORE_NERO_VERDE));
 
-        wattron(finestraIniziale, COLOR_PAIR(UNO));
+        wattron(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
         mvwprintw(finestraIniziale, 25, 105, "Blu");
-        wattroff(finestraIniziale, COLOR_PAIR(UNO));
+        wattroff(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
     }
     else if (info.colore.b == 999)
     { // colore blu
-        wattron(finestraIniziale, COLOR_PAIR(UNO));
+        wattron(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
         mvwprintw(finestraIniziale, 25, 32, "Rosso");
-        wattroff(finestraIniziale, COLOR_PAIR(UNO));
+        wattroff(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
 
-        wattron(finestraIniziale, COLOR_PAIR(UNO));
+        wattron(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
         mvwprintw(finestraIniziale, 25, 68, "Verde");
-        wattroff(finestraIniziale, COLOR_PAIR(UNO));
+        wattroff(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
 
-        wattron(finestraIniziale, COLOR_PAIR(DUE));
+        wattron(finestraIniziale, COLOR_PAIR(COLORE_NERO_VERDE));
         stampaRettangolo(finestraIniziale, 88, 23);
         mvwprintw(finestraIniziale, 25, 105, "Blu");
-        wattroff(finestraIniziale, COLOR_PAIR(DUE));
+        wattroff(finestraIniziale, COLOR_PAIR(COLORE_NERO_VERDE));
     }
     else if (info.colore.r == 999)
     { // colore rosso
-        wattron(finestraIniziale, COLOR_PAIR(DUE));
+        wattron(finestraIniziale, COLOR_PAIR(COLORE_NERO_VERDE));
         stampaRettangolo(finestraIniziale, 16, 23);
         mvwprintw(finestraIniziale, 25, 32, "Rosso");
-        wattroff(finestraIniziale, COLOR_PAIR(DUE));
+        wattroff(finestraIniziale, COLOR_PAIR(COLORE_NERO_VERDE));
 
-        wattron(finestraIniziale, COLOR_PAIR(UNO));
-        stampaRettangolo(finestraIniziale, 52, 23);
-        wattroff(finestraIniziale, COLOR_PAIR(UNO));
+        wattron(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
+        mvwprintw(finestraIniziale, 25, 68, "Verde");
+        wattroff(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
 
-        wattron(finestraIniziale, COLOR_PAIR(UNO));
+        wattron(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
         mvwprintw(finestraIniziale, 25, 105, "Blu");
-        wattroff(finestraIniziale, COLOR_PAIR(UNO));
+        wattroff(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
     }
+
+    wrefresh(finestraIniziale);
 }

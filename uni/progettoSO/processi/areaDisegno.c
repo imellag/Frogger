@@ -7,27 +7,27 @@ void funzPrato(WINDOW *finestraGioco, int gameDifficulty)
 {
     // alto 3
     int i, j;
-    wattron(finestraGioco, COLOR_PAIR(QUATTRO));
+    wattron(finestraGioco, COLOR_PAIR(COLORE_SFONDO_PRATO));
     for (i = ZERO; i < ALTEZZA_PRATO; i++)
     {
         for (j = ZERO; j < LARGHEZZA_SCHERMO; j++)
             mvwprintw(finestraGioco, INIZIO_PRATO + (gameDifficulty * 3) + i, j, " ");
     }
-    wattroff(finestraGioco, COLOR_PAIR(QUATTRO));
+    wattroff(finestraGioco, COLOR_PAIR(COLORE_SFONDO_PRATO));
 }
 
 void funzMarciapiede(WINDOW *finestraGioco, int gameDifficulty)
 {
     int i, j;
 
-    wattron(finestraGioco, COLOR_PAIR(DUE));
+    wattron(finestraGioco, COLOR_PAIR(COLORE_SFONDO_MARCIAPIEDE));
 
     for (i = ZERO; i < ALTEZZA_MARCIAPIEDE; i++)
     {
         for (j = ZERO; j < LARGHEZZA_SCHERMO; j++)
             mvwprintw(finestraGioco, INIZIO_MARCIAPIEDE + (gameDifficulty * 6) + i, j, " ");
     }
-    wattroff(finestraGioco, COLOR_PAIR(DUE));
+    wattroff(finestraGioco, COLOR_PAIR(COLORE_SFONDO_MARCIAPIEDE));
 }
 
 void funzAutostrada(WINDOW *finestraGioco, int gameDifficulty)
@@ -36,7 +36,7 @@ void funzAutostrada(WINDOW *finestraGioco, int gameDifficulty)
     int i, j;
 
     // attivo il colore della strada quindi grigio scuro
-    wattron(finestraGioco, COLOR_PAIR(TRE));
+    wattron(finestraGioco, COLOR_PAIR(COLORE_SFONDO_AUTOSTRDA));
 
     // è alto 9 e parte da altezza 20
     for (i = ZERO; i < ALTEZZA_AUTOSTRADA + (gameDifficulty * 3); i++)
@@ -48,13 +48,13 @@ void funzAutostrada(WINDOW *finestraGioco, int gameDifficulty)
     }
 
     // spengo il colore
-    wattroff(finestraGioco, COLOR_PAIR(TRE));
+    wattroff(finestraGioco, COLOR_PAIR(COLORE_SFONDO_AUTOSTRDA));
 }
 
 void funzFiume(WINDOW *finestraGioco, int gameDifficulty)
 {
     int i, j;
-    wattron(finestraGioco, COLOR_PAIR(CINQUE));
+    wattron(finestraGioco, COLOR_PAIR(COLORE_SFONDO_FIUME));
     for (i = ZERO; i < ALTEZZA_FIUME + (gameDifficulty * 3); i++)
     {
         for (j = ZERO; j < LARGHEZZA_SCHERMO; j++)
@@ -62,14 +62,14 @@ void funzFiume(WINDOW *finestraGioco, int gameDifficulty)
             mvwprintw(finestraGioco, INIZIO_FIUME + i, j, " ");
         }
     }
-    wattroff(finestraGioco, COLOR_PAIR(CINQUE));
+    wattroff(finestraGioco, COLOR_PAIR(COLORE_SFONDO_FIUME));
 }
 
 void stampaPunteggio(WINDOW *finestraGioco,int punteggio)
 {
-    wattron(finestraGioco, COLOR_PAIR(12));
+    wattron(finestraGioco, COLOR_PAIR(COLORE_SCRITTE_INFO));
     mvwprintw(finestraGioco, DUE, LARGHEZZA_SCHERMO / DUE - QUATTRO, "Score: %d", punteggio);
-    wattroff(finestraGioco, COLOR_PAIR(12));
+    wattroff(finestraGioco, COLOR_PAIR(COLORE_SCRITTE_INFO));
 }
 
 
@@ -77,7 +77,7 @@ void funzTane(WINDOW *finestraGioco, bool arrayTane[])
 {
     int i, j;
 
-    wattron(finestraGioco, COLOR_PAIR(2));
+    wattron(finestraGioco, COLOR_PAIR(COLORE_SFONDO_MARCIAPIEDE));
 
     for (i = ZERO; i < ALTEZZA_TANE; i++)
     {
@@ -89,7 +89,7 @@ void funzTane(WINDOW *finestraGioco, bool arrayTane[])
 
     stampaTane(finestraGioco, arrayTane);
 
-    wattroff(finestraGioco, COLOR_PAIR(2));
+    wattroff(finestraGioco, COLOR_PAIR(COLORE_SFONDO_MARCIAPIEDE));
 }
 
 void stampaTane(WINDOW *finestraGioco, bool arrayTane[])

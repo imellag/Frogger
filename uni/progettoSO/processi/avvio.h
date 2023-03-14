@@ -14,6 +14,11 @@ void stampaRettangolo(WINDOW *finestra, int iniziox, int inizioy);
 
 void stampaIniziale(WINDOW *finestraIniziale);
 
+// gestisce il menù delle impostazioni
 Avvio impostazioni(WINDOW *finestraIniziale, Avvio info);
 
+// stampa i giusti colori in base alle scelte dell'utente
 void stampaColoriGiusti(WINDOW *finestraIniziale, Avvio info);
+
+// stampa le scritte ogni iterazione del while
+void stampaSprite(WINDOW *finestraIniziale, Avvio info);

@@ -50,6 +50,22 @@ enum numeri
     DIECI
 };
 
+enum ColorPair
+{
+    COLORE_VERDE_NERO = 1,
+    COLORE_NERO_VERDE,
+    COLORE_NEMICI_TRONCO,
+    COLORE_SFONDO_MARCIAPIEDE,
+    COLORE_SFONDO_AUTOSTRDA,
+    COLORE_SFONDO_PRATO,
+    COLORE_SFONDO_FIUME,
+    COLORE_SFONDO_TRONCHI,
+    COLORE_NERO,
+    COLORE_SCRITTE_INFO,
+    COLORE_RANA_SFONDO
+
+};
+
 // difficoltà di gioco disponibili
 enum gameDifficulty
 {
