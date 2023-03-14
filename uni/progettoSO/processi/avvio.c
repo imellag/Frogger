@@ -168,6 +168,9 @@ Avvio impostazioni(WINDOW *finestraIniziale, Avvio info)
             MEVENT event;
             if (getmouse(&event) == OK)
             {
+                mvwprintw(finestraIniziale, 0, 0, "x: %d y: %d", event.x, event.y);
+                wrefresh(finestraIniziale);
+                sleep(1);
                 if (event.x < 30 + INIZIO_LARGHEZZA_FINESTRA && event.y > 30 + INIZIO_ALTEZZA_FINESTRA) // tasto "indietro"
                 {
                     wclear(finestraIniziale);
