@@ -1,4 +1,3 @@
-
 #include "lib.h"
 #include "funzioniGenerali.h"
 #include "rana.h"
@@ -62,7 +61,7 @@ bool areaGioco(Avvio info)
 
     Oggetto macchinina[MAX_MACCHINE];
     Oggetto camioncino[MAX_CAMION];
-    Oggetto tronchino[MAX_TRONCHI];
+    Oggetto tronco[MAX_TRONCHI];
     WINDOW *finestraGioco;
 
     bool hitProiettile[MAX_TRONCHI];
@@ -73,33 +72,7 @@ bool areaGioco(Avvio info)
     timer = TEMPO_INIZIALE;
     punteggio = PUNTEGGIO_INIZIALE;
 
-    // pipe principale che viene utilizzata per inviare le posizioni dei vari oggetti
-    // e stamparli successivamente nel main
-    int p[DUE];
-    if (pipe(p) == -UNO)
-    {
-        perror("Error\n");
-        exit(EXIT_FAILURE);
-    }
-
-    // pipe non bloccante che mi serve per comunicare con il processo rana
-    // in caso di collisioni o spostamenti(es: rana sul tronco)
-    int pRana[DUE];
-    if (pipe(pRana) == -UNO)
-    {
-        perror("Error\n");
-        exit(EXIT_FAILURE);
-    }
-
-    // funzione per rendere non bloccante la pipe
-    fcntl(pRana[0], F_SETFL, fcntl(pRana[0], F_GETFL) | O_NONBLOCK);
-
-    int pVeicoli[DUE];
-    if (pipe(pVeicoli) == -UNO)
-    {
-        perror("Error");
-        exit(EXIT_FAILURE);
-    }
+    
     // musica di sottofondo
     if (info.audio)
         system("ffplay -nodisp ../file_audio/frogger.mp3 2> /dev/null & ");
@@ -146,17 +119,17 @@ bool areaGioco(Avvio info)
     stampaRana(finestraGioco, ranocchio.coordinate, coloreTroncoRana, info.difficolta);
 
     // creo tutti i processi della rana, dei veicoli, dei tronchi e del tempo
-    funzRana(p, pRana, info.difficolta);
-    funzAuto(p, info.difficolta, pVeicoli);
-    funzTronchi(p, info.difficolta);
-    funzTempo(p);
+    funzRana(info.difficolta);
+    funzAuto(info.difficolta);
+    funzTronchi(info.difficolta);
+    funzTempo();
 
     // prima di iniziare porto tutti gli oggetti fuori dallo schermo
     for (i = ZERO; i < MAX_TRONCHI; i++)
     {
 
-        tronchino[i].coordinate.x = FUORI_MAPPA;
-        tronchino[i].coordinate.y = FUORI_MAPPA;
+        tronco[i].coordinate.x = FUORI_MAPPA;
+        tronco[i].coordinate.y = FUORI_MAPPA;
 
         proiettileNemico[i].coordinate.x = FUORI_MAPPA - 2;
         proiettileNemico[i].coordinate.y = FUORI_MAPPA - 2;
@@ -182,12 +155,11 @@ bool areaGioco(Avvio info)
 
     time(&inizio_nemico);
 
-    close(pRana[READ]);
     partitaInCorso = true;
     /* Leggo i dati della pipe p dove vengono scritte le posizioni di tutti gli oggetti.
     Quello che viene letto dalla pipe viene salvato in una variabile provvisoria e,
     dopo essere stato riconosciuto tramite il suo id, viene salvato nella variabile dell'oggetto
-    corrispondente. Viene anche letto il tempo aggiornato in secondi. */
+    corrispondente. Viene anche letto il tempo aggiornato in secondi. 
     while (partitaInCorso)
     {
         partitaFinita = false;
@@ -221,7 +193,7 @@ bool areaGioco(Avvio info)
         }
 
         else if (pacchetto.id >= TRONCO0 && pacchetto.id <= TRONCO4)
-            tronchino[pacchetto.id - TRONCO0] = pacchetto;
+            tronco[pacchetto.id - TRONCO0] = pacchetto;
 
         else if (pacchetto.id >= MACCHINA0 && pacchetto.id <= MACCHINA10)
             macchinina[pacchetto.id - MACCHINA0] = pacchetto;
@@ -244,7 +216,7 @@ bool areaGioco(Avvio info)
             creaProiettile(p, ranocchio, &offset);
 
         else if (pacchetto.id == PAUSA)
-            partitaFinita = funzPausa(finestraGioco, info.difficolta, camioncino, tronchino, macchinina, tempo.pid, ranocchio.pid);
+            partitaFinita = funzPausa(finestraGioco, info.difficolta, camioncino, tronco, macchinina, tempo.pid, ranocchio.pid);
         else if (pacchetto.id == TEMPO)
             tempo = pacchetto;
 
@@ -278,7 +250,7 @@ bool areaGioco(Avvio info)
             time(&fine_nemico);
 
             /* controllo se it tempo di attesa dello spawn del nemico è finito e se è
-            così viene stampato in un tronco che non è occupato dalla rana o da un altro nemico */
+            così viene stampato in un tronco che non è occupato dalla rana o da un altro nemico 
             if ((fine_nemico - inizio_nemico) >= TEMPO_SPAWN_NEMICO - info.difficolta)
             {
                 contaNemici = 0;
@@ -292,7 +264,7 @@ bool areaGioco(Avvio info)
                     do
                     {
                         troncoNemico = rand() % (NUMERO_TRONCHI + info.difficolta);
-                    } while (tronchino[troncoNemico].coordinate.y == ranocchio.coordinate.y ||
+                    } while (tronco[troncoNemico].coordinate.y == ranocchio.coordinate.y ||
                              nemico[troncoNemico] == true);
 
                     nemico[troncoNemico] = true;
@@ -304,7 +276,7 @@ bool areaGioco(Avvio info)
             // ciclo macchine
 
             /* ciclo per assegnare i pid agli oggetti e successivamente controllo le collisioni
-             con le varie macchine o se la rana è presente sul tronco */
+             con le varie macchine o se la rana è presente sul tronco 
             for (i = ZERO; i < NUMERO_MACCHINE + info.difficolta; i++)
             {
                 // controllo la collisione dei proiettili con le auto, sia quelli nemici che quello della rana
@@ -353,7 +325,7 @@ bool areaGioco(Avvio info)
             {
 
                 /* per ognuno dei proiettili nemici controllo che non collida con il proiettile della rana,
-                e nel caso li distruggo entrambi */
+                e nel caso li distruggo entrambi 
                 for (j = 0; j < NUMERO_PROIETTILI; j++)
                 {
                     if (controlloCollisioniProiettili(proiettilino[j].coordinate, proiettileNemico[i].coordinate))
@@ -378,11 +350,11 @@ bool areaGioco(Avvio info)
             {
 
                 /* controllo la collisione del proiettile con i tronchi e se è presente un nemico lo uccido
-                           e distruggo il proiettile */
+                           e distruggo il proiettile 
 
                 for (j = 0; j < NUMERO_PROIETTILI; j++)
                 {
-                    if (controlloCollisioneNemicoProiettile(proiettilino[j], tronchino[i], nemico[i]))
+                    if (controlloCollisioneNemicoProiettile(proiettilino[j], tronco[i], nemico[i]))
                     {
                         nemico[i] = false;
                         proiettilino[j] = uccidiProiettile(proiettilino[j]);
@@ -397,9 +369,9 @@ bool areaGioco(Avvio info)
                 }
 
                 // controllo se la rana è salita sul tronco
-                if (tronchino[i].coordinate.x <= ranocchio.coordinate.x &&
-                    (tronchino[i].coordinate.x + LARGHEZZA_TRONCHI) >= ranocchio.coordinate.x &&
-                    ranocchio.coordinate.y == tronchino[i].coordinate.y)
+                if (tronco[i].coordinate.x <= ranocchio.coordinate.x &&
+                    (tronco[i].coordinate.x + LARGHEZZA_TRONCHI) >= ranocchio.coordinate.x &&
+                    ranocchio.coordinate.y == tronco[i].coordinate.y)
                 {
 
                     // se è presente un nemico sul tronco allora la rana muore
@@ -412,10 +384,10 @@ bool areaGioco(Avvio info)
                         // così facendo la rana salirà sul tronco nel punto esatto
                         if (!sulTronco)
                         {
-                            differenza = ranocchio.coordinate.x - tronchino[i].coordinate.x;
+                            differenza = ranocchio.coordinate.x - tronco[i].coordinate.x;
                             sulTronco = true;
                         }
-                        ranocchio.coordinate.x = tronchino[i].coordinate.x + differenza;
+                        ranocchio.coordinate.x = tronco[i].coordinate.x + differenza;
                         coloreTroncoRana = true;
 
                         // comunico la posizione al processo rana
@@ -426,7 +398,7 @@ bool areaGioco(Avvio info)
                 // in questo casa la rana è sull'altezza del tronco però una x diversa dal range di esso
                 // pertanto non è riuscita a salire sul tronco successivo quindi comunico le coordinate di partenza
                 // e tolgo una vita
-                else if (ranocchio.coordinate.y == tronchino[i].coordinate.y)
+                else if (ranocchio.coordinate.y == tronco[i].coordinate.y)
                 {
                     if (info.audio)
                         system("ffplay -nodisp ../file_audio/rana_in_acqua.mp3 2> /dev/null & ");
@@ -435,21 +407,21 @@ bool areaGioco(Avvio info)
                 }
 
                 /* se il nemico non è morto lo stampo sul tronco e se è pronto a sparare il proiettile
-                ne creo il processo */
+                ne creo il processo 
                 if (nemico[i])
                 {
-                    stampaNemico(finestraGioco, tronchino[i].coordinate);
+                    stampaNemico(finestraGioco, tronco[i].coordinate);
 
                     time(&fine_proiettile);
                     if ((difftime(fine_proiettile, inizio_proiettile[i])) >= DUE)
                     {
                         time(&inizio_proiettile[i]);
-                        funzProiettileNemico(tronchino[i].coordinate, p, i, info.difficolta);
+                        funzProiettileNemico(tronco[i].coordinate, p, i, info.difficolta);
                     }
                 }
                 // altrimenti, se non è presente un nemico stampo solamente il tronco
                 else
-                    stampaTronco(finestraGioco, tronchino[i].coordinate);
+                    stampaTronco(finestraGioco, tronco[i].coordinate);
 
                 // mi prendo i pid dei tronchi per poi utilizzare questo array per
                 // killare correttamente i vari processi tronchi
@@ -464,12 +436,12 @@ bool areaGioco(Avvio info)
 
             // controllo se i proiettili nemici sono in movimento e nel caso li stampo
             for (i = 0; i < NUMERO_PROIETTILI; i++)
-                stampaProiettili(finestraGioco, tronchino, nemico, proiettilino[i].coordinate, info.difficolta);
+                stampaProiettili(finestraGioco, tronco, nemico, proiettilino[i].coordinate, info.difficolta);
 
             for (i = ZERO; i < NUMERO_NEMICI + info.difficolta; i++)
             {
                 if (!hitProiettile[i])
-                    stampaProiettili(finestraGioco, tronchino, nemico, proiettileNemico[i].coordinate, info.difficolta);
+                    stampaProiettili(finestraGioco, tronco, nemico, proiettileNemico[i].coordinate, info.difficolta);
             }
 
             // stampo il punteggio  e il tempo rimanente nella parte alta dello schermo
@@ -493,11 +465,12 @@ bool areaGioco(Avvio info)
         }
         /* uscita dal gioco nel caso in cui viene premuta la q, finiscono le vite, finisce il tempo
         oppure vengono chiuse tutte le tane. Nel caso di vittoria o sconfitta
-        viene stampata una schermata finale diversa */
-        riniziaPartita = finePartita(finestraGioco, ranocchio, vite, buffer, punteggio, info.difficolta, tempo, macchinina, camioncino, tronchino, &partitaInCorso, partitaFinita);
+        viene stampata una schermata finale diversa 
+        riniziaPartita = finePartita(finestraGioco, ranocchio, vite, buffer, punteggio, info.difficolta, tempo, macchinina, camioncino, tronco, &partitaInCorso, partitaFinita);
         buffer = false;
     }
     return riniziaPartita;
+    */
 }
 
 bool CorsiaOccupata(Oggetto macchinina[], Oggetto camioncino[], int corsia, int difficolta)
@@ -509,39 +482,43 @@ bool CorsiaOccupata(Oggetto macchinina[], Oggetto camioncino[], int corsia, int 
     {
         if (macchinina[i].velocita < ZERO)
         {
-            if (macchinina[i].coordinate.x >= LARGHEZZA_SCHERMO && macchinina[i].coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3)){
+            if (macchinina[i].coordinate.x >= LARGHEZZA_SCHERMO && macchinina[i].coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
+            {
                 flag = true;
                 break;
             }
         }
         else
-        {   
-            if (macchinina[i].coordinate.x <= 0 && macchinina[i].coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3)){
+        {
+            if (macchinina[i].coordinate.x <= 0 && macchinina[i].coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
+            {
                 flag = true;
-            break;
-            
+                break;
             }
         }
     }
-if(!flag){
-    for (i = 0; i < NUMERO_CAMION + difficolta; i++)
+    if (!flag)
     {
-        if (camioncino[i].velocita < ZERO)
+        for (i = 0; i < NUMERO_CAMION + difficolta; i++)
         {
-            if (camioncino[i].coordinate.x >= LARGHEZZA_SCHERMO  && camioncino[i].coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3)){
-                flag = true;
-                break;
+            if (camioncino[i].velocita < ZERO)
+            {
+                if (camioncino[i].coordinate.x >= LARGHEZZA_SCHERMO && camioncino[i].coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            else
+            {
+                if (camioncino[i].coordinate.x <= 0 && camioncino[i].coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
+                {
+                    flag = true;
+                    break;
+                }
             }
         }
-        else
-        {
-            if (camioncino[i].coordinate.x <= 0 && camioncino[i].coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3)){
-                flag = true;
-                break;}
-        }
     }
-
-}
 
     return flag;
 }

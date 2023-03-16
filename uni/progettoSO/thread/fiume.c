@@ -7,7 +7,7 @@ char spriteTronchi[ALTEZZA_RANA][LARGHEZZA_TRONCHI] = {"<~~~~~~~~~~~~~>", "<~~~~
 char spriteNemicosulTronco[ALTEZZA_NEMICO][LARGHEZZA_TRONCHI] = {"<~~~~~o\\/o~~~~>", "<~~~~~:||:~~~~>", "<~~~~~./\\.~~~~>"};
 
 
-int funzTronchi(int p[DUE], int gameDifficulty)
+int funzTronchi(int gameDifficulty)
 {
     int i;
     pid_t tronco[MAX_TRONCHI];
@@ -39,7 +39,7 @@ int funzTronchi(int p[DUE], int gameDifficulty)
     }
 }
 
-void funzTronco(int p[DUE], int numeroTronco, int velocita, int gameDifficulty)
+void funzTronco(int numeroTronco, int velocita, int gameDifficulty)
 {
     Oggetto tronco;
 

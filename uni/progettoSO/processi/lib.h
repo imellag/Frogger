@@ -23,9 +23,9 @@ enum oggetti
     TRONCO0,
     TRONCO4 = 68,
     MACCHINA0,
-    MACCHINA10 = 79,
+    MACCHINA6 = 75,
     CAMION0,
-    CAMION8 = 88,
+    CAMION5 = 93,
     TRONCONEMICO0,
     TRONCONEMICO4 = 93,
     PROIETTILE_NEMICO0,
@@ -132,13 +132,13 @@ enum coloriProiettile
 
 // dimensioni macchina e numero di macchine
 #define LARGHEZZA_MACCHINA 6
-#define NUMERO_MACCHINE 5
-#define MAX_MACCHINE 11
+#define NUMERO_MACCHINE 4
+#define MAX_MACCHINE 6
 
 // dimensioni camion e numero di camion
 #define LARGHEZZA_CAMION 13
 #define NUMERO_CAMION 3
-#define MAX_CAMION 9
+#define MAX_CAMION 5
 
 // dimensioni autostrada e coordinate nello schermo
 #define ALTEZZA_AUTOSTRADA 9

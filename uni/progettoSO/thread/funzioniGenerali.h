@@ -23,19 +23,19 @@ int controlloPosizione(Coordinate oggetto, bool coloriFiume, int gameDifficulty)
 
 _Bool checkCoordinate(int posizione, int coordinata_da_checkare, int intorni);
 
-void funzTempo(int pOrologio[]);
+void funzTempo();
 
-void orologio(int pOrologio[]);
+void orologio();
 
 // riporta la rana alla posizione di partenza dopo aver perso una vita
-Oggetto posizioneInizialeRana(int pRana[], Oggetto rana, int gameDifficulty);
+Oggetto posizioneInizialeRana(Oggetto rana, int gameDifficulty);
 
 // controllo la collisione della rana con diversi tipi di oggetto, e per farlo passo anche la dimensione di questo
 bool controlloCollisioneOggetti(Oggetto entita, Coordinate rana, int LARGHEZZA_ENTITA);
 
 /* porta il proiettile fuori dallo schermo dopo che ha è stato distrutto
 o ha colpito la rana o il nemico */
-Oggetto posizioneInizialeProiettile(int p[], Oggetto proiettile, int i);
+Oggetto posizioneInizialeProiettile(Oggetto proiettile, int i);
 
 // stampa i proiettili controllando prima il colore di sfondo
 void stampaProiettili(WINDOW *finestraGioco, Oggetto arrayTrochi[], bool nemico[], Coordinate proiettile, int gameDifficulty);

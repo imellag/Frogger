@@ -106,7 +106,7 @@ int controlloRanaTronco(Coordinate rana, Oggetto tronco[])
     return rana.x;
 }
 
-void funzTempo(int p[])
+void funzTempo()
 {
     pid_t pidTempo;
 

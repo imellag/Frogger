@@ -68,11 +68,11 @@ void gameOver(WINDOW *finestraGioco)
 {
     int i;
 
-    wattron(finestraGioco, COLOR_PAIR(10));
+    wattron(finestraGioco, COLOR_PAIR(COLORE_VERDE_NERO));
 
     for (i = ZERO; i < ALTEZZA_SPRITE; i++)
         mvwprintw(finestraGioco, (ALTEZZA_SCHERMO / DUE - 5) + i, LARGHEZZA_SCHERMO / 2 - 32, "%ls", spriteSconfitta[i]);
-    wattroff(finestraGioco, COLOR_PAIR(10));
+    wattroff(finestraGioco, COLOR_PAIR(COLORE_VERDE_NERO));
 
     wrefresh(finestraGioco);
     sleep(3);
@@ -83,14 +83,14 @@ void vittoria(WINDOW *finestraGioco, int punteggio)
 
     int i;
 
-    wattron(finestraGioco, COLOR_PAIR(COLORE_VERDE_NERO | A_BOLD));
+    wattron(finestraGioco, COLOR_PAIR(COLORE_VERDE_NERO));
 
     for (i = ZERO; i < ALTEZZA_SPRITE; i++)
         mvwprintw(finestraGioco, (ALTEZZA_SCHERMO / DUE - 10) + i, LARGHEZZA_SCHERMO / 2 - 31, "%ls", spriteVittoria[i]);
 
     mvwprintw(finestraGioco, 16, LARGHEZZA_SCHERMO / DUE - 10, "Punteggio finale: %d!", punteggio);
 
-    wattroff(finestraGioco, COLOR_PAIR(COLORE_VERDE_NERO) | A_BOLD);
+    wattroff(finestraGioco, COLOR_PAIR(COLORE_VERDE_NERO));
 
     wrefresh(finestraGioco);
     sleep(5);
@@ -153,10 +153,10 @@ bool funzPausa(WINDOW *finestraGioco, int difficolta, Oggetto camion[], Oggetto 
     int segnaleInviato;
     bool partitaFinita = false;
 
-    for (i = 0; i < NUMERO_MACCHINE + (3 * difficolta); i++)
+    for (i = 0; i < NUMERO_MACCHINE +  difficolta; i++)
         kill(macchine[i].pid, SIGSTOP);
 
-    for (i = 0; i < NUMERO_CAMION + (3 * difficolta); i++)
+    for (i = 0; i < NUMERO_CAMION +  difficolta; i++)
         kill(camion[i].pid, SIGSTOP);
 
     for (i = 0; i < NUMERO_TRONCHI + difficolta; i++)
@@ -176,10 +176,10 @@ bool funzPausa(WINDOW *finestraGioco, int difficolta, Oggetto camion[], Oggetto 
         partitaFinita = true;
     }
 
-    for (i = 0; i < NUMERO_MACCHINE + (3 * difficolta); i++)
+    for (i = 0; i < NUMERO_MACCHINE + difficolta; i++)
         kill(macchine[i].pid, segnaleInviato);
 
-    for (i = 0; i < NUMERO_CAMION + (3 * difficolta); i++)
+    for (i = 0; i < NUMERO_CAMION + difficolta; i++)
         kill(camion[i].pid, segnaleInviato);
 
     for (i = 0; i < NUMERO_TRONCHI + difficolta; i++)
@@ -343,10 +343,10 @@ bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer
 
         endwin();
 
-        for (i = ZERO; i < NUMERO_MACCHINE + (difficolta * 3); i++)
+        for (i = ZERO; i < NUMERO_MACCHINE + difficolta; i++)
             kill(macchina[i].pid, SIGKILL);
 
-        for (i = ZERO; i < NUMERO_CAMION + (difficolta * 3); i++)
+        for (i = ZERO; i < NUMERO_CAMION + difficolta; i++)
             kill(camion[i].pid, SIGKILL);
 
         for (i = ZERO; i < NUMERO_TRONCHI; i++)

@@ -1,5 +1,5 @@
 progetto.out: main.o rana.o autostrada.o fiume.o funzioniGenerali.o collisioni.o avvio.o funzioniMain.o areaDisegno.o areaGioco.o
-	gcc main.o rana.o autostrada.o fiume.o funzioniGenerali.o collisioni.o avvio.o funzioniMain.o areaDisegno.o areaGioco.o -lncursesw -o progetto.out
+	gcc main.o rana.o autostrada.o fiume.o funzioniGenerali.o collisioni.o avvio.o funzioniMain.o areaDisegno.o areaGioco.o -lncursesw -lpthread -o progetto.out
 main.o: main.c lib.h
 	gcc -c main.c
 rana.o: rana.c rana.h lib.h

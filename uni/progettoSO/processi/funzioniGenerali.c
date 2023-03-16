@@ -26,7 +26,7 @@ int controlloLimitiRana(Coordinate entita, int gameDifficulty)
                 break;
             }
         }
-        if (!flag)
+        if (flag==-1)
             flag = SEI;
     }
 
@@ -166,6 +166,7 @@ bool controlloCollisioneOggetti(Oggetto entita, Coordinate rana, int LARGHEZZA_E
 
 void colori(Avvio info)
 {
+
     init_color(COLORE_RANA, info.colore.r, info.colore.g, info.colore.b);          // 19/227/5
     init_color(COLORE_MARCIAPIEDE, 388, 270, 102); // 99/69/26
     init_color(COLORE_AUTOSTRADA, 150, 150, 150);  // grigio (per ora), sarebbe 66/66/66 in rgb, convertito 259 /259/259
@@ -194,7 +195,7 @@ int controlloPosizione(Coordinate oggetto, bool coloriFiume, int gameDifficulty)
     else if (oggetto.y >= INIZIO_AUTOSTRADA + (gameDifficulty * 3) && oggetto.y < INIZIO_MARCIAPIEDE + (gameDifficulty * 6))
         return COLORE_AUTOSTRADA;
     else if (oggetto.y >= INIZIO_PRATO + (gameDifficulty * 3))
-        return COLOR_GREEN;
+        return COLORE_PRATO;
     else if (oggetto.y >= OTTO && oggetto.y < INIZIO_PRATO + (gameDifficulty * 3))
         return COLOR_BLUE;
 }

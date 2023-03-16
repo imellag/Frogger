@@ -7,7 +7,7 @@ char spriteMacchineContrario[ALTEZZA_RANA][LARGHEZZA_MACCHINA] = {" _/^\\", "| _
 char spriteCamion[ALTEZZA_RANA][LARGHEZZA_CAMION] = {"/_______/^\\_ ", "|_______|___|", " O O O   O O"};
 char spriteCamionContrario[ALTEZZA_RANA][LARGHEZZA_CAMION] = {" _/^\\_______\\", "|___|_______|", " O O   O O O"};
 
-void funzAuto(int p[], int gameDifficulty, int pVeicoli[])
+void funzAuto(int gameDifficulty)
 {
     // contatore
     int i;

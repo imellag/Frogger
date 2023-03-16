@@ -13,7 +13,7 @@ void funzAuto(int p[], int gameDifficulty, int pVeicoli[])
     int i;
 
     // pid delle macchine
-    pid_t macchina[MAX_MACCHINE];
+    pid_t macchina[MAX_MACCHINE+MAX_CAMION];
 
     int direzione;
 
@@ -33,7 +33,7 @@ void funzAuto(int p[], int gameDifficulty, int pVeicoli[])
     Coordinate inizioVeicoli[MAX_CAMION + MAX_MACCHINE];
     direzione = spostamento;
 
-    for (i = 0; i < NUMERO_MACCHINE + NUMERO_CAMION + (gameDifficulty * 6); i++)
+    for (i = 0; i < NUMERO_MACCHINE + NUMERO_CAMION + (gameDifficulty * 2); i++)
     {
         do
         {
@@ -51,14 +51,14 @@ void funzAuto(int p[], int gameDifficulty, int pVeicoli[])
         velocitaCorsie[i] = (MIN_VELOCITA_VEICOLI + rand() % (MAX_VELOCITA_VEICOLI - MIN_VELOCITA_VEICOLI)) - 2500 * gameDifficulty;
 
     // genero i processi macchina
-    for (i = ZERO; i < NUMERO_MACCHINE + NUMERO_CAMION + (6 * gameDifficulty); i++)
+    for (i = ZERO; i < NUMERO_MACCHINE + NUMERO_CAMION +  (2*gameDifficulty); i++)
     {
         macchina[i] = fork();
         if (macchina[i] < ZERO)
             printw("Error");
         else if (macchina[i] == ZERO)
         {
-            if (i < (NUMERO_MACCHINE + gameDifficulty * 3))
+            if (i < (NUMERO_MACCHINE + gameDifficulty ))
                 movimentoVeicolo(p, i, gameDifficulty, direzioneCorsie, velocitaCorsie, inizioVeicoli, pVeicoli, MACCHINA0);
 
             else
@@ -66,16 +66,7 @@ void funzAuto(int p[], int gameDifficulty, int pVeicoli[])
         }
     }
 
-    /*  for (i = ZERO; i < NUMERO_CAMION + (3 * gameDifficulty); i++)
-      {
-          macchina[i] = fork();
-          if (macchina[i] < ZERO)
-              printw("Error");
-          else if (macchina[i] == ZERO)
-              movimentoVeicolo(p, i, gameDifficulty, direzioneCorsie, velocitaCorsie, inizioVeicoli, pVeicoli, MACCHINA0);
-      }
 
-      */
 }
 
 void movimentoVeicolo(int p[DUE], int numeroVeicolo, int gameDifficulty, int direzioneCorsie[], int velocitaCorsie[], Coordinate inizioVeicoli[], int pVeicoli[], int tipo)
@@ -85,8 +76,8 @@ void movimentoVeicolo(int p[DUE], int numeroVeicolo, int gameDifficulty, int dir
     srand(getpid());
     int corsia;
     int tempoRandom = rand() % MAX_ATTESA;
-    //  veicolo.coordinate.x = inizioVeicoli[numeroVeicolo].x;
-    veicolo.coordinate.x = rand() % LARGHEZZA_SCHERMO;
+      veicolo.coordinate.x = inizioVeicoli[numeroVeicolo].x;
+  
     if (tipo == CAMION0)
         veicolo.coordinate.y = INIZIO_AUTOSTRADA + (inizioVeicoli[numeroVeicolo].y * 3) + (gameDifficulty * TRE);
     else
@@ -99,7 +90,7 @@ void movimentoVeicolo(int p[DUE], int numeroVeicolo, int gameDifficulty, int dir
     while (true)
     {
         if (tipo == CAMION0)
-            veicolo.id = tipo + numeroVeicolo - NUMERO_MACCHINE + gameDifficulty * 3;
+            veicolo.id = tipo + numeroVeicolo%( NUMERO_MACCHINE + gameDifficulty);
             else
              veicolo.id = tipo + numeroVeicolo ;
 

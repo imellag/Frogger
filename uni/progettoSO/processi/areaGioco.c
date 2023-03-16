@@ -21,7 +21,7 @@ bool areaGioco(Avvio info)
     int contaNemici;
 
     int troncoNemico;
-    int offset;
+    int offset=0;
     int vite;
 
     int corsiaRandom;
@@ -51,11 +51,10 @@ bool areaGioco(Avvio info)
     Oggetto pacchetto;
     Oggetto proiettilino[NUMERO_PROIETTILI];
     Coordinate nuoveCoordinate;
-    int macchineInCoda = 0;
 
     Colore bufferColori;
-    int timer;
-    int punteggio;
+    int timer=TEMPO_INIZIALE;
+    int punteggio=PUNTEGGIO_INIZIALE;
     bool arrayTane[NUMERO_TANE] = {false};
 
     bool nemico[MAX_TRONCHI] = {false};
@@ -223,7 +222,7 @@ bool areaGioco(Avvio info)
         else if (pacchetto.id >= TRONCO0 && pacchetto.id <= TRONCO4)
             tronchino[pacchetto.id - TRONCO0] = pacchetto;
 
-        else if (pacchetto.id >= MACCHINA0 && pacchetto.id <= MACCHINA10)
+        else if (pacchetto.id >= MACCHINA0 && pacchetto.id <= MACCHINA6)
             macchinina[pacchetto.id - MACCHINA0] = pacchetto;
         else if (pacchetto.id == MACCHINA0_OUT)
         {
@@ -234,7 +233,7 @@ bool areaGioco(Avvio info)
 
             write(pVeicoli[WRITE], &corsiaRandom, sizeof(int));
         }
-        else if (pacchetto.id >= CAMION0 && pacchetto.id <= CAMION8)
+        else if (pacchetto.id >= CAMION0 && pacchetto.id <= CAMION5)
             camioncino[pacchetto.id - CAMION0] = pacchetto;
 
         else if (pacchetto.id == q)
@@ -262,6 +261,7 @@ bool areaGioco(Avvio info)
                     arrayTane[risultato] = true; // viene chiusa la tana
                     ranocchio = posizioneInizialeRana(pRana, ranocchio, info.difficolta);
                     punteggio += PUNTEGGIO_TANA;
+                    timer=TEMPO_INIZIALE;
                 }
             }
 

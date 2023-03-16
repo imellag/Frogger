@@ -3,7 +3,7 @@
 #include "funzioniGenerali.h"
 
 char spriteRana[ALTEZZA_RANA][LARGHEZZA_RANA] = {" o.o ", "+-|-+", "\\-|-/"};
-
+/*
 void funzRana(int p[], int pRana[], int gameDifficulty)
 {
 
