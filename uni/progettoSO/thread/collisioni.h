@@ -1,4 +1,4 @@
-void controlloCollisioniMacchine(int pRana[DUE], Oggetto macchinina[],Oggetto ranocchio,int *vite,Oggetto camioncino[],int gameDifficulty);
+void controlloCollisioniMacchine( Oggetto macchinina[],Oggetto ranocchio,int *vite,Oggetto camioncino[],int gameDifficulty);
 // funzione per la collisione del proiettile nemico con la rana
 bool controlloCollisioniRanaProiettile(Coordinate proiettileNemico, Coordinate ranocchio);
 // funzione per le collisioni dei proiettili, sia nemici che della rana, con le macchine

@@ -1,5 +1,6 @@
 #include "lib.h"
 
+#define LIMITE_RANA 6
 // creo il processo della rana
 void funzRana(int p[], int pRana[], int gameDifficulty);
 

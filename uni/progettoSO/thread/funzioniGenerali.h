@@ -25,7 +25,7 @@ _Bool checkCoordinate(int posizione, int coordinata_da_checkare, int intorni);
 
 void funzTempo();
 
-void orologio();
+void* orologio(void* _tempo);
 
 // riporta la rana alla posizione di partenza dopo aver perso una vita
 Oggetto posizioneInizialeRana(Oggetto rana, int gameDifficulty);

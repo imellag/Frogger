@@ -35,7 +35,9 @@ void movimentoRana(int p[], int pRana[], int gameDifficulty)
 
     rana.coordinate.x = ZERO;
     rana.coordinate.y = POSIZIONE_INIZIALE_RANA_Y + (gameDifficulty)*6;
-    rana.pid=getpid();
+    rana.pid = getpid();
+    rana.id = RANA;
+    write(p[WRITE], &rana, sizeof(Oggetto));
 
     close(p[READ]);
     close(pRana[WRITE]);
@@ -56,34 +58,34 @@ void movimentoRana(int p[], int pRana[], int gameDifficulty)
         case W:
         case KEY_UP:
             rana.coordinate.y -= ALTEZZA_RANA;
-            if (controlloLimitiRana(rana.coordinate, gameDifficulty) == SEI)
+            if (controlloLimitiRana(rana.coordinate, gameDifficulty) == LIMITE_RANA)
                 rana.coordinate.y += ALTEZZA_RANA;
             break;
         case s:
         case S:
         case KEY_DOWN:
             rana.coordinate.y += ALTEZZA_RANA;
-            if (controlloLimitiRana(rana.coordinate, gameDifficulty) == SEI)
+            if (controlloLimitiRana(rana.coordinate, gameDifficulty) == LIMITE_RANA)
                 rana.coordinate.y -= ALTEZZA_RANA;
             break;
         case d:
         case D:
         case KEY_RIGHT:
             rana.coordinate.x += LARGHEZZA_RANA;
-            if (controlloLimitiRana(rana.coordinate, gameDifficulty) == SEI)
+            if (controlloLimitiRana(rana.coordinate, gameDifficulty) == LIMITE_RANA)
                 rana.coordinate.x -= LARGHEZZA_RANA;
             break;
         case a:
         case A:
         case KEY_LEFT:
             rana.coordinate.x -= LARGHEZZA_RANA;
-            if (controlloLimitiRana(rana.coordinate, gameDifficulty) == SEI)
+            if (controlloLimitiRana(rana.coordinate, gameDifficulty) == LIMITE_RANA)
                 rana.coordinate.x += LARGHEZZA_RANA;
             break;
         case Q:
         case q:
             rana.id = q;
-              move = false;
+            move = false;
             write(p[WRITE], &rana, sizeof(Oggetto));
             break;
 

@@ -12,122 +12,52 @@ void funzAuto(int gameDifficulty)
     // contatore
     int i;
 
-    // pid delle macchine
-    pid_t macchina[MAX_MACCHINE];
-
     int direzione;
 
     // direzione della macchina(se -1 va da destra verso sinistra se 1 il contrario)
     int spostamento;
 
-    // randomizzo anche la direzione
-    spostamento = rand() % DUE;
-
-    if (spostamento == ZERO)
-        spostamento = -UNO;
-    else
-        spostamento = UNO;
-
-    int velocitaCorsie[MAX_CORSIE];
-    int direzioneCorsie[MAX_CORSIE];
-    Coordinate inizioVeicoli[MAX_CAMION + MAX_MACCHINE];
-    direzione = spostamento;
-
-    for (i = 0; i < NUMERO_MACCHINE + NUMERO_CAMION + (gameDifficulty * 6); i++)
-    {
-        do
-        {
-            inizioVeicoli[i].x = rand() % LARGHEZZA_SCHERMO;
-            inizioVeicoli[i].y = rand() % (NUMERO_CORSIE + gameDifficulty);
-        } while (controlloInizioCoordinateCorsie(inizioVeicoli, i));
-    }
-    for (i = 0; i < NUMERO_CORSIE + gameDifficulty; i++)
-    {
-        direzioneCorsie[i] = direzione;
-        direzione = direzione * -1;
-    }
-
-    for (i = 0; i < NUMERO_CORSIE + gameDifficulty; i++)
-        velocitaCorsie[i] = (MIN_VELOCITA_VEICOLI + rand() % (MAX_VELOCITA_VEICOLI - MIN_VELOCITA_VEICOLI)) - 2500 * gameDifficulty;
-
-    // genero i processi macchina
-    for (i = ZERO; i < NUMERO_MACCHINE + NUMERO_CAMION + (6 * gameDifficulty); i++)
-    {
-        macchina[i] = fork();
-        if (macchina[i] < ZERO)
-            printw("Error");
-        else if (macchina[i] == ZERO)
-        {
-            if (i < (NUMERO_MACCHINE + gameDifficulty * 3))
-                movimentoVeicolo(p, i, gameDifficulty, direzioneCorsie, velocitaCorsie, inizioVeicoli, pVeicoli, MACCHINA0);
-
-            else
-                movimentoVeicolo(p, i, gameDifficulty, direzioneCorsie, velocitaCorsie, inizioVeicoli, pVeicoli, CAMION0);
-        }
-    }
-
-    /*  for (i = ZERO; i < NUMERO_CAMION + (3 * gameDifficulty); i++)
-      {
-          macchina[i] = fork();
-          if (macchina[i] < ZERO)
-              printw("Error");
-          else if (macchina[i] == ZERO)
-              movimentoVeicolo(p, i, gameDifficulty, direzioneCorsie, velocitaCorsie, inizioVeicoli, pVeicoli, MACCHINA0);
-      }
-
-      */
+   
 }
 
-void movimentoVeicolo(int p[DUE], int numeroVeicolo, int gameDifficulty, int direzioneCorsie[], int velocitaCorsie[], Coordinate inizioVeicoli[], int pVeicoli[], int tipo)
+void *movimentoVeicolo(void *_veicolo)
 {
-    Oggetto veicolo;
-    int velocitaRandom = velocitaCorsie[inizioVeicoli[numeroVeicolo].y];
-    srand(getpid());
+    parametriVeicolo *veicolo = _veicolo;
+    int velocitaRandom = veicolo->velocitaCorsia;
     int corsia;
     int tempoRandom = rand() % MAX_ATTESA;
-    //  veicolo.coordinate.x = inizioVeicoli[numeroVeicolo].x;
-    veicolo.coordinate.x = rand() % LARGHEZZA_SCHERMO;
-    if (tipo == CAMION0)
-        veicolo.coordinate.y = INIZIO_AUTOSTRADA + (inizioVeicoli[numeroVeicolo].y * 3) + (gameDifficulty * TRE);
-    else
-        veicolo.coordinate.y = INIZIO_AUTOSTRADA + (inizioVeicoli[numeroVeicolo].y * 3) + (gameDifficulty * TRE);
+    veicolo->veicolo.coordinate.x = veicolo->inizioVeicoli.x;
+    veicolo->veicolo.coordinate.y = veicolo->inizioVeicoli.y;
 
-    veicolo.velocita = direzioneCorsie[inizioVeicoli[numeroVeicolo].y];
-    veicolo.pid = getpid();
+    veicolo->veicolo.velocita = veicolo->direzioneCorsia;
 
-    close(p[READ]);
     while (true)
     {
-        if (tipo == CAMION0)
-            veicolo.id = tipo + numeroVeicolo - NUMERO_MACCHINE + gameDifficulty * 3;
-            else
-             veicolo.id = tipo + numeroVeicolo ;
 
         do
         {
 
-            if (veicolo.velocita < ZERO)
-                veicolo.coordinate.x--;
+            if (veicolo->veicolo.velocita < ZERO)
+                veicolo->veicolo.coordinate.x--;
             else
-                veicolo.coordinate.x++;
+                veicolo->veicolo.coordinate.x++;
 
             usleep(velocitaRandom);
-            write(p[WRITE], &veicolo, sizeof(Oggetto));
+        } while (!controlloLimitiMacchina(veicolo->veicolo.coordinate));
+        /*veicolo->id = MACCHINA0_OUT;
 
-        } while (!controlloLimitiMacchina(veicolo.coordinate));
-        veicolo.id = MACCHINA0_OUT;
-        write(p[WRITE], &veicolo, sizeof(Oggetto));
-
-        read(pVeicoli[READ], &corsia, sizeof(int));
-
-        veicolo.velocita = direzioneCorsie[corsia];
+        veicolo->veicolo.velocita = direzioneCorsia[corsia];
         if (direzioneCorsie[corsia] < 0)
-            veicolo.coordinate.x = LARGHEZZA_SCHERMO + LARGHEZZA_CAMION;
+            veicolo->veicolo.coordinate.x = LARGHEZZA_SCHERMO + LARGHEZZA_CAMION;
         else
-            veicolo.coordinate.x = -LARGHEZZA_CAMION;
-        veicolo.coordinate.y = INIZIO_AUTOSTRADA + (corsia * 3) + (gameDifficulty * TRE);
+            veicolo->veicolo.coordinate.x = -LARGHEZZA_CAMION;
+        veicolo->veicolo.coordinate.y = INIZIO_AUTOSTRADA + (corsia * 3) + (veicolo->veicolo.difficolta * TRE);
 
         velocitaRandom = velocitaCorsie[corsia];
+
+        */
+
+        
     }
 }
 
@@ -218,12 +148,14 @@ bool controlloInizioCoordinateCorsie(Coordinate inizioVeicoli[], int i)
         return flag;
     }
 }
+
 Colore coloreVeicolo()
 {
     Colore rgb;
 
     /* mi assicuro che il colore non sia troppo simile a quello
     dell'autostrada per evitare che la macchina sia invisibile */
+
     do
     {
         rgb.r = rand() % 1000;

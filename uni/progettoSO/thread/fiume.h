@@ -7,7 +7,7 @@
 int funzTronchi(int gameDifficulty);
 /* controlla la posizione dei tronchi, la aggiorna e eventualmente cambia la loro direzione
  se sono arrivati al bordo, e infine invia la posizione aggiornata al main */
-void funzTronco(int numeroTronco, int velocita, int gameDifficulty);
+void* movimentoTronco(void* _tronco);
 // stampa la sprite del tronco
 void stampaTronco(WINDOW *finestraGioco, Coordinate tronco);
 // stampa la sprite del nemico

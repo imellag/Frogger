@@ -1,4 +1,3 @@
-
 #include "lib.h"
 #include "funzioniGenerali.h"
 #include "rana.h"
@@ -21,7 +20,7 @@ bool areaGioco(Avvio info)
     int contaNemici;
 
     int troncoNemico;
-    int offset=0;
+    int offset = 0;
     int vite;
 
     int corsiaRandom;
@@ -53,8 +52,8 @@ bool areaGioco(Avvio info)
     Coordinate nuoveCoordinate;
 
     Colore bufferColori;
-    int timer=TEMPO_INIZIALE;
-    int punteggio=PUNTEGGIO_INIZIALE;
+    int timer = TEMPO_INIZIALE;
+    int punteggio = PUNTEGGIO_INIZIALE;
     bool arrayTane[NUMERO_TANE] = {false};
 
     bool nemico[MAX_TRONCHI] = {false};
@@ -118,6 +117,7 @@ bool areaGioco(Avvio info)
     vite = MAX_VITE - info.difficolta;
 
     clear();
+    refresh();
 
     for (i = ZERO; i < NUMERO_MACCHINE + 3 * info.difficolta; i++)
     {
@@ -153,7 +153,6 @@ bool areaGioco(Avvio info)
     // prima di iniziare porto tutti gli oggetti fuori dallo schermo
     for (i = ZERO; i < MAX_TRONCHI; i++)
     {
-
         tronchino[i].coordinate.x = FUORI_MAPPA;
         tronchino[i].coordinate.y = FUORI_MAPPA;
 
@@ -163,7 +162,6 @@ bool areaGioco(Avvio info)
 
     for (i = ZERO; i < MAX_CAMION; i++)
     {
-
         camioncino[i].coordinate.x = FUORI_MAPPA;
         camioncino[i].coordinate.y = FUORI_MAPPA;
     }
@@ -261,7 +259,7 @@ bool areaGioco(Avvio info)
                     arrayTane[risultato] = true; // viene chiusa la tana
                     ranocchio = posizioneInizialeRana(pRana, ranocchio, info.difficolta);
                     punteggio += PUNTEGGIO_TANA;
-                    timer=TEMPO_INIZIALE;
+                    timer = TEMPO_INIZIALE;
                 }
             }
 
@@ -472,6 +470,8 @@ bool areaGioco(Avvio info)
                     stampaProiettili(finestraGioco, tronchino, nemico, proiettileNemico[i].coordinate, info.difficolta);
             }
 
+            // for (i = ZERO; i < NUMERO_NEMICI; i++) 
+
             // stampo il punteggio  e il tempo rimanente nella parte alta dello schermo
             stampaPunteggio(finestraGioco, punteggio);
             stampaTempo(finestraGioco, timer);
@@ -486,7 +486,7 @@ bool areaGioco(Avvio info)
             tempo.velocita = 0;
 
             // controllo se c'è almeno una tana che non è stata chiusa
-            buffer = controlloTaneChiuse;
+            buffer = controlloTaneChiuse(arrayTane);
 
             if (timer <= 0)
                 ranocchio = morteRana(finestraGioco, &vite, pRana, ranocchio, info.difficolta, &timer);
@@ -509,39 +509,43 @@ bool CorsiaOccupata(Oggetto macchinina[], Oggetto camioncino[], int corsia, int 
     {
         if (macchinina[i].velocita < ZERO)
         {
-            if (macchinina[i].coordinate.x >= LARGHEZZA_SCHERMO && macchinina[i].coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3)){
+            if (macchinina[i].coordinate.x >= LARGHEZZA_SCHERMO && macchinina[i].coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
+            {
                 flag = true;
                 break;
             }
         }
         else
-        {   
-            if (macchinina[i].coordinate.x <= 0 && macchinina[i].coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3)){
+        {
+            if (macchinina[i].coordinate.x <= 0 && macchinina[i].coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
+            {
                 flag = true;
-            break;
-            
+                break;
             }
         }
     }
-if(!flag){
-    for (i = 0; i < NUMERO_CAMION + difficolta; i++)
+    if (!flag)
     {
-        if (camioncino[i].velocita < ZERO)
+        for (i = 0; i < NUMERO_CAMION + difficolta; i++)
         {
-            if (camioncino[i].coordinate.x >= LARGHEZZA_SCHERMO  && camioncino[i].coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3)){
-                flag = true;
-                break;
+            if (camioncino[i].velocita < ZERO)
+            {
+                if (camioncino[i].coordinate.x >= LARGHEZZA_SCHERMO && camioncino[i].coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            else
+            {
+                if (camioncino[i].coordinate.x <= 0 && camioncino[i].coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
+                {
+                    flag = true;
+                    break;
+                }
             }
         }
-        else
-        {
-            if (camioncino[i].coordinate.x <= 0 && camioncino[i].coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3)){
-                flag = true;
-                break;}
-        }
     }
-
-}
 
     return flag;
 }

@@ -47,7 +47,7 @@ bool controlloCollisioniProiettiliAuto(Coordinate proiettile, Oggetto veicolo, i
     return false;
 }
 
-void controlloCollisioniMacchine(int pRana[DUE], Oggetto macchinina[], Oggetto ranocchio, int *vite, Oggetto camioncino[], int gameDifficulty)
+void controlloCollisioniMacchine(Oggetto macchinina[], Oggetto ranocchio, int *vite, Oggetto camioncino[], int gameDifficulty)
 {
     int i, invincibilita = CINQUE;
     for (i = 0; i < CINQUE; i++)
@@ -56,8 +56,7 @@ void controlloCollisioniMacchine(int pRana[DUE], Oggetto macchinina[], Oggetto r
         {
             invincibilita = CINQUE;
             (*vite)--;
-            posizioneInizialeRana(pRana, ranocchio, gameDifficulty);
-            write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
+         //   posizioneInizialeRana(pRana, ranocchio, gameDifficulty);
             clear();
         }
     }
@@ -67,8 +66,7 @@ void controlloCollisioniMacchine(int pRana[DUE], Oggetto macchinina[], Oggetto r
         {
             invincibilita = CINQUE;
             (*vite)--;
-            posizioneInizialeRana(pRana, ranocchio, gameDifficulty);
-            write(pRana[WRITE], &ranocchio, sizeof(Oggetto));
+           // posizioneInizialeRana(pRana, ranocchio, gameDifficulty);
             clear();
         }
     }

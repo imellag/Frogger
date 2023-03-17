@@ -96,13 +96,13 @@ void vittoria(WINDOW *finestraGioco, int punteggio)
     sleep(5);
 }
 
-Oggetto morteRana(WINDOW *finestraGioco, int *vite, int pRana[], Oggetto ranocchio, int difficolta, int *tempo)
+Oggetto morteRana(WINDOW *finestraGioco, int *vite, Oggetto rana, int difficolta, int *tempo)
 {
 
     Oggetto posizioneRana;
     (*tempo) = TEMPO_INIZIALE - (difficolta * 10);
     (*vite)--;
-    posizioneRana = posizioneInizialeRana(pRana, ranocchio, difficolta);
+    posizioneRana = posizioneInizialeRana(rana, difficolta);
     wclear(finestraGioco);
     return posizioneRana;
 }
@@ -127,7 +127,7 @@ void stampaTempo(WINDOW *finestraGioco, int tempo)
     }
 }
 
-void creaProiettile(int p[], Oggetto ranocchio, int *offset)
+void creaProiettile(Oggetto rana, int *offset)
 {
     pid_t pidProiettile;
 
@@ -139,7 +139,7 @@ void creaProiettile(int p[], Oggetto ranocchio, int *offset)
 
     else if (pidProiettile == ZERO)
     {
-        funzProiettile(ranocchio, p, (*offset) % NUMERO_PROIETTILI);
+        //  funzProiettile();
         exit(0);
     }
 }
@@ -154,17 +154,17 @@ bool funzPausa(WINDOW *finestraGioco, int difficolta, Oggetto camion[], Oggetto 
     bool partitaFinita = false;
 
     for (i = 0; i < NUMERO_MACCHINE + (3 * difficolta); i++)
-        kill(macchine[i].pid, SIGSTOP);
+        //kill(macchine[i].pid, SIGSTOP);
 
     for (i = 0; i < NUMERO_CAMION + (3 * difficolta); i++)
-        kill(camion[i].pid, SIGSTOP);
+        //kill(camion[i].pid, SIGSTOP);
 
     for (i = 0; i < NUMERO_TRONCHI + difficolta; i++)
-        kill(tronchi[i].pid, SIGSTOP);
+        //kill(tronchi[i].pid, SIGSTOP);
 
-    kill(pidTempo, SIGSTOP);
+    //kill(pidTempo, SIGSTOP);
 
-    kill(pidRana, SIGSTOP);
+    //kill(pidRana, SIGSTOP);
 
     scelta = pausaeNuovaPartita(finestraGioco, UNO);
 
@@ -177,20 +177,21 @@ bool funzPausa(WINDOW *finestraGioco, int difficolta, Oggetto camion[], Oggetto 
     }
 
     for (i = 0; i < NUMERO_MACCHINE + (3 * difficolta); i++)
-        kill(macchine[i].pid, segnaleInviato);
+        //kill(macchine[i].pid, segnaleInviato);
 
     for (i = 0; i < NUMERO_CAMION + (3 * difficolta); i++)
-        kill(camion[i].pid, segnaleInviato);
+        //kill(camion[i].pid, segnaleInviato);
 
     for (i = 0; i < NUMERO_TRONCHI + difficolta; i++)
-        kill(tronchi[i].pid, segnaleInviato);
+        //kill(tronchi[i].pid, segnaleInviato);
 
-    kill(pidTempo, segnaleInviato);
+    //kill(pidTempo, segnaleInviato);
 
-    kill(pidRana, segnaleInviato);
+    //kill(pidRana, segnaleInviato);
 
     return partitaFinita;
 }
+
 
 bool pausaeNuovaPartita(WINDOW *finestraGioco, int chiamata)
 {
@@ -272,7 +273,7 @@ void schermataFinale(WINDOW *finestraGioco)
 Oggetto uccidiProiettile(Oggetto proiettile)
 {
 
-    kill(proiettile.pid, SIGKILL);
+    //  kill(proiettile.pid, SIGKILL);
     proiettile.coordinate.x = FUORI_MAPPA;
     proiettile.coordinate.y = FUORI_MAPPA;
 
@@ -316,7 +317,7 @@ bool controlloTaneChiuse(bool arrayTane[])
 
     return buffer;
 }
-
+/*
 bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer, int punteggio,
                  int difficolta, Oggetto tempo, Oggetto macchina[], Oggetto camion[], Oggetto tronco[], bool *partitaInCorso, bool partitaFinita)
 {
@@ -357,4 +358,4 @@ bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer
     }
 
     return riniziaPartita;
-}
+}*/

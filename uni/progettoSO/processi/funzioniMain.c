@@ -154,7 +154,7 @@ bool funzPausa(WINDOW *finestraGioco, int difficolta, Oggetto camion[], Oggetto 
     bool partitaFinita = false;
 
     for (i = 0; i < NUMERO_MACCHINE +  difficolta; i++)
-        kill(macchine[i].pid, SIGSTOP);
+       kill(macchine[i].pid, SIGSTOP);
 
     for (i = 0; i < NUMERO_CAMION +  difficolta; i++)
         kill(camion[i].pid, SIGSTOP);
@@ -340,7 +340,7 @@ bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer
             wclear(finestraGioco);
             schermataFinale(finestraGioco);
         }
-
+        delwin(finestraGioco);
         endwin();
 
         for (i = ZERO; i < NUMERO_MACCHINE + difficolta; i++)

@@ -20,10 +20,10 @@ void stampaTempo(WINDOW *finestraGioco, int tempo);
 void vittoria(WINDOW *finestraGioco, int punteggio);
 
 // gestisce la morte della rana. toglie una vita, resetta il tempo e la riporta nella posizione iniziale
-Oggetto morteRana(WINDOW *finestraGioco, int *vite, int pRana[], Oggetto ranocchio, int difficolta, int *tempo);
+Oggetto morteRana(WINDOW *finestraGioco, int *vite, Oggetto ranocchio, int difficolta, int *tempo);
 
 // crea il processo di un proiettile della rana e riproduce il suono dello sparo
-void creaProiettile(int p[], Oggetto ranocchio, int *offset);
+void creaProiettile(Oggetto ranocchio, int *offset);
 
 /* se l'utente mette in pausa la partita manda un segnale di stop a tutti i processi.
 Se poi l'utente decide di riprendere la partita fa ripartire i processi, altrimenti manda un SIGKILL */

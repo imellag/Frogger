@@ -14,6 +14,11 @@ int main()
     srand(time(NULL));
 
     Avvio info;
+    info.difficolta=0;
+    info.audio=false;
+    info.colore.g=999;
+     info.colore.b=1;
+      info.colore.r=1;
     int maxx, maxy;
 
     bool riniziaPartita = false;
@@ -34,7 +39,7 @@ int main()
         getmaxyx(stdscr, maxy, maxx);
 
         dimensioneFinestra(maxx, maxy);
-        info = menuIniziale();
+      //  info = menuIniziale();
         colori(info);
         riniziaPartita = areaGioco(info);
 
