@@ -3,6 +3,9 @@
 // valore restituito dalla funzione di controllo delle coordinate se la rana esce dallo schermo
 #define LIMITE_RANA 6
 
+// valore restituito dalla funzione di controllo delle coordinate se la rana esce dallo schermo
+#define LIMITE_RANA 6
+
 // creo il processo della rana
 void funzRana(int p[], int pRana[], int gameDifficulty);
 

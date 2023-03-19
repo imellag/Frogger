@@ -69,6 +69,7 @@ void funzVeicoli(int p[], int gameDifficulty, int pVeicoli[])
 }
 
 void movimentoVeicolo(int p[DUE], int numeroVeicolo, int gameDifficulty, int direzioneCorsie[], int velocitaCorsie[], Coordinate inizioVeicoli[], int pVeicoli[], int tipo)
+void movimentoVeicolo(int p[DUE], int numeroVeicolo, int gameDifficulty, int direzioneCorsie[], int velocitaCorsie[], Coordinate inizioVeicoli[], int pVeicoli[], int tipo)
 {
     Oggetto veicolo;
     int velocitaRandom = velocitaCorsie[inizioVeicoli[numeroVeicolo].y];
