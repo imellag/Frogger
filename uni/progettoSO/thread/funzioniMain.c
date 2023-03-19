@@ -131,8 +131,7 @@ void creaProiettile(Oggetto rana, int *offset)
 {
     pid_t pidProiettile;
 
-    (*offset)++;
-    system("ffplay -nodisp ../file_audio/sparo.mp3 2> /dev/null &");
+    
     pidProiettile = fork();
     if (pidProiettile < ZERO)
         perror("error");

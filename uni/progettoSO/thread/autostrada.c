@@ -16,48 +16,38 @@ void funzAuto(int gameDifficulty)
 
     // direzione della macchina(se -1 va da destra verso sinistra se 1 il contrario)
     int spostamento;
-
-   
 }
 
 void *movimentoVeicolo(void *_veicolo)
 {
-    parametriVeicolo *veicolo = _veicolo;
+    parametriVeicolo *veicolo = (parametriVeicolo *)_veicolo;
+    pthread_mutex_lock(&mutex);
     int velocitaRandom = veicolo->velocitaCorsia;
     int corsia;
     int tempoRandom = rand() % MAX_ATTESA;
-    veicolo->veicolo.coordinate.x = veicolo->inizioVeicoli.x;
-    veicolo->veicolo.coordinate.y = veicolo->inizioVeicoli.y;
 
     veicolo->veicolo.velocita = veicolo->direzioneCorsia;
+    pthread_mutex_unlock(&mutex);
 
     while (true)
     {
 
         do
         {
-
+            pthread_mutex_lock(&mutex);
             if (veicolo->veicolo.velocita < ZERO)
                 veicolo->veicolo.coordinate.x--;
             else
                 veicolo->veicolo.coordinate.x++;
+            pthread_mutex_unlock(&mutex);
 
             usleep(velocitaRandom);
         } while (!controlloLimitiMacchina(veicolo->veicolo.coordinate));
-        /*veicolo->id = MACCHINA0_OUT;
+        pthread_mutex_lock(&mutex);
+        veicolo->veicolo.id = MACCHINA0_OUT;
+        pthread_mutex_unlock(&mutex);
 
-        veicolo->veicolo.velocita = direzioneCorsia[corsia];
-        if (direzioneCorsie[corsia] < 0)
-            veicolo->veicolo.coordinate.x = LARGHEZZA_SCHERMO + LARGHEZZA_CAMION;
-        else
-            veicolo->veicolo.coordinate.x = -LARGHEZZA_CAMION;
-        veicolo->veicolo.coordinate.y = INIZIO_AUTOSTRADA + (corsia * 3) + (veicolo->veicolo.difficolta * TRE);
 
-        velocitaRandom = velocitaCorsie[corsia];
-
-        */
-
-        
     }
 }
 

@@ -109,6 +109,5 @@ void movimentoProiettileNemico(Coordinate tronco, int i, int gameDifficulty)
 
         usleep(50000);
         proiettile.coordinate.y++;
-        usleep(40000);
     }
 }

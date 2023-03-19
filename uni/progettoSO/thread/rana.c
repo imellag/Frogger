@@ -71,13 +71,14 @@ void *movimentoRana(void *_rana)
             move = false;
             break;
         }
-       pthread_mutex_unlock(&mutex);
+        pthread_mutex_unlock(&mutex);
     }
 }
 
 void *funzProiettile(void *_proiettile)
 {
     Proiettile *proiettile = _proiettile;
+    pthread_mutex_lock(&mutex);
     proiettile->proiettile.id = PROIETTILE0 + proiettile->numeroProiettile;
     proiettile->proiettile.coordinate.x = proiettile->rana.coordinate.x + DUE;
     proiettile->proiettile.coordinate.y = proiettile->rana.coordinate.y - UNO;
@@ -85,12 +86,15 @@ void *funzProiettile(void *_proiettile)
     {
         if (controlloLimitiProiettile(proiettile->proiettile.coordinate))
         {
-            proiettile->proiettile.id = PROIETTILE0_OUT + proiettile->numeroProiettile;
+            proiettile->proiettile.coordinate.x = FUORI_MAPPA;
+            proiettile->proiettile.coordinate.y = FUORI_MAPPA;
             break;
         }
 
-        usleep(50000);
         proiettile->proiettile.coordinate.y--;
+        pthread_mutex_unlock(&mutex);
+
+        usleep(50000);
     }
 }
 

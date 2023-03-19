@@ -13,7 +13,7 @@ void stampaTronco(WINDOW *finestraGioco, Coordinate tronco);
 // stampa la sprite del nemico
 void stampaNemico(WINDOW *finestraGioco, Coordinate nemico);
 // crea il processo del proiettile nemico
-void funzProiettileNemico(Coordinate tronco, int p[], int i, int gameDifficulty);
+void funzProiettileNemico(Coordinate tronco, int p[], int i, int gameDifficulty, bool audio);
 /* controlla la posizione attuale del proiettile nemico, la aggiorna e eventualmente
  invia al main un segnale speciale se il proiettile esce fuori dallo schermo */
 void movimentoProiettileNemico(Coordinate tronco, int p[], int i, int gameDifficulty);

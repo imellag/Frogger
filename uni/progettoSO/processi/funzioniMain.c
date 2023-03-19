@@ -127,12 +127,13 @@ void stampaTempo(WINDOW *finestraGioco, int tempo)
     }
 }
 
-void creaProiettile(int p[], Oggetto ranocchio, int *offset)
+void creaProiettile(int p[], Oggetto ranocchio, int *offset, bool audio)
 {
     pid_t pidProiettile;
 
     (*offset)++;
-    system("ffplay -nodisp ../file_audio/sparo.mp3 2> /dev/null &");
+    if (audio)
+        system("ffplay -nodisp ../file_audio/sparo.mp3 2> /dev/null &");
     pidProiettile = fork();
     if (pidProiettile < ZERO)
         perror("error");

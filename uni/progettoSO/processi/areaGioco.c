@@ -238,7 +238,7 @@ bool areaGioco(Avvio info)
             ranocchio = pacchetto;
 
         else if (pacchetto.id == SPAWN_PROIETTILE)
-            creaProiettile(p, ranocchio, &offset);
+            creaProiettile(p, ranocchio, &offset, info.audio);
 
         else if (pacchetto.id == PAUSA)
             partitaFinita = funzPausa(finestraGioco, info.difficolta, camioncino, tronchino, macchinina, tempo.pid, ranocchio.pid);
@@ -442,7 +442,7 @@ bool areaGioco(Avvio info)
                     if ((difftime(fine_proiettile, inizio_proiettile[i])) >= DUE)
                     {
                         time(&inizio_proiettile[i]);
-                        funzProiettileNemico(tronchino[i].coordinate, p, i, info.difficolta);
+                        funzProiettileNemico(tronchino[i].coordinate, p, i, info.difficolta, info.audio);
                     }
                 }
                 // altrimenti, se non è presente un nemico stampo solamente il tronco
@@ -470,7 +470,10 @@ bool areaGioco(Avvio info)
                     stampaProiettili(finestraGioco, tronchino, nemico, proiettileNemico[i].coordinate, info.difficolta);
             }
 
-            // for (i = ZERO; i < NUMERO_NEMICI; i++) 
+            for (i = ZERO; i < NUMERO_NEMICI + info.difficolta; i++)
+            {
+                hitProiettile[i] = false;
+            }
 
             // stampo il punteggio  e il tempo rimanente nella parte alta dello schermo
             stampaPunteggio(finestraGioco, punteggio);
