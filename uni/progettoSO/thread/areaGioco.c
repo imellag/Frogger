@@ -1,5 +1,4 @@
 #include "lib.h"
-
 #include "funzioniGenerali.h"
 #include "rana.h"
 #include "autostrada.h"
@@ -9,7 +8,9 @@
 #include "funzioniMain.h"
 #include "areaDisegno.h"
 #include "areaGioco.h"
+
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
 bool areaGioco(Avvio info)
 {
     srand(time(NULL));
@@ -548,7 +549,7 @@ bool areaGioco(Avvio info)
             /* uscita dal gioco nel caso in cui viene premuta la q, finiscono le vite, finisce il tempo
    oppure vengono chiuse tutte le tane. Nel caso di vittoria o sconfitta
    viene stampata una schermata finale diversa*/
-            riniziaPartita = finePartita(finestraGioco, rana, vite, buffer, punteggio, info.difficolta, tempo, macchina, camion, tronco, &partitaInCorso, partitaFinita);
+            // riniziaPartita = finePartita(finestraGioco, rana, vite, buffer, punteggio, info.difficolta, tempo, macchina, camion, tronco, &partitaInCorso, partitaFinita);
         }
         buffer = false;
     }
@@ -581,52 +582,3 @@ bool areaGioco(Avvio info)
 // if (timer <= 0)
 //   rana = morteRana(finestraGioco, &vite, rana, info.difficolta, &timer);
 
-bool CorsiaOccupata(parametriVeicolo macchina[], parametriVeicolo camion[], int corsia, int difficolta)
-{
-    bool flag = false;
-    int i;
-
-    for (i = 0; i < NUMERO_MACCHINE + difficolta; i++)
-    {
-        if (macchina[i].veicolo.velocita < ZERO)
-        {
-            if (macchina[i].veicolo.coordinate.x >= LARGHEZZA_SCHERMO && macchina[i].veicolo.coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
-            {
-                flag = true;
-                break;
-            }
-        }
-        else
-        {
-            if (macchina[i].veicolo.coordinate.x <= 0 && macchina[i].veicolo.coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
-            {
-                flag = true;
-                break;
-            }
-        }
-    }
-    if (!flag)
-    {
-        for (i = 0; i < NUMERO_CAMION + difficolta; i++)
-        {
-            if (camion[i].veicolo.velocita < ZERO)
-            {
-                if (camion[i].veicolo.coordinate.x >= LARGHEZZA_SCHERMO && camion[i].veicolo.coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
-                {
-                    flag = true;
-                    break;
-                }
-            }
-            else
-            {
-                if (camion[i].veicolo.coordinate.x <= 0 && camion[i].veicolo.coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
-                {
-                    flag = true;
-                    break;
-                }
-            }
-        }
-    }
-
-    return flag;
-}

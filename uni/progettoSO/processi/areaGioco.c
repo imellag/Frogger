@@ -229,7 +229,7 @@ bool areaGioco(Avvio info)
             do
             {
                 corsiaRandom = rand() % (NUMERO_CORSIE + info.difficolta);
-            } while (CorsiaOccupata(macchinina, camioncino, corsiaRandom, info.difficolta));
+            } while (corsiaOccupata(macchinina, camioncino, corsiaRandom, info.difficolta));
 
             write(pVeicoli[WRITE], &corsiaRandom, sizeof(int));
         }

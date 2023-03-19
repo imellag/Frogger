@@ -46,4 +46,4 @@ bool controlloTaneChiuse(bool arrayTane[]);
 bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer, int punteggio, int difficolta, Oggetto tempo, Oggetto macchina[], Oggetto camion[], Oggetto tronco[], bool *partitaInCorso, bool partitaFinita);
 
 // controlla se l'inizio della corsia generata casualmente è occupato da un altro veicolo
-bool CorsiaOccupata(Oggetto macchinina[], Oggetto camioncino[], int corsia, int difficolta);
+bool corsiaOccupata(Oggetto macchinina[], Oggetto camioncino[], int corsia, int difficolta);

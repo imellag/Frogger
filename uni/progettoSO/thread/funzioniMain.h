@@ -45,3 +45,5 @@ void schermataFinale(WINDOW *finestraGioco);
 bool controlloTaneChiuse(bool arrayTane[]);
 
 bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer, int punteggio, int difficolta, Oggetto tempo, Oggetto macchina[], Oggetto camion[], Oggetto tronco[], bool *partitaInCorso, bool partitaFinita);
+
+bool CorsiaOccupata(parametriVeicolo macchinina[], parametriVeicolo camioncino[], int corsia, int difficolta);

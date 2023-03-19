@@ -214,7 +214,7 @@ bool pausaeNuovaPartita(WINDOW *finestraGioco, int chiamata)
     wattron(finestraGioco, COLOR_PAIR(COLORE_NERO_VERDE));
 
     for (i = ZERO; i < DUE; i++)
-        stampaRettangolo(finestraGioco, 31 + (LARGHEZZA_RETTANGOLO * i + 6 * i), 21);
+        stampaRettangolo(finestraGioco, 21, 31 + (LARGHEZZA_RETTANGOLO * i + 6 * i));
 
     if (chiamata == UNO)
     {
@@ -360,7 +360,7 @@ bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer
     return riniziaPartita;
 }
 
-bool CorsiaOccupata(Oggetto macchinina[], Oggetto camioncino[], int corsia, int difficolta)
+bool corsiaOccupata(Oggetto macchinina[], Oggetto camioncino[], int corsia, int difficolta)
 {
     bool flag = false;
     int i;

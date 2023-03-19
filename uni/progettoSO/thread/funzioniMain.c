@@ -213,8 +213,8 @@ bool pausaeNuovaPartita(WINDOW *finestraGioco, int chiamata)
     wattron(finestraGioco, COLOR_PAIR(COLORE_NERO_VERDE));
 
     for (i = ZERO; i < DUE; i++)
-        stampaRettangolo(finestraGioco, 31 + (LARGHEZZA_RETTANGOLO * i + 6 * i), 21);
-
+        stampaRettangolo(finestraGioco, 21, 31 + (LARGHEZZA_RETTANGOLO * i + 6 * i)); 
+              
     if (chiamata == UNO)
     {
         mvwprintw(finestraGioco, 23, 48, "Si");
@@ -358,3 +358,53 @@ bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer
 
     return riniziaPartita;
 }*/
+
+bool CorsiaOccupata(parametriVeicolo macchina[], parametriVeicolo camion[], int corsia, int difficolta)
+{
+    bool flag = false;
+    int i;
+
+    for (i = 0; i < NUMERO_MACCHINE + difficolta; i++)
+    {
+        if (macchina[i].veicolo.velocita < ZERO)
+        {
+            if (macchina[i].veicolo.coordinate.x >= LARGHEZZA_SCHERMO && macchina[i].veicolo.coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
+            {
+                flag = true;
+                break;
+            }
+        }
+        else
+        {
+            if (macchina[i].veicolo.coordinate.x <= 0 && macchina[i].veicolo.coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
+            {
+                flag = true;
+                break;
+            }
+        }
+    }
+    if (!flag)
+    {
+        for (i = 0; i < NUMERO_CAMION + difficolta; i++)
+        {
+            if (camion[i].veicolo.velocita < ZERO)
+            {
+                if (camion[i].veicolo.coordinate.x >= LARGHEZZA_SCHERMO && camion[i].veicolo.coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            else
+            {
+                if (camion[i].veicolo.coordinate.x <= 0 && camion[i].veicolo.coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
+                {
+                    flag = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    return flag;
+}
