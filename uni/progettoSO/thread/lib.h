@@ -23,9 +23,9 @@ enum oggetti
     TRONCO0,
     TRONCO4 = 68,
     MACCHINA0,
-    MACCHINA6 = 75,
+    MACCHINA10 = 79,
     CAMION0,
-    CAMION5 = 93,
+    CAMION8 = 88,
     TRONCONEMICO0,
     TRONCONEMICO4 = 93,
     PROIETTILE_NEMICO0,
@@ -33,7 +33,7 @@ enum oggetti
     PROIETTILE_NEMICO0_OUT,
     PROIETTILE_NEMICO2_OUT = 99,
     MACCHINA0_OUT,
-    MACCHINA10_OUT=110,
+    MACCHINA10_OUT = 110,
 };
 
 // serve per togliere vari magic numbers
@@ -91,11 +91,12 @@ enum coloriProiettile
 #define FUORI_MAPPA -5
 
 // input da tastiera
-#define ESC 27
 #define A 65
 #define a 97
 #define D 68
 #define d 100
+#define P 80
+#define p 112
 #define Q 81
 #define q 113
 #define S 83
@@ -132,13 +133,13 @@ enum coloriProiettile
 
 // dimensioni macchina e numero di macchine
 #define LARGHEZZA_MACCHINA 6
-#define NUMERO_MACCHINE 4
-#define MAX_MACCHINE 6
+#define NUMERO_MACCHINE 5
+#define MAX_MACCHINE 11
 
 // dimensioni camion e numero di camion
 #define LARGHEZZA_CAMION 13
 #define NUMERO_CAMION 3
-#define MAX_CAMION 5
+#define MAX_CAMION 9
 
 // dimensioni autostrada e coordinate nello schermo
 #define ALTEZZA_AUTOSTRADA 9
@@ -219,8 +220,15 @@ typedef struct
     int id;
     Coordinate coordinate;
     int velocita;
-    pid_t pid;
+    int difficolta;
 } Oggetto;
+
+typedef struct
+{
+    Oggetto proiettile;
+    Oggetto rana;
+    int numeroProiettile;
+} Proiettile;
 
 // struttura usata per restituire un colore da una funzione
 typedef struct
@@ -237,3 +245,14 @@ typedef struct
     bool audio;
     Colore colore;
 } Avvio;
+
+typedef struct
+{
+    Oggetto veicolo;
+    int velocitaCorsia;
+    int direzioneCorsia;
+    Coordinate inizioVeicoli;
+
+} parametriVeicolo;
+
+extern pthread_mutex_t mutex;

@@ -20,10 +20,10 @@ void stampaTempo(WINDOW *finestraGioco, int tempo);
 void vittoria(WINDOW *finestraGioco, int punteggio);
 
 // gestisce la morte della rana. toglie una vita, resetta il tempo e la riporta nella posizione iniziale
-Oggetto morteRana(WINDOW *finestraGioco, int *vite, int pRana[], Oggetto ranocchio, int difficolta, int *tempo);
+Oggetto morteRana(WINDOW *finestraGioco, int *vite, Oggetto ranocchio, int difficolta, int *tempo);
 
 // crea il processo di un proiettile della rana e riproduce il suono dello sparo
-void creaProiettile(int p[], Oggetto ranocchio, int *offset, bool audio);
+void creaProiettile(Oggetto ranocchio, int *offset);
 
 /* se l'utente mette in pausa la partita manda un segnale di stop a tutti i processi.
 Se poi l'utente decide di riprendere la partita fa ripartire i processi, altrimenti manda un SIGKILL */
@@ -39,11 +39,9 @@ Oggetto uccidiProiettile(Oggetto proiettile);
 // stampa la scritta "grazie per aver giocato"
 void schermataFinale(WINDOW *finestraGioco);
 
-// controlla se c'è almeno una tana ancora aperta
+// time_t spawnNemico(time_t fine_nemico, time_t inizio_nemico, int difficolta,bool sulTronco, bool nemico[],Oggetto tronchino[],time_t inizio_proiettile[],Oggetto rana);
+// Oggetto controlloCollisioneVeicoliProiettile(int i,Oggetto proiettilino[], Oggetto proiettileNemico[], Oggetto macchinina[], bool hitProiettile[]);
+
 bool controlloTaneChiuse(bool arrayTane[]);
 
-// gestisce le casistiche di fine partita
 bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer, int punteggio, int difficolta, Oggetto tempo, Oggetto macchina[], Oggetto camion[], Oggetto tronco[], bool *partitaInCorso, bool partitaFinita);
-
-// controlla se l'inizio della corsia generata casualmente è occupato da un altro veicolo
-bool CorsiaOccupata(Oggetto macchinina[], Oggetto camioncino[], int corsia, int difficolta);

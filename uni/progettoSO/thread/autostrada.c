@@ -7,118 +7,47 @@ char spriteMacchineContrario[ALTEZZA_RANA][LARGHEZZA_MACCHINA] = {" _/^\\", "| _
 char spriteCamion[ALTEZZA_RANA][LARGHEZZA_CAMION] = {"/_______/^\\_ ", "|_______|___|", " O O O   O O"};
 char spriteCamionContrario[ALTEZZA_RANA][LARGHEZZA_CAMION] = {" _/^\\_______\\", "|___|_______|", " O O   O O O"};
 
-void funzVeicoli(int p[], int gameDifficulty, int pVeicoli[])
+void funzAuto(int gameDifficulty)
 {
     // contatore
     int i;
-
-    // pid delle macchine
-    pid_t macchina[MAX_MACCHINE + MAX_CAMION];
 
     int direzione;
 
     // direzione della macchina(se -1 va da destra verso sinistra se 1 il contrario)
     int spostamento;
-
-    // randomizzo anche la direzione
-    spostamento = rand() % DUE;
-
-    if (spostamento == ZERO)
-        spostamento = -UNO;
-    else
-        spostamento = UNO;
-
-    int velocitaCorsie[MAX_CORSIE];
-    int direzioneCorsie[MAX_CORSIE];
-    Coordinate inizioVeicoli[MAX_CAMION + MAX_MACCHINE];
-    direzione = spostamento;
-
-    for (i = 0; i < NUMERO_MACCHINE + NUMERO_CAMION + (gameDifficulty * 2); i++)
-    {
-        do
-        {
-            inizioVeicoli[i].x = rand() % LARGHEZZA_SCHERMO;
-            inizioVeicoli[i].y = rand() % (NUMERO_CORSIE + gameDifficulty);
-        } while (controlloInizioCoordinateCorsie(inizioVeicoli, i));
-    }
-
-    for (i = 0; i < NUMERO_CORSIE + gameDifficulty; i++)
-    {
-        direzioneCorsie[i] = direzione;
-        direzione = direzione * -1;
-    }
-
-    for (i = 0; i < NUMERO_CORSIE + gameDifficulty; i++)
-        velocitaCorsie[i] = (MIN_VELOCITA_VEICOLI + rand() % (MAX_VELOCITA_VEICOLI - MIN_VELOCITA_VEICOLI)) - 2500 * gameDifficulty;
-
-    // genero i processi macchina
-    for (i = ZERO; i < NUMERO_MACCHINE + NUMERO_CAMION + (2 * gameDifficulty); i++)
-    {
-        macchina[i] = fork();
-        if (macchina[i] < ZERO)
-            printw("Error");
-        else if (macchina[i] == ZERO)
-        {
-            if (i < (NUMERO_MACCHINE + gameDifficulty))
-                movimentoVeicolo(p, i, gameDifficulty, direzioneCorsie, velocitaCorsie, inizioVeicoli, pVeicoli, MACCHINA0);
-
-            else
-                movimentoVeicolo(p, i, gameDifficulty, direzioneCorsie, velocitaCorsie, inizioVeicoli, pVeicoli, CAMION0);
-        }
-    }
 }
 
-void movimentoVeicolo(int p[DUE], int numeroVeicolo, int gameDifficulty, int direzioneCorsie[], int velocitaCorsie[], Coordinate inizioVeicoli[], int pVeicoli[], int tipo)
+void *movimentoVeicolo(void *_veicolo)
 {
-    Oggetto veicolo;
-    int velocitaRandom = velocitaCorsie[inizioVeicoli[numeroVeicolo].y];
-    srand(getpid());
+    parametriVeicolo *veicolo = (parametriVeicolo *)_veicolo;
+    pthread_mutex_lock(&mutex);
+    int velocitaRandom = veicolo->velocitaCorsia;
     int corsia;
     int tempoRandom = rand() % MAX_ATTESA;
-    veicolo.coordinate.x = inizioVeicoli[numeroVeicolo].x;
 
-    if (tipo == CAMION0)
-        veicolo.coordinate.y = INIZIO_AUTOSTRADA + (inizioVeicoli[numeroVeicolo].y * 3) + (gameDifficulty * TRE);
-    else
-        veicolo.coordinate.y = INIZIO_AUTOSTRADA + (inizioVeicoli[numeroVeicolo].y * 3) + (gameDifficulty * TRE);
+    veicolo->veicolo.velocita = veicolo->direzioneCorsia;
+    pthread_mutex_unlock(&mutex);
 
-    veicolo.velocita = direzioneCorsie[inizioVeicoli[numeroVeicolo].y];
-    veicolo.pid = getpid();
-
-    close(p[READ]);
     while (true)
     {
-        if (tipo == CAMION0)
-            veicolo.id = tipo + numeroVeicolo % (NUMERO_MACCHINE + gameDifficulty);
-        else
-            veicolo.id = tipo + numeroVeicolo;
 
         do
         {
-            if (veicolo.velocita < ZERO)
-                veicolo.coordinate.x--;
+            pthread_mutex_lock(&mutex);
+            if (veicolo->veicolo.velocita < ZERO)
+                veicolo->veicolo.coordinate.x--;
             else
-                veicolo.coordinate.x++;
+                veicolo->veicolo.coordinate.x++;
+            pthread_mutex_unlock(&mutex);
 
             usleep(velocitaRandom);
-            write(p[WRITE], &veicolo, sizeof(Oggetto));
+        } while (!controlloLimitiMacchina(veicolo->veicolo.coordinate));
+        pthread_mutex_lock(&mutex);
+        veicolo->veicolo.id = MACCHINA0_OUT;
+        pthread_mutex_unlock(&mutex);
 
-        } while (!controlloLimitiMacchina(veicolo.coordinate));
 
-        veicolo.id = MACCHINA0_OUT;
-        write(p[WRITE], &veicolo, sizeof(Oggetto));
-
-        read(pVeicoli[READ], &corsia, sizeof(int));
-
-        veicolo.velocita = direzioneCorsie[corsia];
-        if (direzioneCorsie[corsia] < 0)
-            veicolo.coordinate.x = LARGHEZZA_SCHERMO + LARGHEZZA_CAMION;
-        else
-            veicolo.coordinate.x = -LARGHEZZA_CAMION;
-
-        veicolo.coordinate.y = INIZIO_AUTOSTRADA + (corsia * 3) + (gameDifficulty * TRE);
-
-        velocitaRandom = velocitaCorsie[corsia];
     }
 }
 
@@ -194,7 +123,6 @@ void stampaCamion(WINDOW *finestraGioco, Oggetto camion, int indice)
 
     wattroff(finestraGioco, COLOR_PAIR(COLORE_CAMION0 + indice) | A_BOLD);
 }
-
 bool controlloInizioCoordinateCorsie(Coordinate inizioVeicoli[], int i)
 {
     bool flag = false;
@@ -217,6 +145,7 @@ Colore coloreVeicolo()
 
     /* mi assicuro che il colore non sia troppo simile a quello
     dell'autostrada per evitare che la macchina sia invisibile */
+
     do
     {
         rgb.r = rand() % 1000;

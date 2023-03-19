@@ -273,7 +273,6 @@ void stampaSprite(WINDOW *finestraIniziale, Avvio info)
 
     for (i = 0; i < 2; i++)
         mvwprintw(finestraIniziale, 31 + i, 2, "%ls", indietro[i]);
-        
     wattroff(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
 
     stampaColoriGiusti(finestraIniziale, info);

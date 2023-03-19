@@ -97,11 +97,12 @@ void stampaNemico(WINDOW *finestraGioco, Coordinate nemico)
     wattroff(finestraGioco, COLOR_PAIR(COLORE_NEMICI_TRONCO));
 }
 
-void funzProiettileNemico(Coordinate tronco, int p[], int i, int gameDifficulty)
+void funzProiettileNemico(Coordinate tronco, int p[], int i, int gameDifficulty, bool audio)
 {
     pid_t proiettileNemico;
 
-    // system("ffplay -nodisp ../file_audio/sparo.mp3 2> /dev/null &");
+    if (audio)
+        system("ffplay -nodisp ../file_audio/sparo.mp3 2> /dev/null &");
     proiettileNemico = fork();
     if (proiettileNemico < 0)
     {
@@ -136,6 +137,5 @@ void movimentoProiettileNemico(Coordinate tronco, int p[], int i, int gameDiffic
         write(p[WRITE], &proiettile, sizeof(Oggetto));
         usleep(50000);
         proiettile.coordinate.y++;
-        usleep(40000);
     }
 }

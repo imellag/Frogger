@@ -44,7 +44,7 @@ int controlloLimitiMacchina(Coordinate entita)
     if (entita.x < -LARGHEZZA_CAMION)
         flag = 1;
 
-    else if (entita.x > LARGHEZZA_SCHERMO+LARGHEZZA_CAMION)
+    else if (entita.x > LARGHEZZA_SCHERMO + LARGHEZZA_CAMION)
         flag = 2;
 
     return flag;
@@ -106,44 +106,26 @@ int controlloRanaTronco(Coordinate rana, Oggetto tronco[])
     return rana.x;
 }
 
-void funzTempo(int p[])
+void *orologio(void *_tempo)
 {
-    pid_t pidTempo;
-
-    pidTempo = fork();
-
-    if (pidTempo < ZERO)
-    {
-
-        printw("Error");
-        exit(EXIT_FAILURE);
-    }
-    else if (pidTempo == ZERO)
-        orologio(p);
-}
-
-void orologio(int p[])
-{
-    Oggetto secondo;
-    secondo.id = TEMPO;
-    secondo.velocita = 0;
-    secondo.pid = getpid();
-    close(p[READ]);
+    Oggetto *tempo = _tempo;
+    pthread_mutex_lock(&mutex);
+    tempo->velocita = TEMPO_INIZIALE;
+    pthread_mutex_unlock(&mutex);
     while (true)
     {
-
-        write(p[WRITE], &secondo, sizeof(Oggetto));
-        secondo.velocita = 1;
-
+        pthread_mutex_lock(&mutex);
+        tempo->velocita--;
+        pthread_mutex_unlock(&mutex);
         sleep(UNO);
     }
 }
 
-Oggetto posizioneInizialeRana(int pRana[], Oggetto rana, int gameDifficulty)
+Oggetto posizioneInizialeRana(Oggetto rana, int gameDifficulty)
 {
     rana.coordinate.x = ZERO;
     rana.coordinate.y = POSIZIONE_INIZIALE_RANA_Y + (gameDifficulty * 6);
-    write(pRana[WRITE], &rana, sizeof(Oggetto));
+    // write(pRana[WRITE], &rana, sizeof(Oggetto));
     return rana;
 }
 
@@ -166,23 +148,22 @@ bool controlloCollisioneOggetti(Oggetto entita, Coordinate rana, int LARGHEZZA_E
 
 void colori(Avvio info)
 {
-
-    init_color(COLORE_RANA, info.colore.r, info.colore.g, info.colore.b);          // 19/227/5
-    init_color(COLORE_MARCIAPIEDE, 388, 270, 102); // 99/69/26
-    init_color(COLORE_AUTOSTRADA, 150, 150, 150);  // grigio (per ora), sarebbe 66/66/66 in rgb, convertito 259 /259/259
-    init_color(COLORE_TRONCHI, 459, 298, 102);     // 117/76/26
+    init_color(COLORE_RANA, info.colore.r, info.colore.g, info.colore.b); // 19/227/5
+    init_color(COLORE_MARCIAPIEDE, 388, 270, 102);                        // 99/69/26
+    init_color(COLORE_AUTOSTRADA, 150, 150, 150);                         // grigio (per ora), sarebbe 66/66/66 in rgb, convertito 259 /259/259
+    init_color(COLORE_TRONCHI, 459, 298, 102);                            // 117/76/26
     init_color(COLORE_TANA, 541, 271, 0);
     init_color(COLORE_NEMICI, 875, 313, 273); // 224, 80, 70
     init_color(COLORE_FIUME, 59, 699, 996);   // 15,179,255
-    init_color(COLORE_PRATO, 114, 569, 251); // 29, 145, 64
+    init_color(COLORE_PRATO, 114, 569, 251);  // 29, 145, 64
     init_pair(COLORE_NEMICI_TRONCO, COLOR_BLACK, COLORE_NEMICI);
     init_pair(COLORE_SFONDO_MARCIAPIEDE, COLOR_BLACK, COLORE_MARCIAPIEDE);
     init_pair(COLORE_SFONDO_AUTOSTRDA, COLOR_BLACK, COLORE_AUTOSTRADA);
     init_pair(COLORE_SFONDO_PRATO, COLOR_BLACK, COLORE_PRATO); // colore prato
     init_pair(COLORE_SFONDO_FIUME, COLOR_BLACK, COLORE_FIUME); // colore fiume
     init_pair(COLORE_SFONDO_TRONCHI, COLOR_BLACK, COLORE_TRONCHI);
-    init_pair(COLORE_VERDE_NERO, COLOR_GREEN, COLOR_BLACK); // colore delle scritte
-    init_pair(COLORE_NERO, COLOR_BLACK, COLOR_BLACK); // colore nero
+    init_pair(COLORE_VERDE_NERO, COLOR_GREEN, COLOR_BLACK);     // colore delle scritte
+    init_pair(COLORE_NERO, COLOR_BLACK, COLOR_BLACK);           // colore nero
     init_pair(COLORE_SCRITTE_INFO, COLORE_NEMICI, COLOR_BLACK); // colore scritte schermata(puntaggio tempo e vite)
 }
 

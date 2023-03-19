@@ -6,12 +6,19 @@
 #define MIN_ATTESA 1000000
 #define MAX_ATTESA 5000000
 
-// crea per ogni veicolo un processo
-void funzVeicoli(int p[], int gameDifficulty,int pVeicoli[]);
+// crea per ogni macchina un processo
+void funzAuto(int gameDifficulty);
 
-/* gestisce il movimento dei veicoli che viene successivamente inviato al main
+// crea un camion per ogni processo
+void funzCamion(int direzioneCorsie[], int spostamento, int gameDifficulty,int velocitaCorsie[],Coordinate inizioVeicoli[],int pVeicoli[]);
+
+/* gestisce il movimento della macchina che viene successivamente inviato al main
  e il cambio delle corsie */
-void movimentoVeicolo(int p[], int numeroMacchina, int gameDifficulty,int direzioneCorsie[],int velocitaCorsie[],Coordinate inizioVeicoli[],int pVeicoli[],int tipo);
+void* movimentoVeicolo( void *_veicolo);
+
+/* gestisce il movimento dei camion che viene successivamente inviato al main
+ e il cambio delle corsie */
+void movimentoCamion( int numeroCamion, int gameDifficulty,int direzioneCorsie[],int velocitaCorsie[],Coordinate inizioVeicoli[]);
 
 /* dopo che la macchina arriva a uno dei due bordi
  viene rigenerata in una corsia random */
@@ -23,7 +30,7 @@ void stampaMacchina(WINDOW*finestraGioco,Oggetto macchina, int indice);
 // funzione per stampare i camion
 void stampaCamion(WINDOW*finestraGioco,Oggetto camion, int indice);
 
-// aggiungere commento
+
 bool controlloInizioCoordinateCorsie(Coordinate inizioVeicoli[],int i);
 
 // crea casualmente e restituisce un colore per un singolo veicolo
