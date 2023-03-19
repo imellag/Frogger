@@ -305,9 +305,9 @@ bool areaGioco(Avvio info)
                     }
                 }
 
-                if (vecchiaRana.coordinate.x != vecchiaRana2.coordinate.x || vecchiaRana.coordinate.y != vecchiaRana2.coordinate.y)
+                if (vecchiaRana.coordinate.x != rana.coordinate.x || vecchiaRana.coordinate.y != rana.coordinate.y)
                 {
-                    vecchiaRana2 = vecchiaRana;
+                    vecchiaRana = rana;
                     sulTronco = false;
                 }
 

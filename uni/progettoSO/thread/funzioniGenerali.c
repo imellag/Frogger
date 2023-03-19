@@ -26,7 +26,7 @@ int controlloLimitiRana(Coordinate entita, int gameDifficulty)
                 break;
             }
         }
-        if (!flag)
+        if (flag==-1)
             flag = SEI;
     }
 
