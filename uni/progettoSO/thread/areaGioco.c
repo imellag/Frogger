@@ -46,7 +46,7 @@ bool areaGioco(Avvio info)
 
     Oggetto proiettileNemico[MAX_TRONCHI];
     Oggetto rana;
-    Oggetto vecchiaRana, vecchiaRana2;
+    Oggetto vecchiaRana;
 
     Oggetto tempo;
 

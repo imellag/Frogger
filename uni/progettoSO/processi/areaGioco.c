@@ -42,7 +42,7 @@ bool areaGioco(Avvio info)
 
     Oggetto proiettileNemico[MAX_TRONCHI];
     Oggetto ranocchio;
-    Oggetto vecchiaRana, vecchiaRana2;
+    Oggetto vecchiaRana;
 
     Oggetto tempo;
 
@@ -193,10 +193,7 @@ bool areaGioco(Avvio info)
         read(p[READ], &pacchetto, sizeof(Oggetto));
 
         if (pacchetto.id == RANA)
-        {
             ranocchio = pacchetto;
-            vecchiaRana = pacchetto;
-        }
 
         else if (pacchetto.id >= PROIETTILE0 && pacchetto.id <= PROIETTILE29)
             proiettilino[pacchetto.id - PROIETTILE0] = pacchetto;
@@ -388,9 +385,9 @@ bool areaGioco(Avvio info)
                     }
                 }
 
-                if (vecchiaRana.coordinate.x != vecchiaRana2.coordinate.x || vecchiaRana.coordinate.y != vecchiaRana2.coordinate.y)
+                if (vecchiaRana.coordinate.x != ranocchio.coordinate.x || vecchiaRana.coordinate.y != ranocchio.coordinate.y)
                 {
-                    vecchiaRana2 = vecchiaRana;
+                    vecchiaRana = ranocchio;
                     sulTronco = false;
                 }
 
