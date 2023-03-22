@@ -94,7 +94,7 @@ bool controlloCollisioneNemicoProiettile(Oggetto proiettile, Oggetto tronco, boo
 
     if (proiettile.coordinate.x >= tronco.coordinate.x &&
         proiettile.coordinate.x <= tronco.coordinate.x + LARGHEZZA_TRONCHI &&
-        proiettile.coordinate.y == tronco.coordinate.y + DUE && nemico)
+        proiettile.coordinate.y == tronco.coordinate.y && nemico)
 
         flag = true;
 

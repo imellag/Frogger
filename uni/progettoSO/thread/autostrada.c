@@ -7,17 +7,6 @@ char spriteMacchineContrario[ALTEZZA_RANA][LARGHEZZA_MACCHINA] = {" _/^\\", "| _
 char spriteCamion[ALTEZZA_RANA][LARGHEZZA_CAMION] = {"/_______/^\\_ ", "|_______|___|", " O O O   O O"};
 char spriteCamionContrario[ALTEZZA_RANA][LARGHEZZA_CAMION] = {" _/^\\_______\\", "|___|_______|", " O O   O O O"};
 
-void funzAuto(int gameDifficulty)
-{
-    // contatore
-    int i;
-
-    int direzione;
-
-    // direzione della macchina(se -1 va da destra verso sinistra se 1 il contrario)
-    int spostamento;
-}
-
 void *movimentoVeicolo(void *_veicolo)
 {
     parametriVeicolo *veicolo = (parametriVeicolo *)_veicolo;
@@ -35,19 +24,22 @@ void *movimentoVeicolo(void *_veicolo)
         do
         {
             pthread_mutex_lock(&mutex);
+            velocitaRandom = veicolo->velocitaCorsia;
+
+            // in base alla direzione del veicolo mi sposto 
+            //verso sinistra o verso destra
             if (veicolo->veicolo.velocita < ZERO)
                 veicolo->veicolo.coordinate.x--;
             else
                 veicolo->veicolo.coordinate.x++;
-            pthread_mutex_unlock(&mutex);
 
+            pthread_mutex_unlock(&mutex);
             usleep(velocitaRandom);
+
         } while (!controlloLimitiMacchina(veicolo->veicolo.coordinate));
         pthread_mutex_lock(&mutex);
         veicolo->veicolo.id = MACCHINA0_OUT;
         pthread_mutex_unlock(&mutex);
-
-
     }
 }
 
@@ -129,7 +121,8 @@ bool controlloInizioCoordinateCorsie(Coordinate inizioVeicoli[], int i)
     int j;
     for (j = 0; j < i; j++)
     {
-        if ((inizioVeicoli[j].x <= inizioVeicoli[i].x) && ((inizioVeicoli[j].x + LARGHEZZA_CAMION) >= (inizioVeicoli[i].x + LARGHEZZA_CAMION)) &&
+        if (((inizioVeicoli[j].x + LARGHEZZA_CAMION + 1) >= inizioVeicoli[i].x) &&
+            ((inizioVeicoli[j].x - LARGHEZZA_CAMION - 1) <= inizioVeicoli[i].x) &&
             (inizioVeicoli[j].y == inizioVeicoli[i].y))
         {
             flag = true;

@@ -269,10 +269,10 @@ void schermataFinale(WINDOW *finestraGioco)
     sleep(2);
 }
 
-Oggetto uccidiProiettile(Oggetto proiettile)
+Oggetto uccidiProiettile(Oggetto proiettile,pthread_t threadProiettile)
 {
 
-    //  kill(proiettile.pid, SIGKILL);
+    pthread_cancel(threadProiettile);
     proiettile.coordinate.x = FUORI_MAPPA;
     proiettile.coordinate.y = FUORI_MAPPA;
 
@@ -288,13 +288,13 @@ time_t spawnNemico(time_t fine_nemico, time_t inizio_nemico, int difficolta, boo
     int troncoNemico = 0;
 }
 
-Oggetto controlloCollisioneVeicoliProiettile(int i, Oggetto proiettilino[], Oggetto proiettileNemico[], Oggetto macchinina[], bool hitProiettile[])
+Oggetto controlloCollisioneVeicoliProiettile(int i, Oggetto proiettilino[], Oggetto proiettileNemico[], Oggetto macchinina[], bool hitProiettile[],pthread_t threadProiettile)
 {
     int j;
     for (j = 0; j < NUMERO_PROIETTILI; j++)
     {
         if (proiettiliVeicoli(proiettilino[j], proiettileNemico, macchinina[i], LARGHEZZA_MACCHINA, hitProiettile))
-            proiettilino[j] = uccidiProiettile(proiettilino[j]);
+            proiettilino[j] = uccidiProiettile(proiettilino[j],threadProiettile);
     }
 
     return proiettilino[j];
@@ -316,13 +316,13 @@ bool controlloTaneChiuse(bool arrayTane[])
 
     return buffer;
 }
-/*
-bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer, int punteggio,
-                 int difficolta, Oggetto tempo, Oggetto macchina[], Oggetto camion[], Oggetto tronco[], bool *partitaInCorso, bool partitaFinita)
+
+bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int punteggio,
+                 int difficolta, bool *partitaInCorso, bool partitaFinita)
 {
     int i;
     bool riniziaPartita;
-    if (ranocchio.id == q || vite == 0 || buffer == false || partitaFinita)
+    if (rana.id == q || vite == 0 || buffer == false || partitaFinita)
     {
         (*partitaInCorso) = false;
         wclear(finestraGioco);
@@ -341,23 +341,11 @@ bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer
             schermataFinale(finestraGioco);
         }
 
-        endwin();
-
-        for (i = ZERO; i < NUMERO_MACCHINE + (difficolta * 3); i++)
-            kill(macchina[i].pid, SIGKILL);
-
-        for (i = ZERO; i < NUMERO_CAMION + (difficolta * 3); i++)
-            kill(camion[i].pid, SIGKILL);
-
-        for (i = ZERO; i < NUMERO_TRONCHI; i++)
-            kill(tronco[i].pid, SIGKILL);
-
-        kill(ranocchio.pid, SIGKILL);
-        kill(tempo.pid, SIGKILL);
+        endwin();       
     }
 
     return riniziaPartita;
-}*/
+}
 
 bool CorsiaOccupata(parametriVeicolo macchina[], parametriVeicolo camion[], int corsia, int difficolta)
 {

@@ -114,19 +114,22 @@ Avvio menuIniziale()
                             input = getch();
                             getmouse(&event);
 
-                            if (event.x > INIZIO_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.x < FINE_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.y > 15 + INIZIO_ALTEZZA_FINESTRA && event.y < 20 + INIZIO_ALTEZZA_FINESTRA)
+                            if (event.x > INIZIO_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.x < FINE_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA &&
+                                event.y > 15 + INIZIO_ALTEZZA_FINESTRA && event.y < 20 + INIZIO_ALTEZZA_FINESTRA)
                             {
                                 delwin(finestraIniziale);
                                 info.difficolta = EASY;
                                 return info;
                             }
-                            else if (event.x > INIZIO_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.x < FINE_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.y > 22 + INIZIO_ALTEZZA_FINESTRA && event.y < 27 + INIZIO_ALTEZZA_FINESTRA)
+                            else if (event.x > INIZIO_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.x < FINE_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA &&
+                                     event.y > 22 + INIZIO_ALTEZZA_FINESTRA && event.y < 27 + INIZIO_ALTEZZA_FINESTRA)
                             {
                                 delwin(finestraIniziale);
                                 info.difficolta = MEDIUM;
                                 return info;
                             }
-                            else if (event.x > INIZIO_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.x < FINE_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.y > 29 + INIZIO_ALTEZZA_FINESTRA && event.y < 34 + INIZIO_ALTEZZA_FINESTRA)
+                            else if (event.x > INIZIO_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.x < FINE_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA &&
+                                     event.y > 29 + INIZIO_ALTEZZA_FINESTRA && event.y < 34 + INIZIO_ALTEZZA_FINESTRA)
                             {
                                 delwin(finestraIniziale);
                                 info.difficolta = HARD;
@@ -134,7 +137,8 @@ Avvio menuIniziale()
                             }
                         }
                     }
-                    else if (event.x > INIZIO_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.x < FINE_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.y > 22 + INIZIO_ALTEZZA_FINESTRA && event.y < 27 + INIZIO_ALTEZZA_FINESTRA)
+                    else if (event.x > INIZIO_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.x < FINE_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA &&
+                             event.y > 22 + INIZIO_ALTEZZA_FINESTRA && event.y < 27 + INIZIO_ALTEZZA_FINESTRA)
                     { // impostazioni
                         wclear(finestraIniziale);
                         info = impostazioni(finestraIniziale, info);
@@ -161,7 +165,6 @@ Avvio impostazioni(WINDOW *finestraIniziale, Avvio info)
         stampaSprite(finestraIniziale, info);
 
         input = getch();
-
 
         if (input == KEY_MOUSE)
         {
@@ -267,13 +270,13 @@ void stampaSprite(WINDOW *finestraIniziale, Avvio info)
 
     for (i = 0; i < 2; i++)
         mvwprintw(finestraIniziale, 11 + i, LARGHEZZA_SCHERMO / 2 - 24, "%ls", effettiSonori[i]);
-        
+
     for (i = 0; i < 2; i++)
         mvwprintw(finestraIniziale, 20 + i, LARGHEZZA_SCHERMO / 2 - 32, "%ls", coloreRana[i]);
 
     for (i = 0; i < 2; i++)
         mvwprintw(finestraIniziale, 31 + i, 2, "%ls", indietro[i]);
-        
+
     wattroff(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
 
     stampaColoriGiusti(finestraIniziale, info);
@@ -283,12 +286,12 @@ void stampaSprite(WINDOW *finestraIniziale, Avvio info)
 
 void stampaColoriGiusti(WINDOW *finestraIniziale, Avvio info)
 {
-    #define ROSSO_E_BLU 999
-    #define VERDE 890
-    #define ALTEZZA_PRIMA_SCRITTA 16
-    #define ALTEZZA_SECONDA_SCRITTA 25
-    #define ALTEZZA_PRIMO_RETTANGOLO 14
-    #define ALTEZZA_SECONDO_RETTANGOLO 23
+#define ROSSO_E_BLU 999
+#define VERDE 890
+#define ALTEZZA_PRIMA_SCRITTA 16
+#define ALTEZZA_SECONDA_SCRITTA 25
+#define ALTEZZA_PRIMO_RETTANGOLO 14
+#define ALTEZZA_SECONDO_RETTANGOLO 23
 
     if (info.audio)
     {
@@ -320,8 +323,8 @@ void stampaColoriGiusti(WINDOW *finestraIniziale, Avvio info)
         wattroff(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
 
         wattron(finestraIniziale, COLOR_PAIR(COLORE_NERO_VERDE));
-        stampaRettangolo(finestraIniziale, ALTEZZA_SECONDO_RETTANGOLO, 52);   // 52 = 16 + 36
-        mvwprintw(finestraIniziale, ALTEZZA_SECONDA_SCRITTA, 68, "Verde"); // 66 = 52 + 18 (metà rettangolo) - 2 (metà parola) stesso ragionamento per centrare tutte le scritte nei rettangoli
+        stampaRettangolo(finestraIniziale, ALTEZZA_SECONDO_RETTANGOLO, 52); // 52 = 16 + 36
+        mvwprintw(finestraIniziale, ALTEZZA_SECONDA_SCRITTA, 68, "Verde");  // 66 = 52 + 18 (metà rettangolo) - 2 (metà parola) stesso ragionamento per centrare tutte le scritte nei rettangoli
         wattroff(finestraIniziale, COLOR_PAIR(COLORE_NERO_VERDE));
 
         wattron(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));

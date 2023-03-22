@@ -43,6 +43,8 @@ Avvio menuIniziale()
     WINDOW *finestraIniziale;
 
     finestraIniziale = newwin(ALTEZZA_SCHERMO + 2, LARGHEZZA_SCHERMO - 1, INIZIO_ALTEZZA_FINESTRA, INIZIO_LARGHEZZA_FINESTRA);
+    clear();
+    refresh();
 
     init_pair(COLORE_VERDE_NERO, COLOR_GREEN, COLOR_BLACK);
     init_pair(COLORE_NERO_VERDE, COLOR_BLACK, COLOR_GREEN);
@@ -204,11 +206,6 @@ Avvio impostazioni(WINDOW *finestraIniziale, Avvio info)
                     info.colore.r = 1,
                     info.colore.g = 1;
                     info.colore.b = 999;
-                }
-                else
-                { // debug
-                    mvwprintw(finestraIniziale, 0, 0, "Input generico");
-                    wrefresh(finestraIniziale);
                 }
             }
         }

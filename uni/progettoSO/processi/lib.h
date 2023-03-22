@@ -127,14 +127,6 @@ enum coloriProiettile
 #define NUMERO_TRONCHI 3
 #define MAX_TRONCHI 5
 
-// vale sia per i camion che per le macchine
-#define ALTEZZA_VEICOLI 3
-
-// dimensioni macchina e numero di macchine
-#define LARGHEZZA_MACCHINA 6
-#define NUMERO_MACCHINE 4
-#define MAX_MACCHINE 6
-
 // dimensioni camion e numero di camion
 #define LARGHEZZA_CAMION 13
 #define NUMERO_CAMION 3
@@ -153,7 +145,6 @@ enum coloriProiettile
 // dimensioni fiume e coordinate nello schermo
 #define ALTEZZA_FIUME 9
 #define INIZIO_FIUME 8
-#define NUMERO_CORSIE_FIUME 5
 
 // dimensioni marciapiede e coordinate nello schermo
 #define INIZIO_MARCIAPIEDE 29
@@ -196,11 +187,9 @@ enum coloriProiettile
 #define PUNTEGGIO_UCCISIONE 50
 #define PUNTEGGIO_TANA 150
 #define TEMPO_SPAWN_NEMICO 7
+
 // numero massimo di proiettili che la rana può avere contemporaneamente a schermo
 #define NUMERO_PROIETTILI 30
-
-// dimensione massima nome utente
-#define MAX_NOMI 64
 
 // offset per spostare la finestra dello schermo pù al centro
 #define INIZIO_ALTEZZA_FINESTRA 5

@@ -35,6 +35,7 @@ int funzTronchi(int p[DUE], int gameDifficulty)
         else if (tronco[i] == ZERO)
         {
             funzTronco(p, i, velocita[i] * spostamento, gameDifficulty);
+            exit(0);
         }
     }
 }
@@ -127,7 +128,7 @@ void movimentoProiettileNemico(Coordinate tronco, int p[], int i, int gameDiffic
     close(p[READ]);
     while (true)
     {
-        if (proiettile.coordinate.y >= ALTEZZA_SCHERMO)
+        if (proiettile.coordinate.y >= ALTEZZA_SCHERMO + (6 * gameDifficulty))
         {
             proiettile.id = PROIETTILE_NEMICO0_OUT + i;
             write(p[WRITE], &proiettile, sizeof(Oggetto));

@@ -18,6 +18,7 @@ void funzRana(int p[], int pRana[], int gameDifficulty)
     else if (pidRana == ZERO)
     {
         movimentoRana(p, pRana, gameDifficulty);
+        exit(0);
     }
 }
 
@@ -26,37 +27,39 @@ void movimentoRana(int p[], int pRana[], int gameDifficulty)
     int proiettile_sparato = ZERO;
     int inputMovimento;
     int lettura;
+
     double diff;
     _Bool move;
-    time_t inizio, fine;
     pid_t pidProiettile;
     Oggetto rana;
+    Oggetto pacchetto;
     Oggetto proiettile;
 
-    rana.coordinate.x = ZERO;
+    rana.coordinate.x = 0;
     rana.coordinate.y = POSIZIONE_INIZIALE_RANA_Y + (gameDifficulty)*6;
     rana.pid = getpid();
     rana.id = RANA;
-    write(p[WRITE], &rana, sizeof(Oggetto));
+     write(p[WRITE], &rana, sizeof(Oggetto));
 
     close(p[READ]);
     close(pRana[WRITE]);
-
-    time(&inizio);
+   
 
     while (true)
     {
         rana.id = RANA;
         timeout(UNO);
         inputMovimento = getch();
+         if (read(pRana[READ], &pacchetto, sizeof(Oggetto)) > 0)
+           rana = pacchetto;
 
-        read(pRana[READ], &rana, sizeof(Oggetto));
         move = true;
         switch (inputMovimento)
         {
         case w:
         case W:
         case KEY_UP:
+
             rana.coordinate.y -= ALTEZZA_RANA;
             if (controlloLimitiRana(rana.coordinate, gameDifficulty) == LIMITE_RANA)
                 rana.coordinate.y += ALTEZZA_RANA;
@@ -108,7 +111,6 @@ void movimentoRana(int p[], int pRana[], int gameDifficulty)
             break;
         }
 
-        // read(pRana[READ],&rana,sizeof(Oggetto));
         if (move)
             write(p[WRITE], &rana, sizeof(Oggetto));
     }

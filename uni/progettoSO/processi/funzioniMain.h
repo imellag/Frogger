@@ -47,3 +47,5 @@ bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer
 
 // controlla se l'inizio della corsia generata casualmente è occupato da un altro veicolo
 bool corsiaOccupata(Oggetto macchinina[], Oggetto camioncino[], int corsia, int difficolta);
+
+void creaColoriRandom(int difficolta);

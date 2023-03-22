@@ -39,7 +39,7 @@ int main()
         getmaxyx(stdscr, maxy, maxx);
 
         dimensioneFinestra(maxx, maxy);
-      //  info = menuIniziale();
+        info = menuIniziale();
         colori(info);
         riniziaPartita = areaGioco(info);
 

@@ -13,62 +13,72 @@ bool areaGioco(Avvio info)
 {
     srand(time(NULL));
 
-    int maxx, maxy;
-    int differenza;
-    int risultato;
-    int direzione;
-    int contaNemici;
-
-    int troncoNemico;
+    int differenza, risultato, direzione, contaNemici, troncoNemico;
     int offset = 0;
     int vite;
 
     int corsiaRandom;
+    int macchineInCoda = 0;
 
     bool buffer = false;
-    bool riniziaPartita = false;
     bool pausa = false;
     bool partitaFinita;
-
     bool coloreTroncoRana = false;
     bool coloreTroncoProiettile = false;
     bool coloreNemicoProiettile = false;
     bool sulTronco = false;
     bool partitaInCorso;
-
     // variabili utilizzate per far spawnare i nemici e farli sparare al momento giusto
-    time_t inizio_nemico, fine_nemico, inizio_proiettile[MAX_TRONCHI], fine_proiettile;
+    time_t inizio_nemico, fine_nemico, inizio_proiettile[MAX_TRONCHI], fine_proiettile, inizioInputCorsia, fineInputCorsia;
 
-    Oggetto proiettileNemico[MAX_TRONCHI];
-    Oggetto ranocchio;
-    Oggetto vecchiaRana;
+    Oggetto proiettileNemico[MAX_TRONCHI], ranocchio, vecchiaRana, tempo, pacchetto;
 
-    Oggetto tempo;
-
-    int i, j;
-    Oggetto pacchetto;
+    int i, j = 0, k = 0;
     Oggetto proiettilino[NUMERO_PROIETTILI];
     Coordinate nuoveCoordinate;
-
     Colore bufferColori;
-    int timer = TEMPO_INIZIALE;
-    int punteggio = PUNTEGGIO_INIZIALE;
-    bool arrayTane[NUMERO_TANE] = {false};
 
+    bool arrayTane[NUMERO_TANE] = {false};
     bool nemico[MAX_TRONCHI] = {false};
 
-    Oggetto macchinina[MAX_MACCHINE];
-    Oggetto camioncino[MAX_CAMION];
-    Oggetto tronchino[MAX_TRONCHI];
+    Oggetto macchinina[MAX_MACCHINE], camioncino[MAX_CAMION], tronchino[MAX_TRONCHI];
     WINDOW *finestraGioco;
 
     bool hitProiettile[MAX_TRONCHI];
 
     // inizializzo le variabili
     offset = 0;
-    riniziaPartita = false;
-    timer = TEMPO_INIZIALE;
-    punteggio = PUNTEGGIO_INIZIALE;
+    bool riniziaPartita = false;
+    int timer = TEMPO_INIZIALE;
+    int punteggio = PUNTEGGIO_INIZIALE;
+    ranocchio.coordinate.x = ZERO;
+    ranocchio.coordinate.y = POSIZIONE_INIZIALE_RANA_Y + info.difficolta * NUMERO_CORSIE * 2;
+
+    // prima di iniziare porto le coordinate di tutti gli oggetti fuori dallo schermo
+    for (i = ZERO; i < MAX_TRONCHI; i++)
+    {
+        tronchino[i].coordinate.x = FUORI_MAPPA;
+        tronchino[i].coordinate.y = FUORI_MAPPA;
+
+        proiettileNemico[i].coordinate.x = FUORI_MAPPA - 2;
+        proiettileNemico[i].coordinate.y = FUORI_MAPPA - 2;
+    }
+    for (i = ZERO; i < MAX_CAMION; i++)
+    {
+        camioncino[i].coordinate.x = FUORI_MAPPA;
+        camioncino[i].coordinate.y = FUORI_MAPPA;
+    }
+
+    for (i = 0; i < MAX_MACCHINE; i++)
+    {
+        macchinina[i].coordinate.x = FUORI_MAPPA;
+        macchinina[i].coordinate.y = FUORI_MAPPA;
+    }
+    for (i = 0; i < NUMERO_PROIETTILI; i++)
+    {
+        proiettilino[i].coordinate.x = FUORI_MAPPA - 1;
+        proiettilino[i].coordinate.y = FUORI_MAPPA - 1;
+    }
 
     // pipe principale che viene utilizzata per inviare le posizioni dei vari oggetti
     // e stamparli successivamente nel main
@@ -87,7 +97,6 @@ bool areaGioco(Avvio info)
         perror("Error\n");
         exit(EXIT_FAILURE);
     }
-
     // funzione per rendere non bloccante la pipe
     fcntl(pRana[0], F_SETFL, fcntl(pRana[0], F_GETFL) | O_NONBLOCK);
 
@@ -101,9 +110,6 @@ bool areaGioco(Avvio info)
     // musica di sottofondo
     if (info.audio)
         system("ffplay -nodisp ../file_audio/frogger.mp3 2> /dev/null & ");
-
-    ranocchio.coordinate.x = ZERO;
-    ranocchio.coordinate.y = POSIZIONE_INIZIALE_RANA_Y + info.difficolta * NUMERO_CORSIE * 2;
 
     /* inizializzo l'array dei proiettili nemici. I valori vengono cambiati a true quando il proiettile viene distrutto in modo che non venga più stampato
      e vengono nuovamente settati a false dopo la stampa */
@@ -123,30 +129,20 @@ bool areaGioco(Avvio info)
     refresh();
 
     // per ogni veicolo genero un colore casuale
-    for (i = ZERO; i < NUMERO_MACCHINE + 2 * info.difficolta; i++)
-    {
-        bufferColori = coloreVeicolo();
-        init_color(COLORE_MACCHINA0 + i, bufferColori.r, bufferColori.g, bufferColori.b);
-    }
-    for (i = ZERO; i < NUMERO_CAMION + 2 * info.difficolta; i++)
-    {
-        bufferColori = coloreVeicolo();
-        init_color(COLORE_CAMION0 + i, bufferColori.r, bufferColori.g, bufferColori.b);
-    }
+    creaColoriRandom(info.difficolta);
 
     /* Lascio due righe vuote in basso per scrivere il tempo/punteggio ecc. dopo.
     Quindi dato che l'altezza è il numero totale di "pixel" ma effettivamente poi
     le coordinate partono da 0 tolgo 3 alla rana rispetto all'altezza dello schermo
     per centrarla con il marciapiede */
 
-    stampaVite(finestraGioco, vite);
-
     // stampo le varie sezioni dello schermo
     funzMarciapiede(finestraGioco, info.difficolta);
     funzAutostrada(finestraGioco, info.difficolta);
     funzPrato(finestraGioco, info.difficolta);
     funzFiume(finestraGioco, info.difficolta);
-    stampaRana(finestraGioco, ranocchio.coordinate, coloreTroncoRana, info.difficolta);
+    stampaRana(finestraGioco, ranocchio.coordinate, false, info.difficolta);
+    stampaVite(finestraGioco, vite);
 
     // creo tutti i processi della rana, dei veicoli, dei tronchi e del tempo
     funzRana(p, pRana, info.difficolta);
@@ -154,51 +150,27 @@ bool areaGioco(Avvio info)
     funzTronchi(p, info.difficolta);
     funzTempo(p);
 
-    // prima di iniziare porto le coordinate di tutti gli oggetti fuori dallo schermo
-    for (i = ZERO; i < MAX_TRONCHI; i++)
-    {
-        tronchino[i].coordinate.x = FUORI_MAPPA;
-        tronchino[i].coordinate.y = FUORI_MAPPA;
-
-        proiettileNemico[i].coordinate.x = FUORI_MAPPA - 2;
-        proiettileNemico[i].coordinate.y = FUORI_MAPPA - 2;
-    }
-
-    for (i = ZERO; i < MAX_CAMION; i++)
-    {
-        camioncino[i].coordinate.x = FUORI_MAPPA;
-        camioncino[i].coordinate.y = FUORI_MAPPA;
-    }
-
-    for (i = 0; i < MAX_MACCHINE; i++)
-    {
-        macchinina[i].coordinate.x = FUORI_MAPPA;
-        macchinina[i].coordinate.y = FUORI_MAPPA;
-    }
-    for (i = 0; i < NUMERO_PROIETTILI; i++)
-    {
-        proiettilino[i].coordinate.x = FUORI_MAPPA - 1;
-        proiettilino[i].coordinate.y = FUORI_MAPPA - 1;
-    }
-
     time(&inizio_nemico);
+    time(&fineInputCorsia);
+    time(&inizioInputCorsia);
 
-    close(pRana[READ]);
     partitaInCorso = true;
-
+    close(pRana[READ]);
     /* Leggo i dati della pipe p dove vengono scritte le posizioni di tutti gli oggetti.
     Quello che viene letto dalla pipe viene salvato in una variabile provvisoria e,
     dopo essere stato riconosciuto tramite il suo id, viene salvato nella variabile dell'oggetto
     corrispondente. Viene anche letto il tempo aggiornato in secondi. */
     while (partitaInCorso)
     {
+
         partitaFinita = false;
 
-        refresh();
         read(p[READ], &pacchetto, sizeof(Oggetto));
 
         if (pacchetto.id == RANA)
+        {
             ranocchio = pacchetto;
+        }
 
         else if (pacchetto.id >= PROIETTILE0 && pacchetto.id <= PROIETTILE29)
             proiettilino[pacchetto.id - PROIETTILE0] = pacchetto;
@@ -226,12 +198,7 @@ bool areaGioco(Avvio info)
             macchinina[pacchetto.id - MACCHINA0] = pacchetto;
         else if (pacchetto.id == MACCHINA0_OUT)
         {
-            do
-            {
-                corsiaRandom = rand() % (NUMERO_CORSIE + info.difficolta);
-            } while (corsiaOccupata(macchinina, camioncino, corsiaRandom, info.difficolta));
-
-            write(pVeicoli[WRITE], &corsiaRandom, sizeof(int));
+            macchineInCoda++;
         }
         else if (pacchetto.id >= CAMION0 && pacchetto.id <= CAMION5)
             camioncino[pacchetto.id - CAMION0] = pacchetto;
@@ -253,7 +220,7 @@ bool areaGioco(Avvio info)
             risultato = controlloLimitiRana(ranocchio.coordinate, info.difficolta);
 
             // se la rana è entrata in una tana viene portata alla posizione iniziale viene aggiornato il punteggio
-            if (risultato < SEI && risultato >= ZERO)
+            if (risultato < 6 && risultato >= 0)
             {
                 if (!(arrayTane[risultato] == true))
                 {
@@ -299,20 +266,30 @@ bool areaGioco(Avvio info)
                     time(&inizio_proiettile[troncoNemico]);
                 }
             }
+            time(&fineInputCorsia);
+            if (macchineInCoda > 0)
+            {
 
+                corsiaRandom = k % (NUMERO_CORSIE + info.difficolta);
+                write(pVeicoli[WRITE], &corsiaRandom, sizeof(int));
+                k++;
+                time(&inizioInputCorsia);
+                macchineInCoda--;
+            }
             // ciclo macchine
 
-            /* ciclo per assegnare i pid agli oggetti e successivamente controllo le collisioni
+            /* ciclo controllARE le collisioni
              con le varie macchine o se la rana è presente sul tronco */
-            for (i = ZERO; i < NUMERO_MACCHINE + info.difficolta; i++)
+            for (i = 0; i < NUMERO_MACCHINE + info.difficolta; i++)
             {
                 // controllo la collisione dei proiettili con le auto, sia quelli nemici che quello della rana
 
                 for (j = 0; j < NUMERO_PROIETTILI; j++)
                 {
-                    if (proiettiliVeicoli(proiettilino[j], proiettileNemico, macchinina[i], LARGHEZZA_MACCHINA, hitProiettile))
+                    if (proiettiliVeicoli(proiettilino[j], proiettileNemico, macchinina[i], LARGHEZZA_MACCHINA, hitProiettile, info.difficolta))
                         proiettilino[j] = uccidiProiettile(proiettilino[j]);
                 }
+                // stampo le macchine
                 stampaMacchina(finestraGioco, macchinina[i], i);
 
                 // controllo se la rana è dentro il range dello sprite della macchina
@@ -331,7 +308,7 @@ bool areaGioco(Avvio info)
                 // controllo se i proiettili collidono con un camion e nel caso li distruggo
                 for (j = 0; j < NUMERO_PROIETTILI; j++)
                 {
-                    if (proiettiliVeicoli(proiettilino[j], proiettileNemico, camioncino[i], LARGHEZZA_CAMION, hitProiettile))
+                    if (proiettiliVeicoli(proiettilino[j], proiettileNemico, camioncino[i], LARGHEZZA_CAMION, hitProiettile, info.difficolta))
                         proiettilino[j] = uccidiProiettile(proiettilino[j]);
                 }
                 // stampo i camion
@@ -348,7 +325,7 @@ bool areaGioco(Avvio info)
             }
 
             // ciclo proiettili nemici
-            for (i = 0; i < MAX_PROIETTILI_NEMICI; i++)
+            for (i = 0; i < NUMERO_NEMICI + info.difficolta; i++)
             {
 
                 /* per ognuno dei proiettili nemici controllo che non collida con il proiettile della rana,
@@ -465,15 +442,18 @@ bool areaGioco(Avvio info)
                 stampaProiettili(finestraGioco, tronchino, nemico, proiettilino[i].coordinate, info.difficolta);
 
             // controllo che i proiettili nemici siano stati distrutti e nel caso li stampo
-            for (i = ZERO; i < NUMERO_NEMICI + info.difficolta; i++)
+            for (i = 0; i < NUMERO_NEMICI + info.difficolta; i++)
             {
                 if (!hitProiettile[i])
                     stampaProiettili(finestraGioco, tronchino, nemico, proiettileNemico[i].coordinate, info.difficolta);
             }
 
             // resetto l'array
-            for (i = ZERO; i < NUMERO_NEMICI + info.difficolta; i++)
-                hitProiettile[i] = false;
+            for (i = 0; i < NUMERO_NEMICI + info.difficolta; i++)
+            {
+                if (proiettileNemico[i].coordinate.y > ALTEZZA_SCHERMO)
+                    hitProiettile[i] = false;
+            }
 
             // stampo il punteggio  e il tempo rimanente nella parte alta dello schermo
             stampaPunteggio(finestraGioco, punteggio);

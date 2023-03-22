@@ -34,16 +34,16 @@ alla funzione chiamante che poi lo gestisce */
 bool pausaeNuovaPartita(WINDOW *finestraGioco, int chiamata);
 
 // killa il processo di un proiettile e ne resetta le coordinate in modo che non venga mostrato nello schermo
-Oggetto uccidiProiettile(Oggetto proiettile);
+Oggetto uccidiProiettile(Oggetto proiettile, pthread_t threadProiettile);
 
 // stampa la scritta "grazie per aver giocato"
 void schermataFinale(WINDOW *finestraGioco);
 
 // time_t spawnNemico(time_t fine_nemico, time_t inizio_nemico, int difficolta,bool sulTronco, bool nemico[],Oggetto tronchino[],time_t inizio_proiettile[],Oggetto rana);
-// Oggetto controlloCollisioneVeicoliProiettile(int i,Oggetto proiettilino[], Oggetto proiettileNemico[], Oggetto macchinina[], bool hitProiettile[]);
+Oggetto controlloCollisioneVeicoliProiettile(int i, Oggetto proiettilino[], Oggetto proiettileNemico[], Oggetto macchinina[], bool hitProiettile[], pthread_t threadProiettile);
 
 bool controlloTaneChiuse(bool arrayTane[]);
 
-bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer, int punteggio, int difficolta, Oggetto tempo, Oggetto macchina[], Oggetto camion[], Oggetto tronco[], bool *partitaInCorso, bool partitaFinita);
+bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int punteggio, int difficolta, bool *partitaInCorso, bool partitaFinita);
 
 bool CorsiaOccupata(parametriVeicolo macchinina[], parametriVeicolo camioncino[], int corsia, int difficolta);

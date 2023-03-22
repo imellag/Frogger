@@ -5,7 +5,6 @@ char spriteTana[TRE][LARGHEZZA_TANE] = {"     _____     ", "    /     \\    ", "
 
 void funzPrato(WINDOW *finestraGioco, int gameDifficulty)
 {
-    // alto 3
     int i, j;
     wattron(finestraGioco, COLOR_PAIR(COLORE_SFONDO_PRATO));
     for (i = ZERO; i < ALTEZZA_PRATO; i++)
@@ -65,13 +64,12 @@ void funzFiume(WINDOW *finestraGioco, int gameDifficulty)
     wattroff(finestraGioco, COLOR_PAIR(COLORE_SFONDO_FIUME));
 }
 
-void stampaPunteggio(WINDOW *finestraGioco,int punteggio)
+void stampaPunteggio(WINDOW *finestraGioco, int punteggio)
 {
     wattron(finestraGioco, COLOR_PAIR(COLORE_SCRITTE_INFO));
     mvwprintw(finestraGioco, DUE, LARGHEZZA_SCHERMO / DUE - QUATTRO, "Score: %d", punteggio);
     wattroff(finestraGioco, COLOR_PAIR(COLORE_SCRITTE_INFO));
 }
-
 
 void funzTane(WINDOW *finestraGioco, bool arrayTane[])
 {
@@ -107,7 +105,7 @@ void stampaTane(WINDOW *finestraGioco, bool arrayTane[])
             {
                 for (k = 0; k < LARGHEZZA_TANE; k++)
                 {
-                    mvwprintw(finestraGioco, pos.y + j, pos.x + k,"%c", spriteTana[j][k]);
+                    mvwprintw(finestraGioco, pos.y + j, pos.x + k, "%c", spriteTana[j][k]);
                 }
             }
         }

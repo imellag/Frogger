@@ -118,8 +118,10 @@ void funzTempo(int p[])
         printw("Error");
         exit(EXIT_FAILURE);
     }
-    else if (pidTempo == ZERO)
+    else if (pidTempo == ZERO){
         orologio(p);
+        exit(0);
+    }
 }
 
 void orologio(int p[])
@@ -228,7 +230,7 @@ void stampaProiettili(WINDOW *finestraGioco, Oggetto arrayTronchi[], bool nemico
         soloStampa(finestraGioco, proiettile, COLORE_SFONDO_AUTOSTRDA);
     else if (controlloPosizione(proiettile, false, gameDifficulty) == COLORE_MARCIAPIEDE)
         soloStampa(finestraGioco, proiettile, COLORE_SFONDO_MARCIAPIEDE);
-    else if (controlloPosizione(proiettile, false, gameDifficulty) == COLOR_GREEN)
+    else if (controlloPosizione(proiettile, false, gameDifficulty) == COLORE_PRATO)
         soloStampa(finestraGioco, proiettile, COLORE_SFONDO_PRATO);
 }
 

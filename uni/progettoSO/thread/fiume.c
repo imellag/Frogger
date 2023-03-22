@@ -20,12 +20,12 @@ void *movimentoTronco(void *_tronco)
     Oggetto *tronco = _tronco;
     int i;
 
+    pthread_mutex_lock(&mutex);
     int tempoRandom = TEMPO_TRONCO_MIN + rand() % (TEMPO_TRONCO_MIN + TEMPO_TRONCO_MAX) - 2500 * tronco->difficolta;
 
     tronco->coordinate.y = INIZIO_FIUME + tronco->id * ALTEZZA_TRONCHI;
     tronco->coordinate.x = rand() % (LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI);
-    //  tronco->id = TRONCO0 + numeroTronco;
-    // tronco->velocita = velocita;
+    pthread_mutex_unlock(&mutex);
 
     while (true)
     {
@@ -74,18 +74,20 @@ void *movimentoProiettileNemico(void *_proiettileNemico)
 {
     Oggetto *proiettileNemico = (Oggetto *)_proiettileNemico;
 
-    //  proiettile.id = PROIETTILE_NEMICO0 + i;
-
     while (true)
     {
-        if (proiettileNemico->coordinate.y >= ALTEZZA_SCHERMO)
+        pthread_mutex_lock(&mutex);
+
+        if (proiettileNemico->coordinate.y >= ALTEZZA_SCHERMO + (6 * proiettileNemico->difficolta))
         {
             proiettileNemico->coordinate.x = FUORI_MAPPA - 2;
             proiettileNemico->coordinate.y = FUORI_MAPPA - 2;
             break;
         }
+        pthread_mutex_unlock(&mutex);
+
+        proiettileNemico->coordinate.y++;
 
         usleep(50000);
-        proiettileNemico->coordinate.y++;
     }
 }

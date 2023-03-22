@@ -12,8 +12,7 @@ void funzAuto(int gameDifficulty);
 // crea un camion per ogni processo
 void funzCamion(int direzioneCorsie[], int spostamento, int gameDifficulty,int velocitaCorsie[],Coordinate inizioVeicoli[],int pVeicoli[]);
 
-/* gestisce il movimento della macchina che viene successivamente inviato al main
- e il cambio delle corsie */
+/* gestisce il movimento della macchina e il cambio delle corsie */
 void* movimentoVeicolo( void *_veicolo);
 
 /* gestisce il movimento dei camion che viene successivamente inviato al main

@@ -90,20 +90,6 @@ enum coloriProiettile
 // posizione dove vengono portati gli oggetti come i proiettili quando non devono essere visualizzati a schermo
 #define FUORI_MAPPA -5
 
-// input da tastiera
-#define A 65
-#define a 97
-#define D 68
-#define d 100
-#define P 80
-#define p 112
-#define Q 81
-#define q 113
-#define S 83
-#define s 115
-#define W 87
-#define w 119
-#define SPACEBAR ' '
 
 // altezza generale di tutte le corsie (fiume, autostrada ecc.)
 #define ALTEZZA_CORSIE 3
@@ -251,7 +237,6 @@ typedef struct
     Oggetto veicolo;
     int velocitaCorsia;
     int direzioneCorsia;
-    Coordinate inizioVeicoli;
 
 } parametriVeicolo;
 

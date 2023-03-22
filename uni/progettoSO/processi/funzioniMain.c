@@ -1,5 +1,6 @@
 #include "funzioniMain.h"
 #include "collisioni.h"
+#include "lib.h"
 wchar_t *spriteSconfitta[ALTEZZA_SPRITE] = {
     L"██╗░░██╗░█████╗░██╗  ██████╗░███████╗██████╗░░██████╗░█████╗░██╗",
     L"██║░░██║██╔══██╗██║  ██╔══██╗██╔════╝██╔══██╗██╔════╝██╔══██╗██║",
@@ -289,18 +290,6 @@ time_t spawnNemico(time_t fine_nemico, time_t inizio_nemico, int difficolta, boo
     int troncoNemico = 0;
 }
 
-Oggetto controlloCollisioneVeicoliProiettile(int i, Oggetto proiettilino[], Oggetto proiettileNemico[], Oggetto macchinina[], bool hitProiettile[])
-{
-    int j;
-    for (j = 0; j < NUMERO_PROIETTILI; j++)
-    {
-        if (proiettiliVeicoli(proiettilino[j], proiettileNemico, macchinina[i], LARGHEZZA_MACCHINA, hitProiettile))
-            proiettilino[j] = uccidiProiettile(proiettilino[j]);
-    }
-
-    return proiettilino[j];
-}
-
 bool controlloTaneChiuse(bool arrayTane[])
 {
     int i;
@@ -334,6 +323,9 @@ bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer
         else if (buffer == false)
             vittoria(finestraGioco, punteggio);
 
+        wclear(finestraGioco);
+        wrefresh(finestraGioco);
+
         riniziaPartita = pausaeNuovaPartita(finestraGioco, DUE);
 
         if (!riniziaPartita)
@@ -343,18 +335,6 @@ bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer
         }
         delwin(finestraGioco);
         endwin();
-
-        for (i = ZERO; i < NUMERO_MACCHINE + difficolta; i++)
-            kill(macchina[i].pid, SIGKILL);
-
-        for (i = ZERO; i < NUMERO_CAMION + difficolta; i++)
-            kill(camion[i].pid, SIGKILL);
-
-        for (i = ZERO; i < NUMERO_TRONCHI; i++)
-            kill(tronco[i].pid, SIGKILL);
-
-        kill(ranocchio.pid, SIGKILL);
-        kill(tempo.pid, SIGKILL);
     }
 
     return riniziaPartita;
@@ -367,45 +347,54 @@ bool corsiaOccupata(Oggetto macchinina[], Oggetto camioncino[], int corsia, int 
 
     for (i = 0; i < NUMERO_MACCHINE + difficolta; i++)
     {
-        if (macchinina[i].velocita < ZERO)
+        if (camioncino[i].coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
         {
-            if (macchinina[i].coordinate.x >= LARGHEZZA_SCHERMO && macchinina[i].coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
+
+            if (macchinina[i].velocita < ZERO)
             {
-                flag = true;
-                break;
-            }
-        }
-        else
-        {
-            if (macchinina[i].coordinate.x <= 0 && macchinina[i].coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
-            {
-                flag = true;
-                break;
-            }
-        }
-    }
-    if (!flag)
-    {
-        for (i = 0; i < NUMERO_CAMION + difficolta; i++)
-        {
-            if (camioncino[i].velocita < ZERO)
-            {
-                if (camioncino[i].coordinate.x >= LARGHEZZA_SCHERMO && camioncino[i].coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
-                {
-                    flag = true;
-                    break;
-                }
+                if (macchinina[i].coordinate.x >= LARGHEZZA_SCHERMO)
+                    return true;
             }
             else
             {
-                if (camioncino[i].coordinate.x <= 0 && camioncino[i].coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
-                {
-                    flag = true;
-                    break;
-                }
+                if (macchinina[i].coordinate.x <= 0)
+                    return true;
             }
         }
     }
 
-    return flag;
+    for (i = 0; i < NUMERO_CAMION + difficolta; i++)
+    {
+        if (camioncino[i].velocita < ZERO)
+        {
+            if (camioncino[i].coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
+            {
+                if (camioncino[i].coordinate.x >= LARGHEZZA_SCHERMO)
+                    return true;
+            }
+            else
+            {
+                if (camioncino[i].coordinate.x <= 0)
+                    return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+void creaColoriRandom(int difficolta)
+{
+    int i;
+    Colore bufferColori;
+    for (i = ZERO; i < NUMERO_MACCHINE + difficolta; i++)
+    {
+        bufferColori = coloreVeicolo();
+        init_color(COLORE_MACCHINA0 + i, bufferColori.r, bufferColori.g, bufferColori.b);
+    }
+    for (i = ZERO; i < NUMERO_CAMION + difficolta; i++)
+    {
+        bufferColori = coloreVeicolo();
+        init_color(COLORE_CAMION0 + i, bufferColori.r, bufferColori.g, bufferColori.b);
+    }
 }

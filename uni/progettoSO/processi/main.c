@@ -14,6 +14,7 @@ int main()
     srand(time(NULL));
 
     Avvio info;
+    info.difficolta=0;
     int maxx, maxy;
 
     bool riniziaPartita = false;
