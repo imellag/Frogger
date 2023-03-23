@@ -110,8 +110,8 @@ bool areaGioco(Avvio info)
         tronco[i].coordinate.x = FUORI_MAPPA;
         tronco[i].coordinate.y = FUORI_MAPPA;
 
-        proiettileNemico[i].coordinate.x = FUORI_MAPPA - 2;
-        proiettileNemico[i].coordinate.y = FUORI_MAPPA - 2;
+        proiettileNemico[i].coordinate.x = FUORI_MAPPA - 3;
+        proiettileNemico[i].coordinate.y = FUORI_MAPPA - 3;
     }
 
     for (i = ZERO; i < MAX_CAMION; i++)
@@ -152,6 +152,7 @@ bool areaGioco(Avvio info)
         tronco[i].id = i;
         tronco[i].difficolta = info.difficolta;
         pthread_create(&threadTronchi[i], NULL, &movimentoTronco, &tronco[i]);
+        pthread_create(&threadProiettileNemico[i], NULL, &movimentoProiettileNemico, &proiettileNemico[i]);
     }
 
     // randomizzo anche la direzione
@@ -374,17 +375,16 @@ bool areaGioco(Avvio info)
                 {
                     pthread_mutex_lock(&mutex);
                     stampaNemico(finestraGioco, tronco[i].coordinate);
-
+                    pthread_mutex_unlock(&mutex);
                     time(&fine_proiettile);
-                    if (fine_proiettile - inizio_proiettile[i] >= DUE)
+                    if (fine_proiettile - inizio_proiettile[i] >= 2)
                     {
                         time(&inizio_proiettile[i]);
                         system("ffplay -nodisp ../file_audio/sparo.mp3 2> /dev/null &");
                         proiettileNemico[i].coordinate.x = tronco[i].coordinate.x + LARGHEZZA_TRONCHI / DUE;
                         proiettileNemico[i].coordinate.y = tronco[i].coordinate.y + ALTEZZA_CORSIE;
-                        pthread_create(&threadProiettileNemico[i], NULL, &movimentoProiettileNemico, &proiettileNemico[i]);
+                        
                     }
-                    pthread_mutex_unlock(&mutex);
                 }
                 // altrimenti, se non è presente un nemico stampo solamente il tronco
                 else
@@ -507,7 +507,8 @@ bool areaGioco(Avvio info)
                     {
                         proiettilino[j].proiettile = uccidiProiettile(proiettilino[j].proiettile, threadProiettile[j]);
                         hitProiettile[i] = true;
-                        pthread_cancel(threadProiettileNemico[i]);
+                        proiettileNemico[i].coordinate.x = FUORI_MAPPA - 2;
+                        proiettileNemico[i].coordinate.y = FUORI_MAPPA - 2;
                     }
                 }
 
@@ -516,27 +517,30 @@ bool areaGioco(Avvio info)
                     hitProiettile[i] == false)
                 {
                     rana = morteRana(finestraGioco, &vite, rana, info.difficolta, &timer);
-                    pthread_cancel(threadProiettileNemico[i]);
+                    proiettileNemico[i].coordinate.x = FUORI_MAPPA - 2;
+                    proiettileNemico[i].coordinate.y = FUORI_MAPPA - 2;
                     hitProiettile[i] = true;
                 }
                 pthread_mutex_unlock(&mutex);
             }
-
+            for (i = 0; i < NUMERO_NEMICI + info.difficolta; i++)
+            {
+                pthread_mutex_lock(&mutex);
+                if (proiettileNemico[i].coordinate.x == FUORI_MAPPA - 2)
+                {
+                    hitProiettile[i] = false;
+                }
+                pthread_mutex_unlock(&mutex);
+            }
             // stampo i proiettili nemici
-            for (i = ZERO; i < NUMERO_NEMICI + info.difficolta; i++)
+            for (i = 0; i < NUMERO_NEMICI + info.difficolta; i++)
             { // se hanno colpito qualcosa non vengono printati
                 pthread_mutex_lock(&mutex);
                 if (!hitProiettile[i])
                     stampaProiettili(finestraGioco, tronco, nemico, proiettileNemico[i].coordinate, info.difficolta);
                 pthread_mutex_unlock(&mutex);
             }
-            for (i = ZERO; i < NUMERO_NEMICI + info.difficolta; i++)
-            {
-                pthread_mutex_lock(&mutex);
-                if (proiettileNemico[i].coordinate.x > ALTEZZA_SCHERMO + info.difficolta * 6)
-                    hitProiettile[i] = false;
-                pthread_mutex_unlock(&mutex);
-            }
+
             // controllo se i proiettili nemici sono in movimento e nel caso li stampo
             for (i = 0; i < NUMERO_PROIETTILI; i++)
                 stampaProiettili(finestraGioco, tronco, nemico, proiettilino[i].proiettile.coordinate, info.difficolta);
@@ -555,7 +559,7 @@ bool areaGioco(Avvio info)
             if (tempo.velocita)
             {
                 timer--;
-                punteggio -= DIECI;
+                punteggio -= 10;
                 tempo.velocita = 0;
             }
             pthread_mutex_unlock(&mutex);

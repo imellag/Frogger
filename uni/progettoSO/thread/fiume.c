@@ -77,19 +77,20 @@ void *movimentoProiettileNemico(void *_proiettileNemico)
     while (true)
     {
 
+        pthread_mutex_lock(&mutex);
+
+        proiettileNemico->coordinate.y++;
+        pthread_mutex_unlock(&mutex);
+        usleep(50000);
+
         if (proiettileNemico->coordinate.y >= ALTEZZA_SCHERMO + (6 * proiettileNemico->difficolta))
         {
             pthread_mutex_lock(&mutex);
             proiettileNemico->coordinate.x = FUORI_MAPPA - 2;
             proiettileNemico->coordinate.y = FUORI_MAPPA - 2;
             pthread_mutex_unlock(&mutex);
-            break;
+
         }
-        pthread_mutex_lock(&mutex);
-
-        proiettileNemico->coordinate.y++;
-        pthread_mutex_unlock(&mutex);
-
-        usleep(50000);
     }
+    return NULL;
 }

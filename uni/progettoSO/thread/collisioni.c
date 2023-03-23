@@ -57,7 +57,6 @@ bool proiettiliVeicoli(Oggetto proiettile, Oggetto proiettileNemico[], Oggetto v
         if (controlloCollisioniProiettiliAuto(proiettileNemico[j].coordinate, veicolo, larghezza))
         {
             hitProiettile[j] = true;
-            pthread_cancel(threadProiettileNemico[j]);
             proiettileNemico[j].coordinate.x = FUORI_MAPPA - 2;
             proiettileNemico[j].coordinate.y = FUORI_MAPPA - 2;
         }
