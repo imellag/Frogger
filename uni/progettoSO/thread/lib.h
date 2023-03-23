@@ -123,7 +123,7 @@ enum coloriProiettile
 #define MAX_MACCHINE 11
 
 // dimensioni camion e numero di camion
-#define LARGHEZZA_CAMION 13
+#define LARGHEZZA_CAMION 10
 #define NUMERO_CAMION 3
 #define MAX_CAMION 9
 

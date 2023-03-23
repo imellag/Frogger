@@ -452,7 +452,7 @@ bool areaGioco(Avvio info)
             // resetto l'array
             for (i = 0; i < NUMERO_NEMICI + info.difficolta; i++)
             {
-                if (proiettileNemico[i].coordinate.y > ALTEZZA_SCHERMO)
+                if (proiettileNemico[i].coordinate.y > ALTEZZA_SCHERMO+info.difficolta*6)
                     hitProiettile[i] = false;
             }
 

@@ -257,7 +257,7 @@ bool areaGioco(Avvio info)
 
             if (rana.id == PAUSA)
             {
-                partitaFinita = pausaeNuovaPartita(finestraGioco, 1);
+                partitaFinita = (!pausaeNuovaPartita(finestraGioco, 1));
                 pthread_mutex_lock(&mutex);
                 rana.id = RANA;
                 pthread_mutex_unlock(&mutex);
@@ -374,9 +374,9 @@ bool areaGioco(Avvio info)
                 {
                     pthread_mutex_lock(&mutex);
                     stampaNemico(finestraGioco, tronco[i].coordinate);
-                    pthread_mutex_unlock(&mutex);
+
                     time(&fine_proiettile);
-                    if ((difftime(fine_proiettile, inizio_proiettile[i])) >= DUE)
+                    if (fine_proiettile - inizio_proiettile[i] >= DUE)
                     {
                         time(&inizio_proiettile[i]);
                         system("ffplay -nodisp ../file_audio/sparo.mp3 2> /dev/null &");
@@ -384,6 +384,7 @@ bool areaGioco(Avvio info)
                         proiettileNemico[i].coordinate.y = tronco[i].coordinate.y + ALTEZZA_CORSIE;
                         pthread_create(&threadProiettileNemico[i], NULL, &movimentoProiettileNemico, &proiettileNemico[i]);
                     }
+                    pthread_mutex_unlock(&mutex);
                 }
                 // altrimenti, se non è presente un nemico stampo solamente il tronco
                 else
@@ -404,7 +405,7 @@ bool areaGioco(Avvio info)
                 for (j = 0; j < NUMERO_PROIETTILI; j++)
                 {
                     pthread_mutex_lock(&mutex);
-                    if (proiettiliVeicoli(proiettilino[j].proiettile, proiettileNemico, macchina[i].veicolo, LARGHEZZA_MACCHINA, hitProiettile, threadProiettileNemico))
+                    if (proiettiliVeicoli(proiettilino[j].proiettile, proiettileNemico, macchina[i].veicolo, LARGHEZZA_MACCHINA, hitProiettile, threadProiettileNemico, info.difficolta))
                         proiettilino[j].proiettile = uccidiProiettile(proiettilino[j].proiettile, threadProiettile[j]);
                     pthread_mutex_unlock(&mutex);
                 }
@@ -454,7 +455,7 @@ bool areaGioco(Avvio info)
                 for (j = 0; j < NUMERO_PROIETTILI; j++)
                 {
                     pthread_mutex_lock(&mutex);
-                    if (proiettiliVeicoli(proiettilino[j].proiettile, proiettileNemico, camion[i].veicolo, LARGHEZZA_CAMION, hitProiettile, threadProiettileNemico))
+                    if (proiettiliVeicoli(proiettilino[j].proiettile, proiettileNemico, camion[i].veicolo, LARGHEZZA_CAMION, hitProiettile, threadProiettileNemico, info.difficolta))
                         proiettilino[j].proiettile = uccidiProiettile(proiettilino[j].proiettile, threadProiettile[j]);
                     pthread_mutex_unlock(&mutex);
                 }
@@ -497,6 +498,7 @@ bool areaGioco(Avvio info)
             for (i = 0; i < MAX_PROIETTILI_NEMICI; i++)
             {
 
+                pthread_mutex_lock(&mutex);
                 /* per ognuno dei proiettili nemici controllo che non collida con il proiettile della rana,
                 e nel caso li distruggo entrambi*/
                 for (j = 0; j < NUMERO_PROIETTILI; j++)
@@ -517,17 +519,24 @@ bool areaGioco(Avvio info)
                     pthread_cancel(threadProiettileNemico[i]);
                     hitProiettile[i] = true;
                 }
+                pthread_mutex_unlock(&mutex);
             }
 
             // stampo i proiettili nemici
             for (i = ZERO; i < NUMERO_NEMICI + info.difficolta; i++)
             { // se hanno colpito qualcosa non vengono printati
+                pthread_mutex_lock(&mutex);
                 if (!hitProiettile[i])
                     stampaProiettili(finestraGioco, tronco, nemico, proiettileNemico[i].coordinate, info.difficolta);
+                pthread_mutex_unlock(&mutex);
             }
             for (i = ZERO; i < NUMERO_NEMICI + info.difficolta; i++)
-                hitProiettile[i] = false;
-
+            {
+                pthread_mutex_lock(&mutex);
+                if (proiettileNemico[i].coordinate.x > ALTEZZA_SCHERMO + info.difficolta * 6)
+                    hitProiettile[i] = false;
+                pthread_mutex_unlock(&mutex);
+            }
             // controllo se i proiettili nemici sono in movimento e nel caso li stampo
             for (i = 0; i < NUMERO_PROIETTILI; i++)
                 stampaProiettili(finestraGioco, tronco, nemico, proiettilino[i].proiettile.coordinate, info.difficolta);

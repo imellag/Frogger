@@ -5,8 +5,8 @@
 // sprite dei veicoli verso destra e verso sinistra
 char spriteMacchine[ALTEZZA_RANA][LARGHEZZA_MACCHINA] = {" /^\\_", "| __ |", "o   o"};
 char spriteMacchineContrario[ALTEZZA_RANA][LARGHEZZA_MACCHINA] = {" _/^\\", "| __ |", " o   o"};
-char spriteCamion[ALTEZZA_RANA][LARGHEZZA_CAMION] = {"/_______/^\\_ ", "|_______|___|", " O O O   O O"};
-char spriteCamionContrario[ALTEZZA_RANA][LARGHEZZA_CAMION] = {" _/^\\_______\\", "|___|_______|", " O O   O O O"};
+char spriteCamion[ALTEZZA_RANA][LARGHEZZA_CAMION] = {"/____/^\\_ ", "|____|___|", " O O  O O"};
+char spriteCamionContrario[ALTEZZA_RANA][LARGHEZZA_CAMION] = {" _/^\\____\\", "|___|____|", " O O  O O"};
 
 void funzVeicoli(int p[], int gameDifficulty, int pVeicoli[])
 {

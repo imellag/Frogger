@@ -128,7 +128,7 @@ enum coloriProiettile
 #define MAX_TRONCHI 5
 
 // dimensioni camion e numero di camion
-#define LARGHEZZA_CAMION 13
+#define LARGHEZZA_CAMION 10
 #define NUMERO_CAMION 3
 #define MAX_CAMION 5
 

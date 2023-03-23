@@ -200,14 +200,14 @@ bool pausaeNuovaPartita(WINDOW *finestraGioco, int chiamata)
                         event.y >= 21 + INIZIO_ALTEZZA_FINESTRA && event.y <= 26 + INIZIO_ALTEZZA_FINESTRA)
                     {
                         pthread_mutex_unlock(&mutex);
-                        return false;
+                        return true;
                     }
 
                     else if (event.x >= 73 + INIZIO_LARGHEZZA_FINESTRA && event.x <= 109 + INIZIO_LARGHEZZA_FINESTRA &&
                              event.y >= 21 + INIZIO_ALTEZZA_FINESTRA && event.y <= 26 + INIZIO_ALTEZZA_FINESTRA)
                     {
                         pthread_mutex_unlock(&mutex);
-                        return true;
+                        return false;
                     }
                 }
             }
@@ -240,26 +240,6 @@ Oggetto uccidiProiettile(Oggetto proiettile, pthread_t threadProiettile)
     return proiettile;
 }
 
-time_t spawnNemico(time_t fine_nemico, time_t inizio_nemico, int difficolta, bool sulTronco,
-                   bool nemico[], Oggetto tronchino[], time_t inizio_proiettile[], Oggetto rana)
-{
-
-    int contaNemici = 0;
-    int i;
-    int troncoNemico = 0;
-}
-
-Oggetto controlloCollisioneVeicoliProiettile(int i, Oggetto proiettilino[], Oggetto proiettileNemico[], Oggetto macchinina[], bool hitProiettile[], pthread_t threadProiettile, pthread_t threadProiettileNemico[])
-{
-    int j;
-    for (j = 0; j < NUMERO_PROIETTILI; j++)
-    {
-        if (proiettiliVeicoli(proiettilino[j], proiettileNemico, macchinina[i], LARGHEZZA_MACCHINA, hitProiettile, threadProiettileNemico))
-            proiettilino[j] = uccidiProiettile(proiettilino[j], threadProiettile);
-    }
-
-    return proiettilino[j];
-}
 
 bool controlloTaneChiuse(bool arrayTane[])
 {

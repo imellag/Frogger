@@ -27,7 +27,7 @@ bool controlloCollisioniProiettili(Coordinate proiettile, Coordinate proiettileN
 
 bool controlloCollisioniProiettiliAuto(Coordinate proiettile, Oggetto veicolo, int larghezza)
 {
-    if (veicolo.velocita < ZERO)
+    if (veicolo.velocita < 0)
     {
         if (proiettile.x <= veicolo.coordinate.x &&
             proiettile.x >= veicolo.coordinate.x - larghezza &&
@@ -47,18 +47,19 @@ bool controlloCollisioniProiettiliAuto(Coordinate proiettile, Oggetto veicolo, i
     return false;
 }
 
-
-bool proiettiliVeicoli(Oggetto proiettile, Oggetto proiettileNemico[], Oggetto veicolo, int larghezza, bool hitProiettile[], pthread_t threadProiettileNemico[])
+bool proiettiliVeicoli(Oggetto proiettile, Oggetto proiettileNemico[], Oggetto veicolo, int larghezza, bool hitProiettile[], pthread_t threadProiettileNemico[],int difficolta)
 {
     int j;
 
-    // DA RIVEDERE
-    for (j = ZERO; j < MAX_TRONCHI; j++)
+
+    for (j = 0; j < NUMERO_NEMICI+difficolta; j++)
     {
         if (controlloCollisioniProiettiliAuto(proiettileNemico[j].coordinate, veicolo, larghezza))
         {
             hitProiettile[j] = true;
             pthread_cancel(threadProiettileNemico[j]);
+            proiettileNemico[j].coordinate.x = FUORI_MAPPA - 2;
+            proiettileNemico[j].coordinate.y = FUORI_MAPPA - 2;
         }
     }
     if (controlloCollisioniProiettiliAuto(proiettile.coordinate, veicolo, larghezza))
