@@ -29,6 +29,7 @@ _Bool checkCoordinate(int posizione, int coordinata_da_checkare, int intorni);
 // creo il processo del tempo
 void funzTempo(int pOrologio[]);
 
+// manda un segnale ogni secondo per gestire il timer
 void orologio(int pOrologio[]);
 
 // riporta la rana alla posizione di partenza dopo aver perso una vita

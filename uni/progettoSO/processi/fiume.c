@@ -6,7 +6,6 @@
 char spriteTronchi[ALTEZZA_RANA][LARGHEZZA_TRONCHI] = {"<~~~~~~~~~~~~~>", "<~~~~~~~~~~~~~>", "<~~~~~~~~~~~~~>"};
 char spriteNemicosulTronco[ALTEZZA_NEMICO][LARGHEZZA_TRONCHI] = {"<~~~~~o\\/o~~~~>", "<~~~~~:||:~~~~>", "<~~~~~./\\.~~~~>"};
 
-
 int funzTronchi(int p[DUE], int gameDifficulty)
 {
     int i;
@@ -15,9 +14,11 @@ int funzTronchi(int p[DUE], int gameDifficulty)
     int velocita[MAX_TRONCHI];
     int spostamento;
 
+    // array che tiene le direzioni del tronco
     for (i = ZERO; i < NUMERO_TRONCHI + gameDifficulty; i++)
         velocita[i] = UNO;
 
+    // la direzione delle corsie la genero casualmente
     spostamento = rand() % DUE;
 
     if (spostamento == 0)
@@ -25,6 +26,7 @@ int funzTronchi(int p[DUE], int gameDifficulty)
     else
         spostamento = 1;
 
+    // genero i processi dei tronchi
     for (i = ZERO; i < NUMERO_TRONCHI + gameDifficulty; i++)
     {
         tronco[i] = fork();
@@ -40,14 +42,19 @@ int funzTronchi(int p[DUE], int gameDifficulty)
     }
 }
 
+// funzione che gestisce il movimento del tronco
 void funzTronco(int p[DUE], int numeroTronco, int velocita, int gameDifficulty)
 {
     Oggetto tronco;
 
+    // uso come seme il il pid per generare velocità differenti
     srand(getpid());
 
+    // gli assegno un usleep randomica che corrisponde alla velocità con cui andrà il tronco
+    //(più è alta la difficoltà e più vanno veloci)
     int tempoRandom = TEMPO_TRONCO_MIN + rand() % (TEMPO_TRONCO_MIN + TEMPO_TRONCO_MAX) - 2500 * gameDifficulty;
 
+    // inzializzo le coordinate e gli altri campi
     tronco.coordinate.y = INIZIO_FIUME + numeroTronco * ALTEZZA_TRONCHI;
     tronco.coordinate.x = rand() % (LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI);
     tronco.id = TRONCO0 + numeroTronco;
@@ -61,9 +68,9 @@ void funzTronco(int p[DUE], int numeroTronco, int velocita, int gameDifficulty)
         write(p[WRITE], &tronco, sizeof(Oggetto));
 
         tronco.coordinate.x += tronco.velocita;
-
+        // se arriva al limite dello shcermo cambia direzione
         if (controlloLimitiTronco(tronco.coordinate))
-            tronco.velocita = tronco.velocita * -UNO;
+            tronco.velocita = tronco.velocita * -1;
         usleep(tempoRandom);
     }
 }
@@ -98,6 +105,7 @@ void stampaNemico(WINDOW *finestraGioco, Coordinate nemico)
     wattroff(finestraGioco, COLOR_PAIR(COLORE_NEMICI_TRONCO));
 }
 
+// funzione per generare i proiettili nemici
 void funzProiettileNemico(Coordinate tronco, int p[], int i, int gameDifficulty, bool audio)
 {
     pid_t proiettileNemico;
@@ -115,9 +123,9 @@ void funzProiettileNemico(Coordinate tronco, int p[], int i, int gameDifficulty,
         movimentoProiettileNemico(tronco, p, i, gameDifficulty);
         exit(EXIT_FAILURE);
     }
-   
 }
 
+// funzione che gestisce il movimento dei proiettili nemici
 void movimentoProiettileNemico(Coordinate tronco, int p[], int i, int gameDifficulty)
 {
     Oggetto proiettile;

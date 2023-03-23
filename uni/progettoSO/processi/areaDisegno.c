@@ -3,6 +3,9 @@
 
 char spriteTana[TRE][LARGHEZZA_TANE] = {"     _____     ", "    /     \\    ", "___/       \\___"};
 
+/* per il prato, l'autostrada, il marciapiede, il fiume e le tane stampiamo degli spazi del colore dello sfondo 
+che poi vengono eventualmente sovrascritti con il colore degli oggetti che ci passano sopra */
+
 void funzPrato(WINDOW *finestraGioco, int gameDifficulty)
 {
     int i, j;
@@ -67,7 +70,9 @@ void funzFiume(WINDOW *finestraGioco, int gameDifficulty)
 void stampaPunteggio(WINDOW *finestraGioco, int punteggio)
 {
     wattron(finestraGioco, COLOR_PAIR(COLORE_SCRITTE_INFO));
-    mvwprintw(finestraGioco, DUE, LARGHEZZA_SCHERMO / DUE - QUATTRO, "Score: %d", punteggio);
+    /* lo voglio stampare al centro dello schermo, quindi larghezza / 2, poi prendo la larghezza della scritta (in questo caso 5), la divido 
+    per due (in questo caso usiamo 2) e la sottraggo alle coordinate, in modo che sia perfettamente centrata */
+    mvwprintw(finestraGioco, DUE, LARGHEZZA_SCHERMO / DUE - TRE, "Score: %d", punteggio);
     wattroff(finestraGioco, COLOR_PAIR(COLORE_SCRITTE_INFO));
 }
 
@@ -100,7 +105,7 @@ void stampaTane(WINDOW *finestraGioco, bool arrayTane[])
     for (i = 0; i < NUMERO_TANE; i++)
     {
         if (arrayTane[i] == false)
-        { // tana ancora aperta
+        { // tana ancora aperta, quindi la stampo
             for (j = 0; j < ALTEZZA_TANE; j++)
             {
                 for (k = 0; k < LARGHEZZA_TANE; k++)
@@ -110,7 +115,7 @@ void stampaTane(WINDOW *finestraGioco, bool arrayTane[])
             }
         }
         else
-        {
+        { // se la tana è chiusa stampo solamente degli underscore
             for (k = 0; k < LARGHEZZA_TANE; k++)
             {
                 mvwprintw(finestraGioco, pos.y + ALTEZZA_TANE - UNO, pos.x + k, "_");
@@ -119,7 +124,7 @@ void stampaTane(WINDOW *finestraGioco, bool arrayTane[])
 
         pos.x += LARGHEZZA_TANE;
 
-        // ripeto solo per le 4 tane: l'ultima avrà diversa larghezza perché è più vicina al bordo dello schermo
+        // ripeto solo per le prime 4 tane: l'ultima avrà diversa larghezza perché è più vicina al bordo dello schermo
         if (i != NUMERO_TANE - UNO)
         {
             for (k = 0; k < LARGHEZZA_TANE; k++)

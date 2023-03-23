@@ -47,32 +47,8 @@ bool controlloCollisioniProiettiliAuto(Coordinate proiettile, Oggetto veicolo, i
     return false;
 }
 
-void controlloCollisioniMacchine(Oggetto macchinina[], Oggetto ranocchio, int *vite, Oggetto camioncino[], int gameDifficulty)
-{
-    int i, invincibilita = CINQUE;
-    for (i = 0; i < CINQUE; i++)
-    {
-        if (invincibilita-- <= 0 && macchinina[i].coordinate.x < ranocchio.coordinate.x && (macchinina[i].coordinate.x + LARGHEZZA_MACCHINA) > ranocchio.coordinate.x && macchinina[i].coordinate.y == ranocchio.coordinate.y)
-        {
-            invincibilita = CINQUE;
-            (*vite)--;
-         //   posizioneInizialeRana(pRana, ranocchio, gameDifficulty);
-            clear();
-        }
-    }
-    for (i = ZERO; i < TRE; i++)
-    {
-        if (invincibilita-- <= ZERO && camioncino[i].coordinate.x < ranocchio.coordinate.x && (camioncino[i].coordinate.x + LARGHEZZA_CAMION) > ranocchio.coordinate.x && camioncino[i].coordinate.y == ranocchio.coordinate.y)
-        {
-            invincibilita = CINQUE;
-            (*vite)--;
-           // posizioneInizialeRana(pRana, ranocchio, gameDifficulty);
-            clear();
-        }
-    }
-}
 
-bool proiettiliVeicoli(Oggetto proiettile, Oggetto proiettileNemico[], Oggetto veicolo, int larghezza, bool hitProiettile[])
+bool proiettiliVeicoli(Oggetto proiettile, Oggetto proiettileNemico[], Oggetto veicolo, int larghezza, bool hitProiettile[], pthread_t threadProiettileNemico[])
 {
     int j;
 
@@ -80,7 +56,10 @@ bool proiettiliVeicoli(Oggetto proiettile, Oggetto proiettileNemico[], Oggetto v
     for (j = ZERO; j < MAX_TRONCHI; j++)
     {
         if (controlloCollisioniProiettiliAuto(proiettileNemico[j].coordinate, veicolo, larghezza))
+        {
             hitProiettile[j] = true;
+            pthread_cancel(threadProiettileNemico[j]);
+        }
     }
     if (controlloCollisioniProiettiliAuto(proiettile.coordinate, veicolo, larghezza))
         return true;

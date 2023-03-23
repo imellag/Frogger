@@ -26,7 +26,7 @@ int controlloLimitiRana(Coordinate entita, int gameDifficulty)
                 break;
             }
         }
-        if (flag==-1)
+        if (flag == -1)
             flag = SEI;
     }
 
@@ -36,6 +36,7 @@ int controlloLimitiRana(Coordinate entita, int gameDifficulty)
 
     return flag;
 }
+
 int controlloLimitiMacchina(Coordinate entita)
 {
 
@@ -49,6 +50,7 @@ int controlloLimitiMacchina(Coordinate entita)
 
     return flag;
 }
+
 int controlloLimitiCamion(Coordinate entita)
 {
 
@@ -75,7 +77,7 @@ int controlloLimitiProiettile(Coordinate entita)
 int controlloLimitiTronco(Coordinate entita)
 {
     bool flag = false;
-    if (entita.x < ZERO || entita.x >= LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI)
+    if (entita.x < 0 || entita.x >= LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI)
         flag = true;
 
     return flag;
@@ -88,10 +90,10 @@ int controlloRanaTronco(Coordinate rana, Oggetto tronco[])
     bool flag = false;
     int i, j;
 
-    for (i = ZERO; i < TRE; i++)
+    for (i = 0; i < ALTEZZA_TRONCHI; i++)
     {
         flag = false;
-        for (j = ZERO; j < LARGHEZZA_RANA; j++)
+        for (j = 0; j < LARGHEZZA_RANA; j++)
         {
             if (rana.x + j == tronco[i].coordinate.x + j && rana.y == tronco[i].coordinate.y)
                 flag = true;
@@ -125,7 +127,6 @@ Oggetto posizioneInizialeRana(Oggetto rana, int gameDifficulty)
 {
     rana.coordinate.x = ZERO;
     rana.coordinate.y = POSIZIONE_INIZIALE_RANA_Y + (gameDifficulty * 6);
-    // write(pRana[WRITE], &rana, sizeof(Oggetto));
     return rana;
 }
 
@@ -209,7 +210,7 @@ void stampaProiettili(WINDOW *finestraGioco, Oggetto arrayTronchi[], bool nemico
         soloStampa(finestraGioco, proiettile, COLORE_SFONDO_AUTOSTRDA);
     else if (controlloPosizione(proiettile, false, gameDifficulty) == COLORE_MARCIAPIEDE)
         soloStampa(finestraGioco, proiettile, COLORE_SFONDO_MARCIAPIEDE);
-    else if (controlloPosizione(proiettile, false, gameDifficulty) == COLOR_GREEN)
+    else if (controlloPosizione(proiettile, false, gameDifficulty) == COLORE_PRATO)
         soloStampa(finestraGioco, proiettile, COLORE_SFONDO_PRATO);
 }
 

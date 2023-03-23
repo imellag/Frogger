@@ -15,6 +15,8 @@ bool areaGioco(Avvio info)
 {
     srand(time(NULL));
 
+    int i, j, k = 0;
+
     int differenza, risultato, direzione, contaNemici;
 
     int troncoNemico, vite;
@@ -24,8 +26,6 @@ bool areaGioco(Avvio info)
     bool buffer = false;
     bool pausa = false;
     bool partitaFinita;
-
-    char nomeUtente[MAX_NOMI];
     bool coloreTroncoRana = false;
     bool coloreTroncoProiettile = false;
     bool coloreNemicoProiettile = false;
@@ -43,7 +43,6 @@ bool areaGioco(Avvio info)
 
     Oggetto tempo;
 
-    int i, j;
     Oggetto pacchetto;
     Proiettile proiettilino[NUMERO_PROIETTILI];
     Coordinate nuoveCoordinate;
@@ -88,16 +87,8 @@ bool areaGioco(Avvio info)
     clear();
     refresh();
 
-    for (i = ZERO; i < NUMERO_MACCHINE + 3 * info.difficolta; i++)
-    {
-        bufferColori = coloreVeicolo();
-        init_color(COLORE_MACCHINA0 + i, bufferColori.r, bufferColori.g, bufferColori.b);
-    }
-    for (i = ZERO; i < NUMERO_CAMION + 3 * info.difficolta; i++)
-    {
-        bufferColori = coloreVeicolo();
-        init_color(COLORE_CAMION0 + i, bufferColori.r, bufferColori.g, bufferColori.b);
-    }
+    // per ogni veicolo genero un colore casuale
+    creaColoriRandom(info.difficolta);
 
     /* Lascio due righe vuote in basso per scrivere il tempo/punteggio ecc. dopo.
     Quindi dato che l'altezza è il numero totale di "pixel" ma effettivamente poi
@@ -173,29 +164,7 @@ bool areaGioco(Avvio info)
 
     int velocitaCorsie[MAX_CORSIE];
     int direzioneCorsie[MAX_CORSIE];
-    Coordinate inizioVeicoli[MAX_CAMION + MAX_MACCHINE];
     j = 0;
-
-    for (i = 0; i < NUMERO_MACCHINE + NUMERO_CAMION + (info.difficolta * 2); i++)
-    {
-        do
-        {
-            inizioVeicoli[i].x = rand() % LARGHEZZA_SCHERMO;
-            inizioVeicoli[i].y = rand() % (NUMERO_CORSIE + info.difficolta);
-        } while (controlloInizioCoordinateCorsie(inizioVeicoli, i));
-
-        if (i < (NUMERO_MACCHINE + info.difficolta))
-        {
-            macchina[i].veicolo.coordinate.x = inizioVeicoli[i].x;
-            macchina[i].veicolo.coordinate.y = INIZIO_AUTOSTRADA + inizioVeicoli[i].y * 3 + info.difficolta * 3;
-        }
-        else
-        {
-            camion[j].veicolo.coordinate.x = inizioVeicoli[i].x;
-            camion[j].veicolo.coordinate.y = INIZIO_AUTOSTRADA + inizioVeicoli[i].y * 3 + info.difficolta * 3;
-            j++;
-        }
-    }
 
     for (i = 0; i < NUMERO_CORSIE + info.difficolta; i++)
     {
@@ -209,8 +178,14 @@ bool areaGioco(Avvio info)
     for (i = 0; i < NUMERO_MACCHINE + info.difficolta; i++)
     {
         pthread_mutex_lock(&mutex);
-        macchina[i].direzioneCorsia = direzioneCorsie[inizioVeicoli[i].y];
-        macchina[i].velocitaCorsia = velocitaCorsie[inizioVeicoli[i].y];
+        corsia = rand() % (NUMERO_CORSIE + info.difficolta);
+        macchina[i].veicolo.coordinate.y = INIZIO_AUTOSTRADA + info.difficolta * 3 + corsia * 3;
+        macchina[i].direzioneCorsia = direzioneCorsie[corsia];
+        macchina[i].velocitaCorsia = velocitaCorsie[corsia];
+        if (direzioneCorsie[corsia] < 0)
+            macchina[i].veicolo.coordinate.x = -LARGHEZZA_CAMION;
+        else
+            macchina[i].veicolo.coordinate.x = LARGHEZZA_CAMION + LARGHEZZA_SCHERMO;
         macchina[i].veicolo.difficolta = info.difficolta;
         macchina[i].veicolo.id = MACCHINA0;
         pthread_mutex_unlock(&mutex);
@@ -219,8 +194,14 @@ bool areaGioco(Avvio info)
     for (i = 0; i < NUMERO_CAMION + info.difficolta; i++)
     {
         pthread_mutex_lock(&mutex);
-        camion[i].direzioneCorsia = direzioneCorsie[inizioVeicoli[i + NUMERO_MACCHINE + info.difficolta].y];
-        camion[i].velocitaCorsia = velocitaCorsie[inizioVeicoli[i + NUMERO_MACCHINE + info.difficolta].y];
+        corsia = rand() % (NUMERO_CORSIE + info.difficolta);
+        camion[i].veicolo.coordinate.y = INIZIO_AUTOSTRADA + info.difficolta * 3 + corsia * 3;
+        camion[i].direzioneCorsia = direzioneCorsie[corsia];
+        camion[i].velocitaCorsia = velocitaCorsie[corsia];
+        if (direzioneCorsie[corsia] < 0)
+            camion[i].veicolo.coordinate.x = -LARGHEZZA_CAMION;
+        else
+            camion[i].veicolo.coordinate.x = LARGHEZZA_CAMION + LARGHEZZA_SCHERMO;
         camion[i].veicolo.difficolta = info.difficolta;
         camion[i].veicolo.id = CAMION0;
         pthread_mutex_unlock(&mutex);
@@ -272,6 +253,14 @@ bool areaGioco(Avvio info)
                 offset++;
                 if (offset == NUMERO_PROIETTILI)
                     offset = 0;
+            }
+
+            if (rana.id == PAUSA)
+            {
+                partitaFinita = pausaeNuovaPartita(finestraGioco, 1);
+                pthread_mutex_lock(&mutex);
+                rana.id = RANA;
+                pthread_mutex_unlock(&mutex);
             }
             // stampa dei colori di background
             funzMarciapiede(finestraGioco, info.difficolta);
@@ -415,29 +404,23 @@ bool areaGioco(Avvio info)
                 for (j = 0; j < NUMERO_PROIETTILI; j++)
                 {
                     pthread_mutex_lock(&mutex);
-                    if (proiettiliVeicoli(proiettilino[j].proiettile, proiettileNemico, macchina[i].veicolo, LARGHEZZA_MACCHINA, hitProiettile))
+                    if (proiettiliVeicoli(proiettilino[j].proiettile, proiettileNemico, macchina[i].veicolo, LARGHEZZA_MACCHINA, hitProiettile, threadProiettileNemico))
                         proiettilino[j].proiettile = uccidiProiettile(proiettilino[j].proiettile, threadProiettile[j]);
                     pthread_mutex_unlock(&mutex);
                 }
                 pthread_mutex_lock(&mutex);
                 stampaMacchina(finestraGioco, macchina[i].veicolo, i);
-                pthread_mutex_unlock(&mutex);
 
                 // modifico nel thread l'id del veicolo e se viene modificato
                 // vuol dire che il veicolo è uscito dalla corsia quindi
                 // gli viene assegnata una nuova corsia con un spazio libero
                 if (macchina[i].veicolo.id == MACCHINA0_OUT)
                 {
-                    j = 0;
-                    // ciclo finchè non trovo una corsia libera
-                    do
-                    {
-                    
-                        corsia = rand() % (NUMERO_CORSIE + info.difficolta);
-                        j++;
-                    } while (CorsiaOccupata(macchina, camion, corsia, info.difficolta) && j<100);
-                    pthread_mutex_lock(&mutex);
 
+                    j = 0;
+
+                    corsia = k % (NUMERO_CORSIE + info.difficolta);
+                    k++;
                     // in base alla direzione lo faccio partire da destra o da sinistra
                     if (direzioneCorsie[corsia] < 0)
                         macchina[i].veicolo.coordinate.x = LARGHEZZA_SCHERMO + LARGHEZZA_CAMION;
@@ -445,12 +428,11 @@ bool areaGioco(Avvio info)
                         macchina[i].veicolo.coordinate.x = -LARGHEZZA_CAMION;
                     // gli assegno la direzione , la velocità e l'altezza scelta della corsia scelta
                     macchina[i].veicolo.coordinate.y = INIZIO_AUTOSTRADA + info.difficolta * 3 + corsia * 3;
-                    macchina[i].direzioneCorsia = direzioneCorsie[corsia];
+                    macchina[i].veicolo.velocita = direzioneCorsie[corsia];
                     macchina[i].velocitaCorsia = velocitaCorsie[corsia];
                     macchina[i].veicolo.id = i;
-                    pthread_mutex_unlock(&mutex);
                 }
-                pthread_mutex_lock(&mutex);
+
                 // controllo se la rana è dentro il range dello sprite della macchina
                 // allora la porto alla alla posizione di partenza e tolgo una vita
                 if (controlloCollisioneOggetti(macchina[i].veicolo, rana.coordinate, LARGHEZZA_MACCHINA))
@@ -472,7 +454,7 @@ bool areaGioco(Avvio info)
                 for (j = 0; j < NUMERO_PROIETTILI; j++)
                 {
                     pthread_mutex_lock(&mutex);
-                    if (proiettiliVeicoli(proiettilino[j].proiettile, proiettileNemico, camion[i].veicolo, LARGHEZZA_CAMION, hitProiettile))
+                    if (proiettiliVeicoli(proiettilino[j].proiettile, proiettileNemico, camion[i].veicolo, LARGHEZZA_CAMION, hitProiettile, threadProiettileNemico))
                         proiettilino[j].proiettile = uccidiProiettile(proiettilino[j].proiettile, threadProiettile[j]);
                     pthread_mutex_unlock(&mutex);
                 }
@@ -496,18 +478,15 @@ bool areaGioco(Avvio info)
                 // gli viene assegnata una nuova corsia con un spazio libero
                 if (camion[i].veicolo.id == MACCHINA0_OUT)
                 {
-                    j = 0;
-                    do
-                    {
-                        corsia = rand() % (NUMERO_CORSIE + info.difficolta);
-                        j++;
-                    } while (CorsiaOccupata(camion, camion, corsia, info.difficolta) && j<100);
+                    corsia = k % (NUMERO_CORSIE + info.difficolta);
+                    k++;
+
                     if (direzioneCorsie[corsia] < 0)
                         camion[i].veicolo.coordinate.x = LARGHEZZA_SCHERMO + LARGHEZZA_CAMION;
                     else
                         camion[i].veicolo.coordinate.x = -LARGHEZZA_CAMION;
                     camion[i].veicolo.coordinate.y = INIZIO_AUTOSTRADA + info.difficolta * 3 + corsia * 3;
-                    camion[i].direzioneCorsia = direzioneCorsie[corsia];
+                    camion[i].veicolo.velocita = direzioneCorsie[corsia];
                     camion[i].velocitaCorsia = velocitaCorsie[corsia];
                     camion[i].veicolo.id = i;
                 }

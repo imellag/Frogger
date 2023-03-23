@@ -11,7 +11,7 @@ void dimensioneFinestra(int maxx, int maxy);
 void stampaVite(WINDOW *finestraGioco, int vite);
 
 // stampa la scritta finale quando il giocatore esaurisce le vite
-void gameOver(WINDOW *finestraGioco);
+void gameOver(WINDOW *finestraGioco, int punteggio);
 
 // stampa la barra del tempo e la aggiorna ogni secondo
 void stampaTempo(WINDOW *finestraGioco, int tempo);
@@ -48,4 +48,7 @@ bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer
 // controlla se l'inizio della corsia generata casualmente è occupato da un altro veicolo
 bool corsiaOccupata(Oggetto macchinina[], Oggetto camioncino[], int corsia, int difficolta);
 
+/* crea un colore random per ogni veicolo e si assicura che questo colore non sia troppo simile a quello dell'autostrada
+ per evitare che le macchine siano poco visibili. Viene chiamata una volta all'inizio della partita e ogni veicolo tiene
+ il suo colore per tutta la durata della partita */
 void creaColoriRandom(int difficolta);

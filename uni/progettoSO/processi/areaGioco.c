@@ -13,6 +13,8 @@ bool areaGioco(Avvio info)
 {
     srand(time(NULL));
 
+    int i, j = 0, k = 0;
+
     int differenza, risultato, direzione, contaNemici, troncoNemico;
     int offset = 0;
     int vite;
@@ -20,23 +22,21 @@ bool areaGioco(Avvio info)
     int corsiaRandom;
     int macchineInCoda = 0;
 
-    bool buffer = false;
+    bool buffer = false; // controllo che ci sia almeno una tana aperta per continuare la partita
     bool pausa = false;
     bool partitaFinita;
-    bool coloreTroncoRana = false;
-    bool coloreTroncoProiettile = false;
-    bool coloreNemicoProiettile = false;
-    bool sulTronco = false;
+    bool coloreTroncoRana = false; // usato quando la rana sale sul tronco per ottenere il colore di sfondo
+
+    bool sulTronco = false; // rana sul tronco
     bool partitaInCorso;
     // variabili utilizzate per far spawnare i nemici e farli sparare al momento giusto
     time_t inizio_nemico, fine_nemico, inizio_proiettile[MAX_TRONCHI], fine_proiettile, inizioInputCorsia, fineInputCorsia;
 
+    // array dei proiettili nemici e variabili usate per ricevere dati dai processi
     Oggetto proiettileNemico[MAX_TRONCHI], ranocchio, vecchiaRana, tempo, pacchetto;
 
-    int i, j = 0, k = 0;
     Oggetto proiettilino[NUMERO_PROIETTILI];
     Coordinate nuoveCoordinate;
-    Colore bufferColori;
 
     bool arrayTane[NUMERO_TANE] = {false};
     bool nemico[MAX_TRONCHI] = {false};
@@ -136,13 +136,14 @@ bool areaGioco(Avvio info)
     le coordinate partono da 0 tolgo 3 alla rana rispetto all'altezza dello schermo
     per centrarla con il marciapiede */
 
+    stampaVite(finestraGioco, vite);
+
     // stampo le varie sezioni dello schermo
     funzMarciapiede(finestraGioco, info.difficolta);
     funzAutostrada(finestraGioco, info.difficolta);
     funzPrato(finestraGioco, info.difficolta);
     funzFiume(finestraGioco, info.difficolta);
     stampaRana(finestraGioco, ranocchio.coordinate, false, info.difficolta);
-    stampaVite(finestraGioco, vite);
 
     // creo tutti i processi della rana, dei veicoli, dei tronchi e del tempo
     funzRana(p, pRana, info.difficolta);
@@ -278,7 +279,7 @@ bool areaGioco(Avvio info)
             }
             // ciclo macchine
 
-            /* ciclo controllARE le collisioni
+            /* ciclo per controllare le collisioni
              con le varie macchine o se la rana è presente sul tronco */
             for (i = 0; i < NUMERO_MACCHINE + info.difficolta; i++)
             {

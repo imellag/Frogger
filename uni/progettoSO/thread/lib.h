@@ -186,9 +186,6 @@ enum coloriProiettile
 // numero massimo di proiettili che la rana può avere contemporaneamente a schermo
 #define NUMERO_PROIETTILI 30
 
-// dimensione massima nome utente
-#define MAX_NOMI 64
-
 // offset per spostare la finestra dello schermo pù al centro
 #define INIZIO_ALTEZZA_FINESTRA 5
 #define INIZIO_LARGHEZZA_FINESTRA 20

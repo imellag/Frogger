@@ -65,7 +65,7 @@ void stampaVite(WINDOW *finestraGioco, int vite)
     wattroff(finestraGioco, COLOR_PAIR(COLORE_SCRITTE_INFO));
 }
 
-void gameOver(WINDOW *finestraGioco)
+void gameOver(WINDOW *finestraGioco, int punteggio)
 {
     int i;
 
@@ -73,6 +73,9 @@ void gameOver(WINDOW *finestraGioco)
 
     for (i = ZERO; i < ALTEZZA_SPRITE; i++)
         mvwprintw(finestraGioco, (ALTEZZA_SCHERMO / DUE - 5) + i, LARGHEZZA_SCHERMO / 2 - 32, "%ls", spriteSconfitta[i]);
+
+    mvwprintw(finestraGioco, 20, LARGHEZZA_SCHERMO / DUE - 12, "Punteggio finale: %d!", punteggio);
+
     wattroff(finestraGioco, COLOR_PAIR(COLORE_VERDE_NERO));
 
     wrefresh(finestraGioco);
@@ -89,7 +92,7 @@ void vittoria(WINDOW *finestraGioco, int punteggio)
     for (i = ZERO; i < ALTEZZA_SPRITE; i++)
         mvwprintw(finestraGioco, (ALTEZZA_SCHERMO / DUE - 10) + i, LARGHEZZA_SCHERMO / 2 - 31, "%ls", spriteVittoria[i]);
 
-    mvwprintw(finestraGioco, 16, LARGHEZZA_SCHERMO / DUE - 10, "Punteggio finale: %d!", punteggio);
+    mvwprintw(finestraGioco, 16, LARGHEZZA_SCHERMO / DUE - 12, "Punteggio finale: %d!", punteggio);
 
     wattroff(finestraGioco, COLOR_PAIR(COLORE_VERDE_NERO));
 
@@ -318,7 +321,7 @@ bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer
         wclear(finestraGioco);
 
         if (vite == ZERO || partitaFinita)
-            gameOver(finestraGioco);
+            gameOver(finestraGioco, punteggio);
 
         else if (buffer == false)
             vittoria(finestraGioco, punteggio);
@@ -331,6 +334,7 @@ bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer
         if (!riniziaPartita)
         {
             wclear(finestraGioco);
+            wrefresh(finestraGioco);
             schermataFinale(finestraGioco);
         }
         delwin(finestraGioco);

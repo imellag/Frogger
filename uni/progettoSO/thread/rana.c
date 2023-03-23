@@ -82,15 +82,19 @@ void *funzProiettile(void *_proiettile)
     proiettile->proiettile.id = PROIETTILE0 + proiettile->numeroProiettile;
     proiettile->proiettile.coordinate.x = proiettile->rana.coordinate.x + DUE;
     proiettile->proiettile.coordinate.y = proiettile->rana.coordinate.y - UNO;
+    pthread_mutex_unlock(&mutex);
     while (true)
     {
+
         if (controlloLimitiProiettile(proiettile->proiettile.coordinate))
         {
+            pthread_mutex_lock(&mutex);
             proiettile->proiettile.coordinate.x = FUORI_MAPPA;
             proiettile->proiettile.coordinate.y = FUORI_MAPPA;
+            pthread_mutex_unlock(&mutex);
             break;
         }
-
+        pthread_mutex_lock(&mutex);
         proiettile->proiettile.coordinate.y--;
         pthread_mutex_unlock(&mutex);
 

@@ -1,6 +1,7 @@
 #include "lib.h"
 #include"autostrada.h"
 
+// controlla se la rana è entrata in una tana oppure ha provato a uscire dallo schermo
 int controlloLimitiRana(Coordinate entita,int gameDifficulty);
 
 /* funzione generale utilizzata per diversi oggetti nel gioco, riconosciuti tramite la variabile tipo,
@@ -21,9 +22,9 @@ void colori(Avvio info);
 // in base alla posizione della rana o del proiettile stampa i colori sottostanti
 int controlloPosizione(Coordinate oggetto, bool coloriFiume, int gameDifficulty);
 
+/* controlla le coordinate della rana quando entra in una tana e restituisce un booleano che indica
+ se la rana è entrata nella tana alla quale è stata aumentata la hitbox di un numero pari agli intorni */
 _Bool checkCoordinate(int posizione, int coordinata_da_checkare, int intorni);
-
-void funzTempo();
 
 void* orologio(void* _tempo);
 

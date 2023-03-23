@@ -11,23 +11,26 @@ void *movimentoVeicolo(void *_veicolo)
 {
     parametriVeicolo *veicolo = (parametriVeicolo *)_veicolo;
     pthread_mutex_lock(&mutex);
+    int tempoRandom = rand() % 15;
+    pthread_mutex_unlock(&mutex);
+    sleep(tempoRandom);
+    pthread_mutex_lock(&mutex);
     int velocitaRandom = veicolo->velocitaCorsia;
     int corsia;
-    int tempoRandom = rand() % MAX_ATTESA;
 
     veicolo->veicolo.velocita = veicolo->direzioneCorsia;
-    pthread_mutex_unlock(&mutex);
 
+    pthread_mutex_unlock(&mutex);
     while (true)
     {
 
-        do
+        while (!controlloLimitiMacchina(veicolo->veicolo.coordinate))
         {
             pthread_mutex_lock(&mutex);
             velocitaRandom = veicolo->velocitaCorsia;
 
-            // in base alla direzione del veicolo mi sposto 
-            //verso sinistra o verso destra
+            // in base alla direzione del veicolo mi sposto
+            // verso sinistra o verso destra
             if (veicolo->veicolo.velocita < ZERO)
                 veicolo->veicolo.coordinate.x--;
             else
@@ -35,8 +38,7 @@ void *movimentoVeicolo(void *_veicolo)
 
             pthread_mutex_unlock(&mutex);
             usleep(velocitaRandom);
-
-        } while (!controlloLimitiMacchina(veicolo->veicolo.coordinate));
+        }
         pthread_mutex_lock(&mutex);
         veicolo->veicolo.id = MACCHINA0_OUT;
         pthread_mutex_unlock(&mutex);
