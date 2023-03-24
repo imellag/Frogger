@@ -240,7 +240,6 @@ Oggetto uccidiProiettile(Oggetto proiettile, pthread_t threadProiettile)
     return proiettile;
 }
 
-
 bool controlloTaneChiuse(bool arrayTane[])
 {
     int i;
@@ -259,7 +258,8 @@ bool controlloTaneChiuse(bool arrayTane[])
 }
 
 bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int punteggio,
-                 int difficolta, bool *partitaInCorso, bool partitaFinita)
+                 int difficolta, bool *partitaInCorso, bool partitaFinita, pthread_t threadRana, pthread_t threadProiettile[],
+                 pthread_t threadTronchi[], pthread_t threadMacchine[], pthread_t threadCamion[], pthread_t threadTempo, pthread_t threadProiettileNemico[])
 {
     int i;
     bool riniziaPartita;
@@ -286,6 +286,22 @@ bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int
             schermataFinale(finestraGioco);
         }
         delwin(finestraGioco);
+
+        for (i = 0; i < NUMERO_TRONCHI + difficolta; i++)
+            pthread_cancel(threadTronchi[i]);
+
+        for (i = 0; i < NUMERO_CAMION + difficolta; i++)
+            pthread_cancel(threadCamion[i]);
+
+        for (i = 0; i < NUMERO_MACCHINE + difficolta; i++)
+            pthread_cancel(threadMacchine[i]);
+
+        for (i = 0; i < NUMERO_NEMICI + difficolta; i++)
+            pthread_cancel(threadProiettileNemico[i]);
+
+        pthread_cancel(threadTempo);
+        pthread_cancel(threadRana);
+
         endwin();
     }
 

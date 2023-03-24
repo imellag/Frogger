@@ -11,7 +11,7 @@ void dimensioneFinestra(int maxx, int maxy);
 void stampaVite(WINDOW *finestraGioco, int vite);
 
 // stampa la scritta finale quando il giocatore esaurisce le vite
-void gameOver(WINDOW *finestraGioco,int punteggio);
+void gameOver(WINDOW *finestraGioco, int punteggio);
 
 // stampa la barra del tempo e la aggiorna ogni secondo
 void stampaTempo(WINDOW *finestraGioco, int tempo);
@@ -25,8 +25,6 @@ Oggetto morteRana(WINDOW *finestraGioco, int *vite, Oggetto ranocchio, int diffi
 // crea il processo di un proiettile della rana e riproduce il suono dello sparo
 void creaProiettile(Oggetto ranocchio, int *offset);
 
-
-
 /* stampa l'interfaccia della pausa e della fine della partita. Prende l'input del mouse dell'utente e lo restituisce
 alla funzione chiamante che poi lo gestisce */
 bool pausaeNuovaPartita(WINDOW *finestraGioco, int chiamata);
@@ -38,16 +36,18 @@ Oggetto uccidiProiettile(Oggetto proiettile, pthread_t threadProiettile);
 void schermataFinale(WINDOW *finestraGioco);
 
 // time_t spawnNemico(time_t fine_nemico, time_t inizio_nemico, int difficolta,bool sulTronco, bool nemico[],Oggetto tronchino[],time_t inizio_proiettile[],Oggetto rana);
-Oggetto controlloCollisioneVeicoliProiettile(int i, Oggetto proiettilino[], Oggetto proiettileNemico[], Oggetto macchinina[], bool hitProiettile[], pthread_t threadProiettile,pthread_t threadProiettileNemico[]);
+Oggetto controlloCollisioneVeicoliProiettile(int i, Oggetto proiettilino[], Oggetto proiettileNemico[], Oggetto macchinina[], bool hitProiettile[], pthread_t threadProiettile, pthread_t threadProiettileNemico[]);
 
 // controlla se c'è almeno una tana ancora aperta
 bool controlloTaneChiuse(bool arrayTane[]);
 
 // gestisce le casistiche di fine partita
-bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int punteggio, int difficolta, bool *partitaInCorso, bool partitaFinita);
+bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int punteggio,
+                 int difficolta, bool *partitaInCorso, bool partitaFinita, pthread_t threadRana, pthread_t threadProiettile[],
+                 pthread_t threadTronchi[], pthread_t threadMacchine[], pthread_t threadCamion[], pthread_t threadTempo, pthread_t threadProiettileNemico[]);
 
-// controlla se l'inizio della corsia generata casualmente è occupato da un altro veicolo
-bool CorsiaOccupata(parametriVeicolo macchinina[], parametriVeicolo camioncino[], int corsia, int difficolta);
+    // controlla se l'inizio della corsia generata casualmente è occupato da un altro veicolo
+    bool CorsiaOccupata(parametriVeicolo macchinina[], parametriVeicolo camioncino[], int corsia, int difficolta);
 
 /* crea un colore random per ogni veicolo e si assicura che questo colore non sia troppo simile a quello dell'autostrada
  per evitare che le macchine siano poco visibili. Viene chiamata una volta all'inizio della partita e ogni veicolo tiene
