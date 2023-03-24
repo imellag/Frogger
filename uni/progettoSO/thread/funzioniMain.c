@@ -285,7 +285,7 @@ bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int
             wrefresh(finestraGioco);
             schermataFinale(finestraGioco);
         }
-
+        delwin(finestraGioco);
         endwin();
     }
 

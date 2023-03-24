@@ -148,9 +148,7 @@ Avvio menuIniziale()
             }
         }
     }
-    wclear(finestraIniziale);
-
-    delwin(finestraIniziale);
+    
 }
 
 Avvio impostazioni(WINDOW *finestraIniziale, Avvio info)
