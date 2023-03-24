@@ -285,7 +285,6 @@ bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int
             wrefresh(finestraGioco);
             schermataFinale(finestraGioco);
         }
-        delwin(finestraGioco);
 
         for (i = 0; i < NUMERO_TRONCHI + difficolta; i++)
             pthread_cancel(threadTronchi[i]);
@@ -302,7 +301,6 @@ bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int
         pthread_cancel(threadTempo);
         pthread_cancel(threadRana);
 
-        endwin();
     }
 
     return riniziaPartita;

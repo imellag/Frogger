@@ -178,8 +178,8 @@ bool areaGioco(Avvio info)
 
         else if (pacchetto.id >= PROIETTILE0_OUT && pacchetto.id <= PROIETTILE29_OUT)
         {
-            proiettilino[pacchetto.id - PROIETTILE0_OUT].coordinate.x = FUORI_MAPPA-1;
-            proiettilino[pacchetto.id - PROIETTILE0_OUT].coordinate.y = FUORI_MAPPA-1;
+            proiettilino[pacchetto.id - PROIETTILE0_OUT].coordinate.x = FUORI_MAPPA - 1;
+            proiettilino[pacchetto.id - PROIETTILE0_OUT].coordinate.y = FUORI_MAPPA - 1;
         }
 
         else if (pacchetto.id >= PROIETTILE_NEMICO0 && pacchetto.id <= PROIETTILE_NEMICO2)
@@ -417,7 +417,7 @@ bool areaGioco(Avvio info)
                     stampaNemico(finestraGioco, tronchino[i].coordinate);
 
                     time(&fine_proiettile);
-                    if ((fine_proiettile- inizio_proiettile[i]) >= 2)
+                    if ((fine_proiettile - inizio_proiettile[i]) >= 2)
                     {
                         time(&inizio_proiettile[i]);
                         funzProiettileNemico(tronchino[i].coordinate, p, i, info.difficolta, info.audio);
@@ -452,7 +452,7 @@ bool areaGioco(Avvio info)
             // resetto l'array
             for (i = 0; i < NUMERO_NEMICI + info.difficolta; i++)
             {
-                if (proiettileNemico[i].coordinate.y ==FUORI_MAPPA)
+                if (proiettileNemico[i].coordinate.y == FUORI_MAPPA)
                     hitProiettile[i] = false;
             }
 
@@ -482,5 +482,8 @@ bool areaGioco(Avvio info)
         riniziaPartita = finePartita(finestraGioco, ranocchio, vite, buffer, punteggio, info.difficolta, tempo, macchinina, camioncino, tronchino, &partitaInCorso, partitaFinita);
         buffer = false;
     }
+
+    delwin(finestraGioco);
+    endwin();
     return riniziaPartita;
 }

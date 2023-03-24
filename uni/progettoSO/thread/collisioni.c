@@ -54,12 +54,14 @@ bool proiettiliVeicoli(Oggetto proiettile, Oggetto proiettileNemico[], Oggetto v
 
     for (j = 0; j < NUMERO_NEMICI+difficolta; j++)
     {
+        pthread_mutex_lock(&mutex);
         if (controlloCollisioniProiettiliAuto(proiettileNemico[j].coordinate, veicolo, larghezza))
         {
             hitProiettile[j] = true;
             proiettileNemico[j].coordinate.x = FUORI_MAPPA - 2;
             proiettileNemico[j].coordinate.y = FUORI_MAPPA - 2;
         }
+        pthread_mutex_unlock(&mutex);
     }
     if (controlloCollisioniProiettiliAuto(proiettile.coordinate, veicolo, larghezza))
         return true;

@@ -14,7 +14,7 @@ void stampaFrogger(int iniziox, int inizioy, WINDOW *finestraIniziale);
 // stampa i rettangoli contenenti gli input possibili
 void stampaRettangolo(WINDOW *finestra, int inizioy, int iniziox);
 
-// stampa le 3 scritte iniziali 
+// stampa le 3 scritte iniziali
 void stampaIniziale(WINDOW *finestraIniziale);
 
 // gestisce il menù delle impostazioni
@@ -25,3 +25,6 @@ void stampaColoriGiusti(WINDOW *finestraIniziale, Avvio info);
 
 // stampa le scritte ogni iterazione del while
 void stampaSprite(WINDOW *finestraIniziale, Avvio info);
+
+// stampa i comandi prima dell'inizio della partita
+void stampaComandi(WINDOW *finestraIniziale);

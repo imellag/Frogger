@@ -21,7 +21,7 @@ void *movimentoTronco(void *_tronco)
     int i;
 
     pthread_mutex_lock(&mutex);
-    int tempoRandom = TEMPO_TRONCO_MIN + rand() % (TEMPO_TRONCO_MIN + TEMPO_TRONCO_MAX) - 2500 * tronco->difficolta;
+    int tempoRandom = TEMPO_TRONCO_MIN + rand() % (TEMPO_TRONCO_MIN + TEMPO_TRONCO_MAX) - 1000 * tronco->difficolta;
 
     tronco->coordinate.y = INIZIO_FIUME + tronco->id * ALTEZZA_TRONCHI;
     tronco->coordinate.x = rand() % (LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI);

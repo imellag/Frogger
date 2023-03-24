@@ -183,7 +183,7 @@ bool areaGioco(Avvio info)
     for (i = 0; i < NUMERO_CORSIE + info.difficolta; i++)
         velocitaCorsie[i] = (MIN_VELOCITA_VEICOLI + rand() % (MAX_VELOCITA_VEICOLI - MIN_VELOCITA_VEICOLI)) - 2500 * info.difficolta;
 
-    for (i = 0; i < NUMERO_MACCHINE + info.difficolta; i++)
+    for (i = 0; i < NUMERO_MACCHINE ; i++)
     {
         pthread_mutex_lock(&mutex);
         corsia = rand() % (NUMERO_CORSIE + info.difficolta);
@@ -199,7 +199,7 @@ bool areaGioco(Avvio info)
         pthread_mutex_unlock(&mutex);
         pthread_create(&threadMacchine[i], NULL, &movimentoVeicolo, &macchina[i]);
     }
-    for (i = 0; i < NUMERO_CAMION + info.difficolta; i++)
+    for (i = 0; i < NUMERO_CAMION ; i++)
     {
         pthread_mutex_lock(&mutex);
         corsia = rand() % (NUMERO_CORSIE + info.difficolta);
@@ -335,15 +335,14 @@ bool areaGioco(Avvio info)
                         pthread_mutex_unlock(&mutex);
                     }
                 }
-
-                if (vecchiaRana.coordinate.x != ranocchio.coordinate.x || vecchiaRana.coordinate.y != ranocchio.coordinate.y)
+                pthread_mutex_lock(&mutex);
+                if (vecchiaRana.coordinate.x != rana.coordinate.x || vecchiaRana.coordinate.y != rana.coordinate.y)
                 {
-                    pthread_mutex_lock(&mutex);
+
                     vecchiaRana = rana;
                     sulTronco = false;
-                    pthread_mutex_unlock(&mutex);
                 }
-
+                pthread_mutex_unlock(&mutex);
                 // controllo se la rana è salita sul tronco
 
                 if (tronchino.coordinate.x <= ranocchio.coordinate.x &&
@@ -389,10 +388,9 @@ bool areaGioco(Avvio info)
                 ne creo il processo*/
                 if (nemico[i])
                 {
-                    pthread_mutex_lock(&mutex);
-                    stampaNemico(finestraGioco, tronco[i].coordinate);
-                    pthread_mutex_unlock(&mutex);
+                    stampaNemico(finestraGioco, tronchino.coordinate);
                     time(&fine_proiettile);
+
                     if (fine_proiettile - inizio_proiettile[i] >= 2)
                     {
                         time(&inizio_proiettile[i]);
@@ -411,7 +409,7 @@ bool areaGioco(Avvio info)
             punteggio = PUNTEGGIO_INIZIALE + (timer * 10) - TEMPO_INIZIALE * 10;
 
             // controllo la collisione dei proiettili con le auto, sia quelli nemici che quello della rana
-            for (i = 0; i < NUMERO_MACCHINE + info.difficolta; i++)
+            for (i = 0; i < NUMERO_MACCHINE ; i++)
             {
                 pthread_mutex_lock(&mutex);
                 macchinina = macchina[i];
@@ -420,7 +418,7 @@ bool areaGioco(Avvio info)
                 for (j = 0; j < NUMERO_PROIETTILI; j++)
                 {
 
-                    if (proiettiliVeicoli(proiettile[j].proiettile, proiettilinoNemico, macchinina.veicolo,
+                    if (proiettiliVeicoli(proiettile[j].proiettile, proiettileNemico, macchinina.veicolo,
                                           LARGHEZZA_MACCHINA, hitProiettile, threadProiettileNemico, info.difficolta))
                     {
                         pthread_mutex_lock(&mutex);
@@ -469,7 +467,7 @@ bool areaGioco(Avvio info)
          con le varie macchine o se la rana è presente sul tronco */
 
             // ciclo camion
-            for (i = 0; i < NUMERO_CAMION + info.difficolta; i++)
+            for (i = 0; i < NUMERO_CAMION ; i++)
             {
                 pthread_mutex_lock(&mutex);
                 camioncino = camion[i];
@@ -478,7 +476,7 @@ bool areaGioco(Avvio info)
                 for (j = 0; j < NUMERO_PROIETTILI; j++)
                 {
 
-                    if (proiettiliVeicoli(proiettile[j].proiettile, proiettilinoNemico, camioncino.veicolo,
+                    if (proiettiliVeicoli(proiettile[j].proiettile, proiettileNemico, camioncino.veicolo,
                                           LARGHEZZA_CAMION, hitProiettile, threadProiettileNemico, info.difficolta))
                     {
                         pthread_mutex_lock(&mutex);
@@ -564,10 +562,8 @@ bool areaGioco(Avvio info)
             for (i = 0; i < NUMERO_NEMICI + info.difficolta; i++)
             {
 
-                if (proiettilinoNemico[i].coordinate.x == FUORI_MAPPA - 2)
-                {
+                if (proiettilinoNemico[i].coordinate.x >= FUORI_MAPPA - 2)
                     hitProiettile[i] = false;
-                }
             }
             // stampo i proiettili nemici
             for (i = 0; i < NUMERO_NEMICI + info.difficolta; i++)
@@ -608,9 +604,9 @@ bool areaGioco(Avvio info)
                 rana = morteRana(finestraGioco, &vite, rana, info.difficolta, &timer);
                 pthread_mutex_unlock(&mutex);
             }
-            pthread_mutex_lock(&mutex);
-            stampaRana(finestraGioco, rana.coordinate, coloreTroncoRana, info.difficolta);
-            pthread_mutex_unlock(&mutex);
+
+            stampaRana(finestraGioco, ranocchio.coordinate, coloreTroncoRana, info.difficolta);
+
             wrefresh(finestraGioco);
 
             /* uscita dal gioco nel caso in cui viene premuta la q, finiscono le vite, finisce il tempo
@@ -621,6 +617,9 @@ bool areaGioco(Avvio info)
         }
         buffer = false;
     }
+
+    delwin(finestraGioco);
+    endwin();
 
     return riniziaPartita;
 }

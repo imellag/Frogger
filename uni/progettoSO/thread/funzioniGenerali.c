@@ -119,7 +119,7 @@ void *orologio(void *_tempo)
         pthread_mutex_lock(&mutex);
         tempo->velocita--;
         pthread_mutex_unlock(&mutex);
-        sleep(UNO);
+        sleep(1);
     }
 }
 

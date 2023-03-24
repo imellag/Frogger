@@ -32,7 +32,7 @@ wchar_t *scrittaFinale[DUE] = {
 void dimensioneFinestra(int maxx, int maxy)
 {
     clear();
-    while (maxy < ALTEZZA_SCHERMO || maxx < LARGHEZZA_SCHERMO)
+    while (maxy < ALTEZZA_SCHERMO + 2 * 7 || maxx < LARGHEZZA_SCHERMO)
     {
         erase();
         mvwprintw(stdscr, maxy / DUE, maxx / DUE - 17, "Ingrandisci lo schermo per giocare!"); // -17 per centrare la scritta
@@ -337,8 +337,6 @@ bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer
             wrefresh(finestraGioco);
             schermataFinale(finestraGioco);
         }
-        delwin(finestraGioco);
-        endwin();
     }
 
     return riniziaPartita;
