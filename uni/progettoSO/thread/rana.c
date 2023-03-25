@@ -80,8 +80,8 @@ void *funzProiettile(void *_proiettile)
     Proiettile *proiettile = _proiettile;
     pthread_mutex_lock(&mutex);
     proiettile->proiettile.id = PROIETTILE0 + proiettile->numeroProiettile;
-    proiettile->proiettile.coordinate.x = proiettile->rana.coordinate.x + DUE;
-    proiettile->proiettile.coordinate.y = proiettile->rana.coordinate.y - UNO;
+    proiettile->proiettile.coordinate.x = proiettile->rana.coordinate.x + 2;
+    proiettile->proiettile.coordinate.y = proiettile->rana.coordinate.y - 1;
     pthread_mutex_unlock(&mutex);
     while (true)
     {
@@ -110,9 +110,9 @@ void stampaRana(WINDOW *finestraGioco, Coordinate rana, _Bool coloreRanaTronco, 
     init_pair(COLORE_RANA_SFONDO, COLORE_RANA, colorePosizione);
     wattron(finestraGioco, COLOR_PAIR(COLORE_RANA_SFONDO) | A_BOLD);
 
-    for (i = ZERO; i < ALTEZZA_RANA; i++)
+    for (i = 0; i < ALTEZZA_RANA; i++)
     {
-        for (j = ZERO; j < LARGHEZZA_RANA; j++)
+        for (j = 0; j < LARGHEZZA_RANA; j++)
         {
             mvwprintw(finestraGioco, rana.y + i, rana.x + j, "%c", spriteRana[i][j]);
         }

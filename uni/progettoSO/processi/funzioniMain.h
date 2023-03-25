@@ -52,3 +52,6 @@ bool corsiaOccupata(Oggetto macchinina[], Oggetto camioncino[], int corsia, int 
  per evitare che le macchine siano poco visibili. Viene chiamata una volta all'inizio della partita e ogni veicolo tiene
  il suo colore per tutta la durata della partita */
 void creaColoriRandom(int difficolta);
+
+// inizializza le coordinate oggetti dello schermo portandoli fuori dallo schermo
+void inizializzaArray(Oggetto tronchi[], Oggetto camion[], Oggetto macchine[], Oggetto proiettili[], Oggetto proiettiliNemici[]);

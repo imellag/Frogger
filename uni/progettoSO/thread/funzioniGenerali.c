@@ -15,10 +15,10 @@ int controlloLimitiRana(Coordinate entita, int gameDifficulty)
 
     /* prima controllo se le coordinate corrispondono a una tana e restituisco il numero della tana per chiuderla,
     altrimenti restituisco 6 che indica che la rana ha superato il confine */
-    const int RAGGIO_HITBOX_TANE = 5; /* La tana e le due caselle ai lati */
-    if (entita.y == CINQUE)
+    const int RAGGIO_HITBOX_TANE = 5; /* La tana e le 2 caselle ai lati */
+    if (entita.y == 5)
     {
-        for (int i = ZERO; i < NUMERO_TANE; i++)
+        for (int i = 0; i < NUMERO_TANE; i++)
         {
             if (checkCoordinate(entita.x, INIZIO_TANE + (LARGHEZZA_TANE * 2 * i), RAGGIO_HITBOX_TANE))
             {
@@ -27,12 +27,12 @@ int controlloLimitiRana(Coordinate entita, int gameDifficulty)
             }
         }
         if (flag == -1)
-            flag = SEI;
+            flag = 6;
     }
 
-    else if (entita.x < ZERO || entita.x >= LARGHEZZA_SCHERMO || entita.y <= SEI ||
+    else if (entita.x < 0 || entita.x >= LARGHEZZA_SCHERMO || entita.y <= 6 ||
              entita.y > ALTEZZA_SCHERMO - ALTEZZA_RANA + gameDifficulty * 6)
-        flag = SEI;
+        flag = 6;
 
     return flag;
 }
@@ -55,7 +55,7 @@ int controlloLimitiCamion(Coordinate entita)
 {
 
     int flag = 0;
-    if (entita.x < -UNO)
+    if (entita.x < -1)
         flag = 1;
 
     else if (entita.x >= LARGHEZZA_SCHERMO)
@@ -104,7 +104,7 @@ int controlloRanaTronco(Coordinate rana, Oggetto tronco[])
             return rana.x;
         }
     }
-    rana.x = -UNO;
+    rana.x = -1;
     return rana.x;
 }
 
@@ -125,7 +125,7 @@ void *orologio(void *_tempo)
 
 Oggetto posizioneInizialeRana(Oggetto rana, int gameDifficulty)
 {
-    rana.coordinate.x = ZERO;
+    rana.coordinate.x = 0;
     rana.coordinate.y = POSIZIONE_INIZIALE_RANA_Y + (gameDifficulty * 6);
     return rana;
 }
@@ -134,7 +134,7 @@ Oggetto posizioneInizialeRana(Oggetto rana, int gameDifficulty)
 bool controlloCollisioneOggetti(Oggetto entita, Coordinate rana, int LARGHEZZA_ENTITA)
 {
     bool flag = false;
-    if (entita.velocita < ZERO)
+    if (entita.velocita < 0)
     {
         if (entita.coordinate.x > rana.x && (entita.coordinate.x - LARGHEZZA_ENTITA) < rana.x && entita.coordinate.y == rana.y)
             flag = true;
@@ -178,7 +178,7 @@ int controlloPosizione(Coordinate oggetto, bool coloriFiume, int gameDifficulty)
         return COLORE_AUTOSTRADA;
     else if (oggetto.y >= INIZIO_PRATO + (gameDifficulty * 3))
         return COLORE_PRATO;
-    else if (oggetto.y >= OTTO && oggetto.y < INIZIO_PRATO + (gameDifficulty * 3))
+    else if (oggetto.y >= 8 && oggetto.y < INIZIO_PRATO + (gameDifficulty * 3))
         return COLOR_BLUE;
 }
 
@@ -190,7 +190,7 @@ void stampaProiettili(WINDOW *finestraGioco, Oggetto arrayTronchi[], bool nemico
     if (controlloPosizione(proiettile, false, gameDifficulty) == COLOR_BLUE)
     {
         colore = COLORE_SFONDO_FIUME;
-        for (j = ZERO; j < NUMERO_TRONCHI + gameDifficulty; j++)
+        for (j = 0; j < NUMERO_TRONCHI + gameDifficulty; j++)
         {
             if (proiettile.x >= arrayTronchi[j].coordinate.x &&
                 proiettile.x <= arrayTronchi[j].coordinate.x + LARGHEZZA_TRONCHI &&

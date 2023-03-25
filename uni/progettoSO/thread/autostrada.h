@@ -19,7 +19,7 @@ void* movimentoVeicolo( void *_veicolo);
  e il cambio delle corsie */
 void movimentoCamion( int numeroCamion, int gameDifficulty,int direzioneCorsie[],int velocitaCorsie[],Coordinate inizioVeicoli[]);
 
-/* dopo che la macchina arriva a uno dei due bordi
+/* dopo che la macchina arriva a 1 dei 2 bordi
  viene rigenerata in una corsia random */
 Oggetto cambioCorsia();
 

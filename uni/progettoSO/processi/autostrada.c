@@ -23,12 +23,12 @@ void funzVeicoli(int p[], int gameDifficulty, int pVeicoli[])
     int numeroVeicoliCorsia;
 
     // randomizzo anche la direzione
-    spostamento = rand() % DUE;
+    spostamento = rand() % 2;
 
-    if (spostamento == ZERO)
-        spostamento = -UNO;
+    if (spostamento == 0)
+        spostamento = -1;
     else
-        spostamento = UNO;
+        spostamento = 1;
 
     // array che salva la velocità della singola corsia che viene creata randomicamente
     int velocitaCorsie[MAX_CORSIE];
@@ -48,14 +48,14 @@ void funzVeicoli(int p[], int gameDifficulty, int pVeicoli[])
         velocitaCorsie[i] = (MIN_VELOCITA_VEICOLI + rand() % (MAX_VELOCITA_VEICOLI - MIN_VELOCITA_VEICOLI)) - 5000 * gameDifficulty;
 
     // genero i processi macchina
-    for (i = ZERO; i < NUMERO_MACCHINE + NUMERO_CAMION + (2 * gameDifficulty); i++)
+    for (i = 0; i < NUMERO_MACCHINE + NUMERO_CAMION; i++)
     {
         macchina[i] = fork();
-        if (macchina[i] < ZERO)
+        if (macchina[i] < 0)
             printw("Error");
-        else if (macchina[i] == ZERO)
+        else if (macchina[i] == 0)
         {
-            if (i < (NUMERO_MACCHINE + gameDifficulty))
+            if (i < (NUMERO_MACCHINE))
             {
                 movimentoVeicolo(p, i, gameDifficulty, direzioneCorsie, velocitaCorsie, pVeicoli, MACCHINA0);
                 exit(0);
@@ -70,7 +70,7 @@ void funzVeicoli(int p[], int gameDifficulty, int pVeicoli[])
     }
 }
 
-void movimentoVeicolo(int p[DUE], int numeroVeicolo, int gameDifficulty, int direzioneCorsie[], int velocitaCorsie[], int pVeicoli[], int tipo)
+void movimentoVeicolo(int p[], int numeroVeicolo, int gameDifficulty, int direzioneCorsie[], int velocitaCorsie[], int pVeicoli[], int tipo)
 {
     Oggetto veicolo;
     close(p[READ]);
@@ -79,6 +79,13 @@ void movimentoVeicolo(int p[DUE], int numeroVeicolo, int gameDifficulty, int dir
     int corsia = rand() % (NUMERO_CORSIE + gameDifficulty);
     int velocitaRandom = velocitaCorsie[corsia];
     int tempoRandom = rand() % 10;
+    if (tipo == CAMION0)
+        veicolo.id = tipo + numeroVeicolo % NUMERO_MACCHINE;
+    else
+        veicolo.id = tipo + numeroVeicolo;
+
+    veicolo.pid = getpid();
+    write(p[WRITE], &veicolo, sizeof(Oggetto));
 
     sleep(tempoRandom);
 
@@ -89,25 +96,25 @@ void movimentoVeicolo(int p[DUE], int numeroVeicolo, int gameDifficulty, int dir
 
     // i veicoli all'inizio della partita vengono creati all'inizio della corsia
     if (tipo == CAMION0)
-        veicolo.coordinate.y = INIZIO_AUTOSTRADA + (corsia * 3) + (gameDifficulty * TRE);
+        veicolo.coordinate.y = INIZIO_AUTOSTRADA + (corsia * 3) + (gameDifficulty * 3);
     else
-        veicolo.coordinate.y = INIZIO_AUTOSTRADA + (corsia * 3) + (gameDifficulty * TRE);
+        veicolo.coordinate.y = INIZIO_AUTOSTRADA + (corsia * 3) + (gameDifficulty * 3);
 
     veicolo.velocita = direzioneCorsie[corsia];
-    veicolo.pid = getpid();
+
     write(p[WRITE], &veicolo, sizeof(Oggetto));
 
     while (true)
     {
         if (tipo == CAMION0)
-            veicolo.id = tipo + numeroVeicolo % (NUMERO_MACCHINE + gameDifficulty);
+            veicolo.id = tipo + numeroVeicolo % NUMERO_MACCHINE;
         else
             veicolo.id = tipo + numeroVeicolo;
 
         // aggiorno le coordinate se il veicolo è ancora dentro lo schermo
         while (!controlloLimitiMacchina(veicolo.coordinate))
         {
-            if (veicolo.velocita < ZERO)
+            if (veicolo.velocita < 0)
                 veicolo.coordinate.x--;
             else
                 veicolo.coordinate.x++;
@@ -127,7 +134,7 @@ void movimentoVeicolo(int p[DUE], int numeroVeicolo, int gameDifficulty, int dir
         else
             veicolo.coordinate.x = -LARGHEZZA_CAMION;
 
-        veicolo.coordinate.y = INIZIO_AUTOSTRADA + (corsia * 3) + (gameDifficulty * TRE);
+        veicolo.coordinate.y = INIZIO_AUTOSTRADA + (corsia * 3) + (gameDifficulty * 3);
 
         velocitaRandom = velocitaCorsie[corsia];
     }
@@ -141,13 +148,13 @@ void stampaMacchina(WINDOW *finestraGioco, Oggetto macchina, int indice)
 
     wattron(finestraGioco, COLOR_PAIR(COLORE_MACCHINA0 + indice) | A_BOLD);
 
-    if (macchina.velocita < ZERO)
+    if (macchina.velocita < 0)
     {
-        for (i = ZERO; i < ALTEZZA_RANA; i++)
+        for (i = 0; i < ALTEZZA_RANA; i++)
         {
-            for (j = ZERO; j < LARGHEZZA_MACCHINA; j++)
+            for (j = 0; j < LARGHEZZA_MACCHINA; j++)
             {
-                if ((macchina.coordinate.x - j) < ZERO)
+                if ((macchina.coordinate.x - j) < 0)
                     break;
                 mvwprintw(finestraGioco, macchina.coordinate.y + i, macchina.coordinate.x - j, "%c", spriteMacchineContrario[i][LARGHEZZA_MACCHINA - 1 - j]);
             }
@@ -155,9 +162,9 @@ void stampaMacchina(WINDOW *finestraGioco, Oggetto macchina, int indice)
     }
     else
     {
-        for (i = ZERO; i < ALTEZZA_RANA; i++)
+        for (i = 0; i < ALTEZZA_RANA; i++)
         {
-            for (j = ZERO; j < LARGHEZZA_MACCHINA; j++)
+            for (j = 0; j < LARGHEZZA_MACCHINA; j++)
             {
                 if ((macchina.coordinate.x + j) >= LARGHEZZA_SCHERMO)
                     break;
@@ -178,13 +185,13 @@ void stampaCamion(WINDOW *finestraGioco, Oggetto camion, int indice)
 
     wattron(finestraGioco, COLOR_PAIR(COLORE_CAMION0 + indice) | A_BOLD);
 
-    if (camion.velocita < ZERO)
+    if (camion.velocita < 0)
     {
-        for (i = ZERO; i < ALTEZZA_RANA; i++)
+        for (i = 0; i < ALTEZZA_RANA; i++)
         {
-            for (j = ZERO; j < LARGHEZZA_CAMION; j++)
+            for (j = 0; j < LARGHEZZA_CAMION; j++)
             {
-                if ((camion.coordinate.x - j) < ZERO)
+                if ((camion.coordinate.x - j) < 0)
                     break;
                 mvwprintw(finestraGioco, camion.coordinate.y + i, camion.coordinate.x - j, "%c", spriteCamionContrario[i][LARGHEZZA_CAMION - 1 - j]);
             }
@@ -192,9 +199,9 @@ void stampaCamion(WINDOW *finestraGioco, Oggetto camion, int indice)
     }
     else
     {
-        for (i = ZERO; i < ALTEZZA_RANA; i++)
+        for (i = 0; i < ALTEZZA_RANA; i++)
         {
-            for (j = ZERO; j < LARGHEZZA_CAMION; j++)
+            for (j = 0; j < LARGHEZZA_CAMION; j++)
             {
                 if ((camion.coordinate.x + j) >= LARGHEZZA_SCHERMO)
                     break;

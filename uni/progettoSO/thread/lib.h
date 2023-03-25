@@ -36,22 +36,6 @@ enum oggetti
     MACCHINA10_OUT = 110,
 };
 
-// serve per togliere vari magic numbers
-enum numeri
-{
-    ZERO,
-    UNO,
-    DUE,
-    TRE,
-    QUATTRO,
-    CINQUE,
-    SEI,
-    SETTE,
-    OTTO,
-    NOVE,
-    DIECI
-};
-
 enum ColorPair
 {
     COLORE_VERDE_NERO = 1,
@@ -159,7 +143,7 @@ enum coloriProiettile
 #define NUMERO_TRONCHI 3
 #define MAX_PROIETTILI_NEMICI 5
 
-// definisco un numero per ciascuno colore che viene utilizzato
+// definisco un numero per ciasc1 colore che viene utilizzato
 #define COLORE_RANA 11
 #define COLORE_MARCIAPIEDE 12
 #define COLORE_AUTOSTRADA 13

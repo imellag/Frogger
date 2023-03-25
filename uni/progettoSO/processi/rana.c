@@ -10,12 +10,12 @@ void funzRana(int p[], int pRana[], int gameDifficulty)
     pid_t pidRana;
 
     pidRana = fork();
-    if (pidRana < ZERO)
+    if (pidRana < 0)
     {
         printw("Error");
         exit(-1);
     }
-    else if (pidRana == ZERO)
+    else if (pidRana == 0)
     {
         movimentoRana(p, pRana, gameDifficulty);
         exit(0);
@@ -24,7 +24,7 @@ void funzRana(int p[], int pRana[], int gameDifficulty)
 
 void movimentoRana(int p[], int pRana[], int gameDifficulty)
 {
-    int proiettile_sparato = ZERO;
+    int proiettile_sparato = 0;
     int inputMovimento;
     int lettura;
 
@@ -34,24 +34,22 @@ void movimentoRana(int p[], int pRana[], int gameDifficulty)
     Oggetto rana;
     Oggetto pacchetto;
     Oggetto proiettile;
+    close(p[READ]);
+    close(pRana[WRITE]);
 
     rana.coordinate.x = 0;
     rana.coordinate.y = POSIZIONE_INIZIALE_RANA_Y + (gameDifficulty)*6;
     rana.pid = getpid();
     rana.id = RANA;
-     write(p[WRITE], &rana, sizeof(Oggetto));
-
-    close(p[READ]);
-    close(pRana[WRITE]);
-   
+    write(p[WRITE], &rana, sizeof(Oggetto));
 
     while (true)
     {
         rana.id = RANA;
-        timeout(UNO);
+        timeout(1);
         inputMovimento = getch();
-         if (read(pRana[READ], &pacchetto, sizeof(Oggetto)) > 0)
-           rana = pacchetto;
+        if (read(pRana[READ], &pacchetto, sizeof(Oggetto)) > 0)
+            rana = pacchetto;
 
         move = true;
         switch (inputMovimento)
@@ -116,12 +114,12 @@ void movimentoRana(int p[], int pRana[], int gameDifficulty)
     }
 }
 
-void funzProiettile(Oggetto rana, int p[DUE], int numeroProiettile)
+void funzProiettile(Oggetto rana, int p[], int numeroProiettile)
 {
     Oggetto proiettile;
     proiettile.id = PROIETTILE0 + numeroProiettile;
-    proiettile.coordinate.x = rana.coordinate.x + DUE;
-    proiettile.coordinate.y = rana.coordinate.y - UNO;
+    proiettile.coordinate.x = rana.coordinate.x + 2;
+    proiettile.coordinate.y = rana.coordinate.y - 1;
     proiettile.pid = getpid();
     while (true)
     {
@@ -147,9 +145,9 @@ void stampaRana(WINDOW *finestraGioco, Coordinate rana, _Bool coloreRanaTronco, 
     init_pair(COLORE_RANA_SFONDO, COLORE_RANA, colorePosizione);
     wattron(finestraGioco, COLOR_PAIR(COLORE_RANA_SFONDO) | A_BOLD);
 
-    for (i = ZERO; i < ALTEZZA_RANA; i++)
+    for (i = 0; i < ALTEZZA_RANA; i++)
     {
-        for (j = ZERO; j < LARGHEZZA_RANA; j++)
+        for (j = 0; j < LARGHEZZA_RANA; j++)
         {
             mvwprintw(finestraGioco, rana.y + i, rana.x + j, "%c", spriteRana[i][j]);
         }

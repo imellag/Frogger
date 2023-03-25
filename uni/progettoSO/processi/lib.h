@@ -23,33 +23,16 @@ enum oggetti
     TRONCO0,
     TRONCO4 = 68,
     MACCHINA0,
-    MACCHINA6 = 75,
+    MACCHINA6 = 72,
     CAMION0,
-    CAMION5 = 93,
+    CAMION5 = 75,
     TRONCONEMICO0,
-    TRONCONEMICO4 = 93,
+    TRONCONEMICO4 = 79,
     PROIETTILE_NEMICO0,
-    PROIETTILE_NEMICO2 = 96,
+    PROIETTILE_NEMICO2 = 84,
     PROIETTILE_NEMICO0_OUT,
-    PROIETTILE_NEMICO2_OUT = 99,
-    MACCHINA0_OUT,
-    MACCHINA10_OUT=110,
-};
-
-// serve per togliere vari magic numbers
-enum numeri
-{
-    ZERO,
-    UNO,
-    DUE,
-    TRE,
-    QUATTRO,
-    CINQUE,
-    SEI,
-    SETTE,
-    OTTO,
-    NOVE,
-    DIECI
+    PROIETTILE_NEMICO2_OUT = 88,
+    MACCHINA0_OUT
 };
 
 enum ColorPair

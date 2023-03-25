@@ -46,10 +46,19 @@ bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int
                  int difficolta, bool *partitaInCorso, bool partitaFinita, pthread_t threadRana, pthread_t threadProiettile[],
                  pthread_t threadTronchi[], pthread_t threadMacchine[], pthread_t threadCamion[], pthread_t threadTempo, pthread_t threadProiettileNemico[]);
 
-    // controlla se l'inizio della corsia generata casualmente è occupato da un altro veicolo
-    bool CorsiaOccupata(parametriVeicolo macchinina[], parametriVeicolo camioncino[], int corsia, int difficolta);
+// controlla se l'inizio della corsia generata casualmente è occupato da un altro veicolo
+bool CorsiaOccupata(parametriVeicolo macchinina[], parametriVeicolo camioncino[], int corsia, int difficolta);
 
 /* crea un colore random per ogni veicolo e si assicura che questo colore non sia troppo simile a quello dell'autostrada
  per evitare che le macchine siano poco visibili. Viene chiamata una volta all'inizio della partita e ogni veicolo tiene
  il suo colore per tutta la durata della partita */
 void creaColoriRandom(int difficolta);
+
+// inizializza le coordinate oggetti dello schermo portandoli fuori dallo schermo
+void inizializzaArray(Oggetto tronco[], Oggetto proiettileNemico[], Oggetto proiettilinoNemico[], parametriVeicolo camion[],
+                      parametriVeicolo macchina[], Proiettile proiettilino[], Proiettile proiettile[]);
+
+// inizializza i dati dei veicolo. chiamata per ogni veicolo
+void inizializzaVeicolo(parametriVeicolo veicolo, int difficolta, int direzioneCorsie[], int velocitaCorsie[]);
+
+void *delayCambioCorsia(void *_flagCambioCorsia);

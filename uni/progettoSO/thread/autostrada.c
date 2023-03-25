@@ -10,8 +10,10 @@ char spriteCamionContrario[ALTEZZA_RANA][LARGHEZZA_CAMION] = {" _/^\\____\\", "|
 void *movimentoVeicolo(void *_veicolo)
 {
     parametriVeicolo *veicolo = (parametriVeicolo *)_veicolo;
+
+    // non faccio spawnare tutti i veicoli ma gli assegno del tempo random
     pthread_mutex_lock(&mutex);
-    int tempoRandom = rand() % 15;
+    int tempoRandom = rand() % 10;
     pthread_mutex_unlock(&mutex);
     sleep(tempoRandom);
     pthread_mutex_lock(&mutex);
@@ -23,7 +25,7 @@ void *movimentoVeicolo(void *_veicolo)
     pthread_mutex_unlock(&mutex);
     while (true)
     {
-
+        // ciclo fino a quando il veicolo non esce dalla corsia
         while (!controlloLimitiMacchina(veicolo->veicolo.coordinate))
         {
             pthread_mutex_lock(&mutex);
@@ -31,7 +33,7 @@ void *movimentoVeicolo(void *_veicolo)
 
             // in base alla direzione del veicolo mi sposto
             // verso sinistra o verso destra
-            if (veicolo->veicolo.velocita < ZERO)
+            if (veicolo->veicolo.velocita < 0)
                 veicolo->veicolo.coordinate.x--;
             else
                 veicolo->veicolo.coordinate.x++;
@@ -39,6 +41,7 @@ void *movimentoVeicolo(void *_veicolo)
             pthread_mutex_unlock(&mutex);
             usleep(velocitaRandom);
         }
+        // uscito il veicolo allora gli assegno un id che gestirà areaGioco per dargli una corsia
         pthread_mutex_lock(&mutex);
         veicolo->veicolo.id = MACCHINA0_OUT;
         pthread_mutex_unlock(&mutex);
@@ -53,13 +56,13 @@ void stampaMacchina(WINDOW *finestraGioco, Oggetto macchina, int indice)
 
     wattron(finestraGioco, COLOR_PAIR(COLORE_MACCHINA0 + indice) | A_BOLD);
 
-    if (macchina.velocita < ZERO)
+    if (macchina.velocita < 0)
     {
-        for (i = ZERO; i < ALTEZZA_RANA; i++)
+        for (i = 0; i < ALTEZZA_RANA; i++)
         {
-            for (j = ZERO; j < LARGHEZZA_MACCHINA; j++)
+            for (j = 0; j < LARGHEZZA_MACCHINA; j++)
             {
-                if ((macchina.coordinate.x - j) < ZERO)
+                if ((macchina.coordinate.x - j) < 0)
                     break;
                 mvwprintw(finestraGioco, macchina.coordinate.y + i, macchina.coordinate.x - j, "%c", spriteMacchineContrario[i][LARGHEZZA_MACCHINA - 1 - j]);
             }
@@ -67,9 +70,9 @@ void stampaMacchina(WINDOW *finestraGioco, Oggetto macchina, int indice)
     }
     else
     {
-        for (i = ZERO; i < ALTEZZA_RANA; i++)
+        for (i = 0; i < ALTEZZA_RANA; i++)
         {
-            for (j = ZERO; j < LARGHEZZA_MACCHINA; j++)
+            for (j = 0; j < LARGHEZZA_MACCHINA; j++)
             {
                 if ((macchina.coordinate.x + j) >= LARGHEZZA_SCHERMO)
                     break;
@@ -90,13 +93,13 @@ void stampaCamion(WINDOW *finestraGioco, Oggetto camion, int indice)
 
     wattron(finestraGioco, COLOR_PAIR(COLORE_CAMION0 + indice) | A_BOLD);
 
-    if (camion.velocita < ZERO)
+    if (camion.velocita < 0)
     {
-        for (i = ZERO; i < ALTEZZA_RANA; i++)
+        for (i = 0; i < ALTEZZA_RANA; i++)
         {
-            for (j = ZERO; j < LARGHEZZA_CAMION; j++)
+            for (j = 0; j < LARGHEZZA_CAMION; j++)
             {
-                if ((camion.coordinate.x - j) < ZERO)
+                if ((camion.coordinate.x - j) < 0)
                     break;
                 mvwprintw(finestraGioco, camion.coordinate.y + i, camion.coordinate.x - j, "%c", spriteCamionContrario[i][LARGHEZZA_CAMION - 1 - j]);
             }
@@ -104,9 +107,9 @@ void stampaCamion(WINDOW *finestraGioco, Oggetto camion, int indice)
     }
     else
     {
-        for (i = ZERO; i < ALTEZZA_RANA; i++)
+        for (i = 0; i < ALTEZZA_RANA; i++)
         {
-            for (j = ZERO; j < LARGHEZZA_CAMION; j++)
+            for (j = 0; j < LARGHEZZA_CAMION; j++)
             {
                 if ((camion.coordinate.x + j) >= LARGHEZZA_SCHERMO)
                     break;
@@ -116,22 +119,6 @@ void stampaCamion(WINDOW *finestraGioco, Oggetto camion, int indice)
     }
 
     wattroff(finestraGioco, COLOR_PAIR(COLORE_CAMION0 + indice) | A_BOLD);
-}
-bool controlloInizioCoordinateCorsie(Coordinate inizioVeicoli[], int i)
-{
-    bool flag = false;
-    int j;
-    for (j = 0; j < i; j++)
-    {
-        if (((inizioVeicoli[j].x + LARGHEZZA_CAMION + 1) >= inizioVeicoli[i].x) &&
-            ((inizioVeicoli[j].x - LARGHEZZA_CAMION - 1) <= inizioVeicoli[i].x) &&
-            (inizioVeicoli[j].y == inizioVeicoli[i].y))
-        {
-            flag = true;
-            break;
-        }
-        return flag;
-    }
 }
 
 Colore coloreVeicolo()

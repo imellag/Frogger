@@ -3,8 +3,6 @@
 #define TEMPO_TRONCO_MIN 40000
 #define TEMPO_TRONCO_MAX 60000
 
-// creo un processo per ogni tronco e la direzione di ognuno
-int funzTronchi(int gameDifficulty);
 /* controlla la posizione dei tronchi, la aggiorna e eventualmente cambia la loro direzione
  se sono arrivati al bordo, e infine invia la posizione aggiornata al main */
 void* movimentoTronco(void* _tronco);

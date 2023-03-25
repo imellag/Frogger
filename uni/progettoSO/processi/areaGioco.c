@@ -30,8 +30,8 @@ bool areaGioco(Avvio info)
     bool sulTronco = false; // rana sul tronco
     bool partitaInCorso;
     // variabili utilizzate per far spawnare i nemici e farli sparare al momento giusto
-    time_t inizio_nemico, fine_nemico, inizio_proiettile[MAX_TRONCHI], fine_proiettile, inizioInputCorsia, fineInputCorsia;
-
+    time_t inizio_nemico, fine_nemico, inizio_proiettile[MAX_TRONCHI], fine_proiettile;
+    clock_t inizioSparo, fineSparo, inizioCambioCorsia, fineCambioCorsia;
     // array dei proiettili nemici e variabili usate per ricevere dati dai processi
     Oggetto proiettileNemico[MAX_TRONCHI], ranocchio, vecchiaRana, tempo, pacchetto;
 
@@ -51,39 +51,16 @@ bool areaGioco(Avvio info)
     bool riniziaPartita = false;
     int timer = TEMPO_INIZIALE;
     int punteggio = PUNTEGGIO_INIZIALE;
-    ranocchio.coordinate.x = ZERO;
+    ranocchio.coordinate.x = 0;
     ranocchio.coordinate.y = POSIZIONE_INIZIALE_RANA_Y + info.difficolta * NUMERO_CORSIE * 2;
-
+ 
     // prima di iniziare porto le coordinate di tutti gli oggetti fuori dallo schermo
-    for (i = ZERO; i < MAX_TRONCHI; i++)
-    {
-        tronchino[i].coordinate.x = FUORI_MAPPA;
-        tronchino[i].coordinate.y = FUORI_MAPPA;
-
-        proiettileNemico[i].coordinate.x = FUORI_MAPPA - 2;
-        proiettileNemico[i].coordinate.y = FUORI_MAPPA - 2;
-    }
-    for (i = ZERO; i < MAX_CAMION; i++)
-    {
-        camioncino[i].coordinate.x = FUORI_MAPPA;
-        camioncino[i].coordinate.y = FUORI_MAPPA;
-    }
-
-    for (i = 0; i < MAX_MACCHINE; i++)
-    {
-        macchinina[i].coordinate.x = FUORI_MAPPA;
-        macchinina[i].coordinate.y = FUORI_MAPPA;
-    }
-    for (i = 0; i < NUMERO_PROIETTILI; i++)
-    {
-        proiettilino[i].coordinate.x = FUORI_MAPPA - 1;
-        proiettilino[i].coordinate.y = FUORI_MAPPA - 1;
-    }
+    inizializzaArray(tronchino, camioncino, macchinina, proiettilino, proiettileNemico);
 
     // pipe principale che viene utilizzata per inviare le posizioni dei vari oggetti
     // e stamparli successivamente nel main
-    int p[DUE];
-    if (pipe(p) == -UNO)
+    int p[2];
+    if (pipe(p) == -1)
     {
         perror("Error\n");
         exit(EXIT_FAILURE);
@@ -91,8 +68,8 @@ bool areaGioco(Avvio info)
 
     // pipe non bloccante che mi serve per comunicare con il processo rana
     // in caso di collisioni o spostamenti(es: rana sul tronco)
-    int pRana[DUE];
-    if (pipe(pRana) == -UNO)
+    int pRana[2];
+    if (pipe(pRana) == -1)
     {
         perror("Error\n");
         exit(EXIT_FAILURE);
@@ -100,8 +77,8 @@ bool areaGioco(Avvio info)
     // funzione per rendere non bloccante la pipe
     fcntl(pRana[0], F_SETFL, fcntl(pRana[0], F_GETFL) | O_NONBLOCK);
 
-    int pVeicoli[DUE];
-    if (pipe(pVeicoli) == -UNO)
+    int pVeicoli[2];
+    if (pipe(pVeicoli) == -1)
     {
         perror("Error");
         exit(EXIT_FAILURE);
@@ -127,7 +104,7 @@ bool areaGioco(Avvio info)
 
     clear();
     refresh();
-
+    int sium;
     // per ogni veicolo genero un colore casuale
     creaColoriRandom(info.difficolta);
 
@@ -152,8 +129,8 @@ bool areaGioco(Avvio info)
     funzTempo(p);
 
     time(&inizio_nemico);
-    time(&fineInputCorsia);
-    time(&inizioInputCorsia);
+    inizioSparo = clock();
+    inizioCambioCorsia = clock();
 
     partitaInCorso = true;
     close(pRana[READ]);
@@ -165,6 +142,7 @@ bool areaGioco(Avvio info)
     {
 
         partitaFinita = false;
+        fineSparo = clock();
 
         read(p[READ], &pacchetto, sizeof(Oggetto));
 
@@ -199,6 +177,7 @@ bool areaGioco(Avvio info)
             macchinina[pacchetto.id - MACCHINA0] = pacchetto;
         else if (pacchetto.id == MACCHINA0_OUT)
         {
+            fineCambioCorsia = clock();
             macchineInCoda++;
         }
         else if (pacchetto.id >= CAMION0 && pacchetto.id <= CAMION5)
@@ -208,7 +187,14 @@ bool areaGioco(Avvio info)
             ranocchio = pacchetto;
 
         else if (pacchetto.id == SPAWN_PROIETTILE)
-            creaProiettile(p, ranocchio, &offset, info.audio);
+        {
+            double differenza = (fineSparo - inizioSparo);
+            if (differenza > 60000)
+            {
+                creaProiettile(p, ranocchio, &offset, info.audio);
+                inizioSparo = clock();
+            }
+        }
 
         else if (pacchetto.id == PAUSA)
             partitaFinita = funzPausa(finestraGioco, info.difficolta, camioncino, tronchino, macchinina, tempo.pid, ranocchio.pid);
@@ -267,21 +253,23 @@ bool areaGioco(Avvio info)
                     time(&inizio_proiettile[troncoNemico]);
                 }
             }
-            time(&fineInputCorsia);
-            if (macchineInCoda > 0)
+            double spawnCorsia = fineCambioCorsia - inizioCambioCorsia;
+            if (spawnCorsia > 50000)
             {
+                if (macchineInCoda > 0)
+                {
 
-                corsiaRandom = k % (NUMERO_CORSIE + info.difficolta);
-                write(pVeicoli[WRITE], &corsiaRandom, sizeof(int));
-                k++;
-                time(&inizioInputCorsia);
-                macchineInCoda--;
+                    corsiaRandom = k % (NUMERO_CORSIE + info.difficolta);
+                    write(pVeicoli[WRITE], &corsiaRandom, sizeof(int));
+                    k++;
+                    macchineInCoda--;
+                }
             }
             // ciclo macchine
 
             /* ciclo per controllare le collisioni
              con le varie macchine o se la rana è presente sul tronco */
-            for (i = 0; i < NUMERO_MACCHINE + info.difficolta; i++)
+            for (i = 0; i < NUMERO_MACCHINE; i++)
             {
                 // controllo la collisione dei proiettili con le auto, sia quelli nemici che quello della rana
 
@@ -304,7 +292,7 @@ bool areaGioco(Avvio info)
             }
 
             // ciclo camion
-            for (i = 0; i < NUMERO_CAMION + info.difficolta; i++)
+            for (i = 0; i < NUMERO_CAMION; i++)
             {
                 // controllo se i proiettili collidono con un camion e nel caso li distruggo
                 for (j = 0; j < NUMERO_PROIETTILI; j++)
@@ -464,7 +452,7 @@ bool areaGioco(Avvio info)
             if (tempo.velocita)
             {
                 timer--;
-                punteggio -= DIECI;
+                punteggio -= 10;
             }
 
             wrefresh(finestraGioco);

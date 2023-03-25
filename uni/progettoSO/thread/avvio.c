@@ -64,7 +64,7 @@ Avvio menuIniziale()
 
     mvwprintw(finestraIniziale, 25, 63, "Caricamento");
 
-    for (i = ZERO; i < TRE; i++)
+    for (i = 0; i < 3; i++)
     {
         mvwprintw(finestraIniziale, 25, 74 + i, ".");
         wrefresh(finestraIniziale);
@@ -106,7 +106,7 @@ Avvio menuIniziale()
                         wclear(finestraIniziale);
                         wattron(finestraIniziale, COLOR_PAIR(COLORE_NERO_VERDE));
 
-                        for (i = ZERO; i < TRE; i++)
+                        for (i = 0; i < 3; i++)
                             stampaRettangolo(finestraIniziale, 15 + i * 7, 52); // tra l'inizio di un rettangolo e l'inizio dell'altro ci sono 7 spazi
 
                         mvwprintw(finestraIniziale, 17, 67, "Facile");
@@ -224,9 +224,9 @@ void stampaRettangolo(WINDOW *finestra, int inizioy, int iniziox)
 {
     int i, j;
     // ogni rettangolo è alto 5 e largo 36
-    for (i = ZERO; i < CINQUE; i++)
+    for (i = 0; i < 5; i++)
     {
-        for (j = ZERO; j < 36; j++)
+        for (j = 0; j < 36; j++)
             mvwprintw(finestra, inizioy + i, iniziox + j, " ");
     }
 }
@@ -235,7 +235,7 @@ void stampaFrogger(int iniziox, int inizioy, WINDOW *finestraIniziale)
 {
     int i;
 
-    for (i = ZERO; i < ALTEZZA_SPRITE; i++)
+    for (i = 0; i < ALTEZZA_SPRITE; i++)
         mvwprintw(finestraIniziale, inizioy + i, iniziox, "%ls", frogger[i]);
 }
 
