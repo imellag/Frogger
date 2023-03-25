@@ -207,7 +207,7 @@ bool areaGioco(Avvio info)
             if (ranocchio.id == SPAWN_PROIETTILE)
             {
                 double delaySparo = fineSparo - inizioSparo;
-                if (delaySparo > 60000)
+                if (delaySparo > 70000)
                 {
                     if (info.audio)
                         system("ffplay -nodisp ../file_audio/sparo.mp3 2> /dev/null &");
@@ -588,7 +588,7 @@ bool areaGioco(Avvio info)
             oppure vengono chiuse tutte le tane. Nel caso di vittoria o sconfitta
             viene stampata una schermata finale diversa*/
             riniziaPartita = finePartita(finestraGioco, rana, vite, buffer, punteggio, info.difficolta, &partitaInCorso, partitaFinita, threadRana, threadProiettile,
-                                         threadTronchi, threadMacchine, threadCamion, threadTempo, threadProiettileNemico);
+                                         threadTronchi, threadMacchine, threadCamion, threadTempo, threadProiettileNemico,threadCambioCorsia);
         }
         buffer = false;
     }

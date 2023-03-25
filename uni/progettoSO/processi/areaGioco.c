@@ -189,7 +189,7 @@ bool areaGioco(Avvio info)
         else if (pacchetto.id == SPAWN_PROIETTILE)
         {
             double differenza = (fineSparo - inizioSparo);
-            if (differenza > 60000)
+            if (differenza > 70000)
             {
                 creaProiettile(p, ranocchio, &offset, info.audio);
                 inizioSparo = clock();

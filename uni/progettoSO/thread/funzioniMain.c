@@ -259,7 +259,8 @@ bool controlloTaneChiuse(bool arrayTane[])
 
 bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int punteggio,
                  int difficolta, bool *partitaInCorso, bool partitaFinita, pthread_t threadRana, pthread_t threadProiettile[],
-                 pthread_t threadTronchi[], pthread_t threadMacchine[], pthread_t threadCamion[], pthread_t threadTempo, pthread_t threadProiettileNemico[])
+                 pthread_t threadTronchi[], pthread_t threadMacchine[],
+                  pthread_t threadCamion[], pthread_t threadTempo, pthread_t threadProiettileNemico[], pthread_t threadCambioCorsia)
 {
     int i;
     bool riniziaPartita;
@@ -289,10 +290,10 @@ bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int
         for (i = 0; i < NUMERO_TRONCHI + difficolta; i++)
             pthread_cancel(threadTronchi[i]);
 
-        for (i = 0; i < NUMERO_CAMION + difficolta; i++)
+        for (i = 0; i < NUMERO_CAMION; i++)
             pthread_cancel(threadCamion[i]);
 
-        for (i = 0; i < NUMERO_MACCHINE + difficolta; i++)
+        for (i = 0; i < NUMERO_MACCHINE; i++)
             pthread_cancel(threadMacchine[i]);
 
         for (i = 0; i < NUMERO_NEMICI + difficolta; i++)
@@ -300,6 +301,7 @@ bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int
 
         pthread_cancel(threadTempo);
         pthread_cancel(threadRana);
+         pthread_cancel(threadCambioCorsia);
     }
 
     return riniziaPartita;

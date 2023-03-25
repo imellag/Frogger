@@ -35,8 +35,9 @@ Oggetto uccidiProiettile(Oggetto proiettile, pthread_t threadProiettile);
 // stampa la scritta "grazie per aver giocato"
 void schermataFinale(WINDOW *finestraGioco);
 
-// time_t spawnNemico(time_t fine_nemico, time_t inizio_nemico, int difficolta,bool sulTronco, bool nemico[],Oggetto tronchino[],time_t inizio_proiettile[],Oggetto rana);
-Oggetto controlloCollisioneVeicoliProiettile(int i, Oggetto proiettilino[], Oggetto proiettileNemico[], Oggetto macchinina[], bool hitProiettile[], pthread_t threadProiettile, pthread_t threadProiettileNemico[]);
+Oggetto controlloCollisioneVeicoliProiettile(int i, Oggetto proiettilino[], Oggetto proiettileNemico[], Oggetto macchinina[],
+
+ bool hitProiettile[], pthread_t threadProiettile, pthread_t threadProiettileNemico[]);
 
 // controlla se c'è almeno una tana ancora aperta
 bool controlloTaneChiuse(bool arrayTane[]);
@@ -44,7 +45,8 @@ bool controlloTaneChiuse(bool arrayTane[]);
 // gestisce le casistiche di fine partita
 bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int punteggio,
                  int difficolta, bool *partitaInCorso, bool partitaFinita, pthread_t threadRana, pthread_t threadProiettile[],
-                 pthread_t threadTronchi[], pthread_t threadMacchine[], pthread_t threadCamion[], pthread_t threadTempo, pthread_t threadProiettileNemico[]);
+                 pthread_t threadTronchi[], pthread_t threadMacchine[], pthread_t threadCamion[], 
+                 pthread_t threadTempo, pthread_t threadProiettileNemico[], pthread_t threadCambioCorsia);
 
 // controlla se l'inizio della corsia generata casualmente è occupato da un altro veicolo
 bool CorsiaOccupata(parametriVeicolo macchinina[], parametriVeicolo camioncino[], int corsia, int difficolta);
