@@ -197,11 +197,7 @@ void stampaProiettili(WINDOW *finestraGioco, Oggetto arrayTronchi[], bool nemico
                 proiettile.y >= arrayTronchi[j].coordinate.y &&
                 proiettile.y <= arrayTronchi[j].coordinate.y + ALTEZZA_TRONCHI)
             {
-                colore = COLORE_SFONDO_TRONCHI;
-                if (nemico[i] == true)
-                {
-                    colore = COLORE_NEMICI_TRONCO;
-                }
+                    colore = COLORE_SFONDO_TRONCHI;
             }
         }
         soloStampa(finestraGioco, proiettile, colore);

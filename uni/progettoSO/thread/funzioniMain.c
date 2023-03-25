@@ -383,11 +383,11 @@ void inizializzaArray(Oggetto tronco[], Oggetto proiettileNemico[], Oggetto proi
         tronco[i].coordinate.x = FUORI_MAPPA;
         tronco[i].coordinate.y = FUORI_MAPPA;
 
-        proiettileNemico[i].coordinate.x = FUORI_MAPPA - 3;
-        proiettileNemico[i].coordinate.y = FUORI_MAPPA - 3;
+        proiettileNemico[i].coordinate.x = FUORI_MAPPA - 2;
+        proiettileNemico[i].coordinate.y = FUORI_MAPPA - 2;
 
-        proiettilinoNemico[i].coordinate.x = FUORI_MAPPA - 3;
-        proiettilinoNemico[i].coordinate.y = FUORI_MAPPA - 3;
+        proiettilinoNemico[i].coordinate.x = FUORI_MAPPA - 2;
+        proiettilinoNemico[i].coordinate.y = FUORI_MAPPA - 2;
     }
 
     for (i = 0; i < MAX_CAMION; i++)

@@ -22,11 +22,8 @@ bool areaGioco(Avvio info)
     int troncoNemico, vite, corsiaRandom, corsia;
 
     bool buffer = false;
-    bool pausa = false;
     bool partitaFinita;
     bool coloreTroncoRana = false;
-    bool coloreTroncoProiettile = false;
-    bool coloreNemicoProiettile = false;
     bool sulTronco = false;
     bool partitaInCorso;
     pthread_t threadRana, threadProiettile[NUMERO_PROIETTILI],
@@ -35,7 +32,7 @@ bool areaGioco(Avvio info)
 
     // variabili utilizzate per far spawnare i nemici e farli sparare al momento giusto
     time_t inizio_nemico, fine_nemico, inizio_proiettile[MAX_TRONCHI], fine_proiettile;
-    clock_t inizioSparo, fineSparo;
+    time_t inizioSparo, fineSparo;
 
     Oggetto proiettileNemico[MAX_TRONCHI], proiettilinoNemico[MAX_TRONCHI];
 
@@ -130,7 +127,7 @@ bool areaGioco(Avvio info)
         tronco[i].id = i;
         tronco[i].difficolta = info.difficolta;
         pthread_create(&threadTronchi[i], NULL, &movimentoTronco, &tronco[i]);
-        pthread_create(&threadProiettileNemico[i], NULL, &movimentoProiettileNemico, &proiettileNemico[i]);
+       
     }
 
     // randomizzo anche la direzione
@@ -173,11 +170,11 @@ bool areaGioco(Avvio info)
 
     partitaInCorso = true;
 
-    inizioSparo = clock();
+    time(&inizioSparo);
 
     while (partitaInCorso)
     {
-        fineSparo = clock();
+        time(&fineSparo);
         partitaFinita = false;
         // ricevo partitaFinita
         if (!partitaFinita)
@@ -191,6 +188,7 @@ bool areaGioco(Avvio info)
             risultato = controlloLimitiRana(ranocchio.coordinate, info.difficolta);
 
             // se la rana è entrata in una tana viene portata alla posizione iniziale viene aggiornato il punteggio
+            // i numeri da 0 a 5 sono i numeri di ogni rispettiva tana
             if (risultato < 6 && risultato >= 0)
             {
                 if (!(arrayTane[risultato] == true))
@@ -204,25 +202,35 @@ bool areaGioco(Avvio info)
                 }
             }
 
+            //se nel thread rana viene premuta la barra spaziatrice
+            //allora viene modificato l'id e genero un proiettile
             if (ranocchio.id == SPAWN_PROIETTILE)
             {
-                double delaySparo = fineSparo - inizioSparo;
-                if (delaySparo > 70000)
+
+                int delaySparo = fineSparo - inizioSparo;
+
+                // inserisco un delay per non dare la possibilità all'utente di sparare molteplici volte
+                if (delaySparo > 1)
                 {
+
                     if (info.audio)
                         system("ffplay -nodisp ../file_audio/sparo.mp3 2> /dev/null &");
+                    
+                    //passo le coordinate della rana per inizializzare il proiettile
                     proiettilino[offset].rana = rana;
                     pthread_create(&threadProiettile[offset], NULL, &funzProiettile, &proiettilino[offset]);
 
+                    // cambio l'id precedentemente modificato dal thread rana
                     pthread_mutex_lock(&mutex);
                     rana.id = RANA;
                     pthread_mutex_unlock(&mutex);
 
+                    // mi sposto nell'array crato per i proiettili
                     offset++;
                     if (offset == NUMERO_PROIETTILI)
                         offset = 0;
 
-                    inizioSparo = clock();
+                    time(&inizioSparo);
                 }
             }
 
@@ -235,6 +243,7 @@ bool areaGioco(Avvio info)
                 rana.id = RANA;
                 pthread_mutex_unlock(&mutex);
             }
+
             // stampa dei colori di background
             funzMarciapiede(finestraGioco, info.difficolta);
             funzAutostrada(finestraGioco, info.difficolta);
@@ -245,6 +254,8 @@ bool areaGioco(Avvio info)
 
             coloreTroncoRana = false;
             time(&fine_nemico);
+
+            // stampo rispettivamente il tempo e il punetggio
             stampaTempo(finestraGioco, timer);
             stampaPunteggio(finestraGioco, punteggio);
 
@@ -252,12 +263,17 @@ bool areaGioco(Avvio info)
              così viene stampato in un tronco che non è occupato dalla rana o da un altro nemico*/
             if ((fine_nemico - inizio_nemico) >= TEMPO_SPAWN_NEMICO - info.difficolta)
             {
+
+                // coontrollo quanti nemici ci sono
                 contaNemici = 0;
                 for (i = 0; i < NUMERO_NEMICI + info.difficolta; i++)
                 {
                     if (nemico[i])
                         contaNemici++;
                 }
+                // se il numero dei nemici spawnati corrisponde al numero di tronchi o se 
+                // la rana è presente sul tronco e i nemici sono un numero in meno rispetto ai tronchi
+                // (quindi comunque tutti i tronchi occupati) allora non faccio spawnare nessun nuovo nemico
                 if (!(contaNemici == (NUMERO_NEMICI + info.difficolta) || contaNemici == (NUMERO_NEMICI + info.difficolta - 1) && sulTronco))
                 {
                     pthread_mutex_lock(&mutex);
@@ -351,14 +367,15 @@ bool areaGioco(Avvio info)
                 {
                     stampaNemico(finestraGioco, tronchino.coordinate);
                     time(&fine_proiettile);
-
-                    if (fine_proiettile - inizio_proiettile[i] >= 2)
+                    int delayProiettileNemico=fine_proiettile-inizio_proiettile[i];
+                    if (proiettileNemico[i].coordinate.x==FUORI_MAPPA-2 && delayProiettileNemico>2)
                     {
                         time(&inizio_proiettile[i]);
                         system("ffplay -nodisp ../file_audio/sparo.mp3 2> /dev/null &");
                         pthread_mutex_lock(&mutex);
                         proiettileNemico[i].coordinate.x = tronco[i].coordinate.x + LARGHEZZA_TRONCHI / 2;
                         proiettileNemico[i].coordinate.y = tronco[i].coordinate.y + ALTEZZA_CORSIE;
+                        pthread_create(&threadProiettileNemico[i], NULL, &movimentoProiettileNemico, &proiettileNemico[i]);
                         pthread_mutex_unlock(&mutex);
                     }
                 }
@@ -394,12 +411,18 @@ bool areaGioco(Avvio info)
 
                 if (macchinina.veicolo.id == MACCHINA0_OUT)
                 {
+                    
                     pthread_mutex_lock(&mutex);
                     bool spawnCorsia = flagCambioCorsia;
                     pthread_mutex_unlock(&mutex);
+                    // se la flag è stata cambaita dal thread a true allora posso spawnare la macchina
                     if (spawnCorsia)
                     {
+
                         pthread_mutex_lock(&mutex);
+                        // ogni volta che un veicolo richiede una corsia gliela assegno partendo da 0 
+                        // e successivamente passo alla successiva (la corsia della macchina è casuale 
+                        // poichè le macchine che richiederanno la stessa corsia sarà casuale)
                         corsia = k % (NUMERO_CORSIE + info.difficolta);
                         k++;
                         // in base alla direzione lo faccio partire da destra o da sinistra
