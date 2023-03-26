@@ -161,14 +161,14 @@ enum coloriProiettile
 
 // variabili utili per il le statistiche e il controllo della partita
 #define MAX_VITE 5
-#define TEMPO_INIZIALE 40
+#define TEMPO_INIZIALE 50
 #define TEMPO_TANA 5
 #define PUNTEGGIO_INIZIALE 2000
 #define PUNTEGGIO_UCCISIONE 50
 #define PUNTEGGIO_TANA 150
 #define TEMPO_SPAWN_NEMICO 7
 // numero massimo di proiettili che la rana può avere contemporaneamente a schermo
-#define NUMERO_PROIETTILI 30
+#define NUMERO_PROIETTILI 20
 
 // offset per spostare la finestra dello schermo pù al centro
 #define INIZIO_ALTEZZA_FINESTRA 5

@@ -13,7 +13,7 @@ void *movimentoVeicolo(void *_veicolo)
 
     // non faccio spawnare tutti i veicoli ma gli assegno del tempo random
     pthread_mutex_lock(&mutex);
-    int tempoRandom = rand() % 10;
+    int tempoRandom = rand() % 4;
     pthread_mutex_unlock(&mutex);
     sleep(tempoRandom);
     pthread_mutex_lock(&mutex);

@@ -47,20 +47,6 @@ bool controlloCollisioniProiettiliAuto(Coordinate proiettile, Oggetto veicolo, i
     return false;
 }
 
-bool proiettiliVeicoli(Oggetto proiettile, Oggetto proiettileNemico[], Oggetto veicolo, int larghezza, bool hitProiettile[],int difficolta)
-{
-    int j;
-
-    for (j = 0; j < NUMERO_NEMICI+difficolta; j++)
-    {
-        if (controlloCollisioniProiettiliAuto(proiettileNemico[j].coordinate, veicolo, larghezza))
-            hitProiettile[j] = true;
-    }
-    if (controlloCollisioniProiettiliAuto(proiettile.coordinate, veicolo, larghezza))
-        return true;
-
-    return false;
-}
 
 bool controlloCollisioneNemicoProiettile(Oggetto proiettile, Oggetto tronco, bool nemico)
 {

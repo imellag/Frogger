@@ -45,7 +45,7 @@ void funzVeicoli(int p[], int gameDifficulty, int pVeicoli[])
 
     // la velocità è indipendente per ogni corsia e viene creata randomicamente
     for (i = 0; i < NUMERO_CORSIE + gameDifficulty; i++)
-        velocitaCorsie[i] = (MIN_VELOCITA_VEICOLI + rand() % (MAX_VELOCITA_VEICOLI - MIN_VELOCITA_VEICOLI)) - 5000 * gameDifficulty;
+        velocitaCorsie[i] = (MIN_VELOCITA_VEICOLI + rand() % (MAX_VELOCITA_VEICOLI - MIN_VELOCITA_VEICOLI)) - 7500 * gameDifficulty;
 
     // genero i processi macchina
     for (i = 0; i < NUMERO_MACCHINE + NUMERO_CAMION; i++)

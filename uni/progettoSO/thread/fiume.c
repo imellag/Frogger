@@ -35,7 +35,6 @@ void *movimentoTronco(void *_tronco)
     }
 }
 
-
 void stampaTronco(WINDOW *finestraGioco, Coordinate tronco)
 {
     int i, j;
@@ -70,30 +69,24 @@ void stampaNemico(WINDOW *finestraGioco, Coordinate nemico)
 void *movimentoProiettileNemico(void *_proiettileNemico)
 {
     Oggetto *proiettileNemico = (Oggetto *)_proiettileNemico;
-    bool proiettileFuori=false;
+    bool proiettileFuori = false;
     while (!proiettileFuori)
     {
-        
+
         // il proiettile nemico va verso il basso quindi aumento la y
         pthread_mutex_lock(&mutex);
 
-        proiettileNemico->coordinate.y++;
-
-            // se il proiettile raggiunge la fine dello schermo in basso allora lo metto fuori mappa
-        if (proiettileNemico->coordinate.y >= POSIZIONE_INIZIALE_RANA_Y + (6 * proiettileNemico->difficolta) || proiettileNemico->coordinate.x ==FUORI_MAPPA-2)
+        // se il proiettile raggiunge la fine dello schermo in basso allora lo metto fuori mappa
+        if (proiettileNemico->coordinate.y > ALTEZZA_SCHERMO + (6 * proiettileNemico->difficolta) || proiettileNemico->coordinate.x == FUORI_MAPPA - 2)
         {
-           
+
             proiettileNemico->coordinate.x = FUORI_MAPPA - 2;
             proiettileNemico->coordinate.y = FUORI_MAPPA - 2;
-            proiettileFuori=true;
-
+            proiettileFuori = true;
         }
-
+        proiettileNemico->coordinate.y++;
         pthread_mutex_unlock(&mutex);
 
         usleep(50000);
-
-    
     }
-    return NULL;
 }

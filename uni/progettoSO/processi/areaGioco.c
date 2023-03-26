@@ -53,7 +53,7 @@ bool areaGioco(Avvio info)
     int punteggio = PUNTEGGIO_INIZIALE;
     ranocchio.coordinate.x = 0;
     ranocchio.coordinate.y = POSIZIONE_INIZIALE_RANA_Y + info.difficolta * NUMERO_CORSIE * 2;
- 
+
     // prima di iniziare porto le coordinate di tutti gli oggetti fuori dallo schermo
     inizializzaArray(tronchino, camioncino, macchinina, proiettilino, proiettileNemico);
 
@@ -255,7 +255,7 @@ bool areaGioco(Avvio info)
                 }
             }
             double spawnCorsia = fineCambioCorsia - inizioCambioCorsia;
-            if (spawnCorsia > 50000)
+            if (spawnCorsia > 60000)
             {
                 if (macchineInCoda > 0)
                 {
@@ -274,9 +274,15 @@ bool areaGioco(Avvio info)
             {
                 // controllo la collisione dei proiettili con le auto, sia quelli nemici che quello della rana
 
+                for (j = 0; j < NUMERO_NEMICI + info.difficolta; j++)
+                {
+                    if (controlloCollisioniProiettiliAuto(proiettileNemico[j].coordinate, macchinina[i], LARGHEZZA_MACCHINA))
+                        hitProiettile[j] = true;
+                }
+
                 for (j = 0; j < NUMERO_PROIETTILI; j++)
                 {
-                    if (proiettiliVeicoli(proiettilino[j], proiettileNemico, macchinina[i], LARGHEZZA_MACCHINA, hitProiettile, info.difficolta))
+                    if (controlloCollisioniProiettiliAuto(proiettilino[j].coordinate, macchinina[i], LARGHEZZA_MACCHINA))
                         proiettilino[j] = uccidiProiettile(proiettilino[j]);
                 }
                 // stampo le macchine
@@ -295,10 +301,17 @@ bool areaGioco(Avvio info)
             // ciclo camion
             for (i = 0; i < NUMERO_CAMION; i++)
             {
+
+                for (j = 0; j < NUMERO_NEMICI + info.difficolta; j++)
+                {
+                    if (controlloCollisioniProiettiliAuto(proiettileNemico[j].coordinate, camioncino[i], LARGHEZZA_CAMION))
+                        hitProiettile[j] = true;
+                }
+
                 // controllo se i proiettili collidono con un camion e nel caso li distruggo
                 for (j = 0; j < NUMERO_PROIETTILI; j++)
                 {
-                    if (proiettiliVeicoli(proiettilino[j], proiettileNemico, camioncino[i], LARGHEZZA_CAMION, hitProiettile, info.difficolta))
+                    if (controlloCollisioniProiettiliAuto(proiettilino[j].coordinate, camioncino[i], LARGHEZZA_CAMION))
                         proiettilino[j] = uccidiProiettile(proiettilino[j]);
                 }
                 // stampo i camion

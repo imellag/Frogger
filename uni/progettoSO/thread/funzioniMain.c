@@ -31,10 +31,10 @@ wchar_t *scrittaFinale[2] = {
 void dimensioneFinestra(int maxx, int maxy)
 {
     clear();
-    while (maxy < ALTEZZA_SCHERMO || maxx < LARGHEZZA_SCHERMO)
+    while (maxy < ALTEZZA_SCHERMO + ALTEZZA_CORSIE*2 +15 || maxx < LARGHEZZA_SCHERMO)
     {
         erase();
-        mvwprintw(stdscr, maxy / 2, maxx / 2 - 17, "Ingrandisci lo schermo per giocare!"); // -17 per centrare la scritta
+        mvwprintw(stdscr, maxy / 2, maxx / 2 - 17, "Ingrandisci lo schermo per giocare! Premere Ctrl -"); // -17 per centrare la scritta
         getmaxyx(stdscr, maxy, maxx);
         refresh();
     }

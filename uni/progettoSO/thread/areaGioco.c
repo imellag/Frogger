@@ -152,7 +152,7 @@ bool areaGioco(Avvio info)
     }
 
     for (i = 0; i < NUMERO_CORSIE + info.difficolta; i++)
-        velocitaCorsie[i] = (MIN_VELOCITA_VEICOLI + rand() % (MAX_VELOCITA_VEICOLI - MIN_VELOCITA_VEICOLI)) - 2500 * info.difficolta;
+        velocitaCorsie[i] = (MIN_VELOCITA_VEICOLI + rand() % (MAX_VELOCITA_VEICOLI - MIN_VELOCITA_VEICOLI)) - 7500 * info.difficolta;
 
     for (i = 0; i < NUMERO_MACCHINE; i++)
     {
@@ -205,6 +205,7 @@ bool areaGioco(Avvio info)
                     pthread_mutex_unlock(&mutex);
 
                     punteggio += PUNTEGGIO_TANA;
+                    timer=TEMPO_INIZIALE;
                 }
             }
 
@@ -375,7 +376,7 @@ bool areaGioco(Avvio info)
                     stampaNemico(finestraGioco, tronchino.coordinate);
                     time(&fine_proiettile);
                     delayProiettileNemico = fine_proiettile - inizio_proiettile[i];
-                    if (proiettileNemico[i].coordinate.x == (FUORI_MAPPA - 2) && delayProiettileNemico > 1)
+                    if (proiettileNemico[i].coordinate.x == (FUORI_MAPPA - 2) && delayProiettileNemico > 2)
                     {
                         time(&inizio_proiettile[i]);
                         system("ffplay -nodisp ../file_audio/sparo.mp3 2> /dev/null &");
@@ -383,6 +384,7 @@ bool areaGioco(Avvio info)
                         pthread_mutex_lock(&mutex);
                         proiettileNemico[i].coordinate.x = tronco[i].coordinate.x + LARGHEZZA_TRONCHI / 2;
                         proiettileNemico[i].coordinate.y = tronco[i].coordinate.y + ALTEZZA_CORSIE;
+                        proiettileNemico[i].difficolta=info.difficolta;
                         pthread_mutex_unlock(&mutex);
                         pthread_create(&threadProiettileNemico[i], NULL, &movimentoProiettileNemico, &proiettileNemico[i]);
                     }
@@ -398,6 +400,17 @@ bool areaGioco(Avvio info)
                 pthread_mutex_lock(&mutex);
                 macchinina = macchina[i];
                 pthread_mutex_unlock(&mutex);
+
+                for (j = 0; j < NUMERO_NEMICI + info.difficolta; j++)
+                {
+                    pthread_mutex_lock(&mutex);
+                    if (controlloCollisioniProiettiliAuto(proiettileNemico[j].coordinate, macchina[i].veicolo, LARGHEZZA_MACCHINA))
+                    {
+                        proiettileNemico[j].coordinate.x = FUORI_MAPPA - 2;
+                        proiettileNemico[j].coordinate.y = FUORI_MAPPA - 2;
+                    }
+                    pthread_mutex_unlock(&mutex);
+                }
                 // controllo la collisione dei proiettili con le auto, sia quelli nemici che quello della rana
                 for (j = 0; j < NUMERO_PROIETTILI; j++)
                 {
@@ -405,8 +418,7 @@ bool areaGioco(Avvio info)
                     proiettile[j] = proiettilino[j];
                     pthread_mutex_unlock(&mutex);
 
-                    if (proiettiliVeicoli(proiettile[j].proiettile, proiettileNemico, macchinina.veicolo,
-                                          LARGHEZZA_MACCHINA, hitProiettile, threadProiettileNemico, info.difficolta))
+                    if (controlloCollisioniProiettiliAuto(proiettile[j].proiettile.coordinate, macchinina.veicolo, LARGHEZZA_MACCHINA))
                     {
                         pthread_mutex_lock(&mutex);
                         proiettilino[j].proiettile = uccidiProiettile(proiettilino[j].proiettile, threadProiettile[j]);
@@ -472,6 +484,17 @@ bool areaGioco(Avvio info)
                 pthread_mutex_lock(&mutex);
                 camioncino = camion[i];
                 pthread_mutex_unlock(&mutex);
+
+                for (j = 0; j < NUMERO_NEMICI + info.difficolta; j++)
+                {
+                    pthread_mutex_lock(&mutex);
+                    if (controlloCollisioniProiettiliAuto(proiettileNemico[j].coordinate, camion[i].veicolo, LARGHEZZA_CAMION))
+                    {
+                        proiettileNemico[j].coordinate.x = FUORI_MAPPA - 2;
+                        proiettileNemico[j].coordinate.y = FUORI_MAPPA - 2;
+                    }
+                    pthread_mutex_unlock(&mutex);
+                }
                 // controllo se i proiettili collidono con un camion e nel caso li distruggo
                 for (j = 0; j < NUMERO_PROIETTILI; j++)
                 {
@@ -479,8 +502,8 @@ bool areaGioco(Avvio info)
                     proiettile[j] = proiettilino[j];
                     pthread_mutex_unlock(&mutex);
 
-                    if (proiettiliVeicoli(proiettile[j].proiettile, proiettileNemico, camioncino.veicolo,
-                                          LARGHEZZA_CAMION, hitProiettile, threadProiettileNemico, info.difficolta))
+                    if (controlloCollisioniProiettiliAuto(proiettile[j].proiettile.coordinate, camioncino.veicolo,
+                                                          LARGHEZZA_CAMION))
                     {
                         pthread_mutex_lock(&mutex);
                         proiettilino[j].proiettile = uccidiProiettile(proiettilino[j].proiettile, threadProiettile[j]);
