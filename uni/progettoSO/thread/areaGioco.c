@@ -611,7 +611,7 @@ bool areaGioco(Avvio info)
             oppure vengono chiuse tutte le tane. Nel caso di vittoria o sconfitta
             viene stampata una schermata finale diversa*/
             riniziaPartita = finePartita(finestraGioco, rana, vite, buffer, punteggio, info.difficolta, &partitaInCorso, partitaFinita, threadRana, threadProiettile,
-                                         threadTronchi, threadMacchine, threadCamion, threadTempo, threadProiettileNemico,threadCambioCorsia);
+                                         threadTronchi, threadMacchine, threadCamion, threadTempo,threadCambioCorsia);
         }
         buffer = false;
     }

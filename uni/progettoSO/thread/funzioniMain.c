@@ -260,7 +260,7 @@ bool controlloTaneChiuse(bool arrayTane[])
 bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int punteggio,
                  int difficolta, bool *partitaInCorso, bool partitaFinita, pthread_t threadRana, pthread_t threadProiettile[],
                  pthread_t threadTronchi[], pthread_t threadMacchine[],
-                  pthread_t threadCamion[], pthread_t threadTempo, pthread_t threadProiettileNemico[], pthread_t threadCambioCorsia)
+                  pthread_t threadCamion[], pthread_t threadTempo, pthread_t threadCambioCorsia)
 {
     int i;
     bool riniziaPartita;
@@ -296,8 +296,6 @@ bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int
         for (i = 0; i < NUMERO_MACCHINE; i++)
             pthread_cancel(threadMacchine[i]);
 
-        for (i = 0; i < NUMERO_NEMICI + difficolta; i++)
-            pthread_cancel(threadProiettileNemico[i]);
 
         pthread_cancel(threadTempo);
         pthread_cancel(threadRana);

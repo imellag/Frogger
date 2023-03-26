@@ -78,6 +78,8 @@ void *movimentoRana(void *_rana)
 void *funzProiettile(void *_proiettile)
 {
     Proiettile *proiettile = _proiettile;
+
+    Coordinate coordinateProiettile;
     pthread_mutex_lock(&mutex);
     proiettile->proiettile.id = PROIETTILE0 + proiettile->numeroProiettile;
     proiettile->proiettile.coordinate.x = proiettile->rana.coordinate.x + 2;
@@ -86,7 +88,11 @@ void *funzProiettile(void *_proiettile)
     while (true)
     {
 
-        if (controlloLimitiProiettile(proiettile->proiettile.coordinate))
+        pthread_mutex_lock(&mutex);
+        coordinateProiettile = proiettile->proiettile.coordinate;
+        pthread_mutex_unlock(&mutex);
+
+        if (controlloLimitiProiettile(coordinateProiettile))
         {
             pthread_mutex_lock(&mutex);
             proiettile->proiettile.coordinate.x = FUORI_MAPPA;

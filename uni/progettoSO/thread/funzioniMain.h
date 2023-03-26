@@ -46,7 +46,7 @@ bool controlloTaneChiuse(bool arrayTane[]);
 bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int punteggio,
                  int difficolta, bool *partitaInCorso, bool partitaFinita, pthread_t threadRana, pthread_t threadProiettile[],
                  pthread_t threadTronchi[], pthread_t threadMacchine[], pthread_t threadCamion[], 
-                 pthread_t threadTempo, pthread_t threadProiettileNemico[], pthread_t threadCambioCorsia);
+                 pthread_t threadTempo, pthread_t threadCambioCorsia);
 
 // controlla se l'inizio della corsia generata casualmente è occupato da un altro veicolo
 bool CorsiaOccupata(parametriVeicolo macchinina[], parametriVeicolo camioncino[], int corsia, int difficolta);
