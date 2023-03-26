@@ -119,13 +119,13 @@ void stampaTempo(WINDOW *finestraGioco, int tempo)
         if (i <= tempo)
         {
             wattron(finestraGioco, COLOR_PAIR(COLORE_NEMICI_TRONCO));
-            mvwprintw(finestraGioco, 2, 0 + i, " ");
+            mvwprintw(finestraGioco, 2,i, " ");
             wattroff(finestraGioco, COLOR_PAIR(COLORE_NEMICI_TRONCO));
         }
         else
         {
             wattron(finestraGioco, COLOR_PAIR(COLORE_NERO));
-            mvwprintw(finestraGioco, 2, 0 + i, " ");
+            mvwprintw(finestraGioco, 2, i, " ");
             wattroff(finestraGioco, COLOR_PAIR(COLORE_NERO));
         }
     }
@@ -337,6 +337,8 @@ bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer
             wrefresh(finestraGioco);
             schermataFinale(finestraGioco);
         }
+
+        system("killall ffplay");
     }
 
     return riniziaPartita;

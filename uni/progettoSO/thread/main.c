@@ -15,7 +15,7 @@ int main()
 
     Avvio info;
     info.difficolta=0;
-    info.audio=false;
+    info.audio=true;
     info.colore.g=999;
      info.colore.b=1;
       info.colore.r=1;

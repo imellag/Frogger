@@ -70,30 +70,30 @@ void stampaNemico(WINDOW *finestraGioco, Coordinate nemico)
 void *movimentoProiettileNemico(void *_proiettileNemico)
 {
     Oggetto *proiettileNemico = (Oggetto *)_proiettileNemico;
-    Oggetto coordinateProiettile;
-    while (true)
+    bool proiettileFuori=false;
+    while (!proiettileFuori)
     {
         
         // il proiettile nemico va verso il basso quindi aumento la y
         pthread_mutex_lock(&mutex);
 
         proiettileNemico->coordinate.y++;
-        coordinateProiettile=(*proiettileNemico);
+
+            // se il proiettile raggiunge la fine dello schermo in basso allora lo metto fuori mappa
+        if (proiettileNemico->coordinate.y >= POSIZIONE_INIZIALE_RANA_Y + (6 * proiettileNemico->difficolta) || proiettileNemico->coordinate.x ==FUORI_MAPPA-2)
+        {
+           
+            proiettileNemico->coordinate.x = FUORI_MAPPA - 2;
+            proiettileNemico->coordinate.y = FUORI_MAPPA - 2;
+            proiettileFuori=true;
+
+        }
 
         pthread_mutex_unlock(&mutex);
 
         usleep(50000);
 
-        // se il proiettile raggiunge la fine dello schermo in basso allora lo metto fuori mappa
-        if (coordinateProiettile.coordinate.y >= POSIZIONE_INIZIALE_RANA_Y + (6 * coordinateProiettile.difficolta) || coordinateProiettile.coordinate.x ==FUORI_MAPPA-2)
-        {
-            pthread_mutex_lock(&mutex);
-            proiettileNemico->coordinate.x = FUORI_MAPPA - 2;
-            proiettileNemico->coordinate.y = FUORI_MAPPA - 2;
-            pthread_mutex_unlock(&mutex);
-            break;
-
-        }
+    
     }
     return NULL;
 }

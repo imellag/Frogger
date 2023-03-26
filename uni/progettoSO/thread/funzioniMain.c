@@ -300,6 +300,7 @@ bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int
         pthread_cancel(threadTempo);
         pthread_cancel(threadRana);
          pthread_cancel(threadCambioCorsia);
+         system("killall ffplay");
     }
 
     return riniziaPartita;

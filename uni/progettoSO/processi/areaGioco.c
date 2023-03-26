@@ -207,6 +207,7 @@ bool areaGioco(Avvio info)
             risultato = controlloLimitiRana(ranocchio.coordinate, info.difficolta);
 
             // se la rana è entrata in una tana viene portata alla posizione iniziale viene aggiornato il punteggio
+            // i numeri da 0 a 5 sono i numeri di ogni rispettiva tana
             if (risultato < 6 && risultato >= 0)
             {
                 if (!(arrayTane[risultato] == true))

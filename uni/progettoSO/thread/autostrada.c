@@ -133,9 +133,10 @@ Colore coloreVeicolo()
         rgb.r = rand() % 1000;
         rgb.g = rand() % 1000;
         rgb.b = rand() % 1000;
-    } while (rgb.r > 100 && rgb.r < 200 &&
-             rgb.g > 100 && rgb.g < 200 &&
-             rgb.b > 100 && rgb.b < 200);
+    } while (rgb.r > 150 && rgb.r < 350 &&
+             rgb.g > 150 && rgb.g < 350 &&
+             rgb.b > 150 && rgb.b < 350);
 
     return rgb;
 }
+

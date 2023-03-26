@@ -171,7 +171,7 @@ void colori(Avvio info)
 
     init_color(COLORE_RANA, info.colore.r, info.colore.g, info.colore.b);          // 19/227/5
     init_color(COLORE_MARCIAPIEDE, 388, 270, 102); // 99/69/26
-    init_color(COLORE_AUTOSTRADA, 150, 150, 150);  // grigio (per ora), sarebbe 66/66/66 in rgb, convertito 259 /259/259
+    init_color(COLORE_AUTOSTRADA, 259, 259, 259);    // grigio (per ora), sarebbe 66/66/66 in rgb, convertito 259 /259/259
     init_color(COLORE_TRONCHI, 459, 298, 102);     // 117/76/26
     init_color(COLORE_TANA, 541, 271, 0);
     init_color(COLORE_NEMICI, 875, 313, 273); // 224, 80, 70
