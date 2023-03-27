@@ -15,3 +15,4 @@ void funzProiettileNemico(Coordinate tronco, int i, int gameDifficulty);
 /* controlla la posizione attuale del proiettile nemico, la aggiorna e eventualmente
  invia al main un segnale speciale se il proiettile esce fuori dallo schermo */
 void* movimentoProiettileNemico(void* _proiettileNemico);
+

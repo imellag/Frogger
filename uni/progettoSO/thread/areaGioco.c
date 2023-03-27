@@ -20,7 +20,7 @@ bool areaGioco(Avvio info)
     int differenza, risultato, direzione, contaNemici;
 
     int troncoNemico, vite, corsiaRandom, corsia;
-
+    int delayProiettileNemico;
     bool buffer = false;
     bool partitaFinita;
     bool coloreTroncoRana = false;
@@ -28,8 +28,8 @@ bool areaGioco(Avvio info)
     bool partitaInCorso = true;
     pthread_t threadRana, threadProiettile[NUMERO_PROIETTILI],
         threadTronchi[MAX_TRONCHI], threadMacchine[NUMERO_MACCHINE], threadCamion[NUMERO_CAMION],
-        threadTempo, threadProiettileNemico[MAX_TRONCHI], threadCambioCorsia;
-
+        threadTempo, threadProiettileNemico[MAX_TRONCHI], threadCambioCorsia, threadSparoNemico;
+    bool flagSparoNemico;
     // variabili utilizzate per far spawnare i nemici e farli sparare al momento giusto
     time_t inizio_nemico, fine_nemico, inizio_proiettile[MAX_TRONCHI], fine_proiettile;
     time_t inizioSparo, fineSparo;
@@ -47,8 +47,6 @@ bool areaGioco(Avvio info)
     bool arrayTane[NUMERO_TANE] = {false};
 
     bool nemico[MAX_TRONCHI] = {false};
-
-    int delayProiettileNemico;
 
     parametriVeicolo macchina[NUMERO_MACCHINE], camion[NUMERO_CAMION], macchinina, camioncino;
 
@@ -125,6 +123,7 @@ bool areaGioco(Avvio info)
 
     pthread_create(&threadRana, NULL, &movimentoRana, &rana);
     pthread_create(&threadCambioCorsia, NULL, &delayCambioCorsia, &flagCambioCorsia);
+ 
 
     for (i = 0; i < NUMERO_TRONCHI + info.difficolta; i++)
     {
@@ -181,6 +180,7 @@ bool areaGioco(Avvio info)
 
     for (i = 0; i < NUMERO_NEMICI + info.difficolta; i++)
         time(&inizio_proiettile[i]);
+
     partitaFinita = false;
     while (partitaInCorso)
     {
@@ -240,7 +240,7 @@ bool areaGioco(Avvio info)
             }
 
             if (rana.coordinate.y == INIZIO_TANE)
-              rana = morteRana(finestraGioco, &vite, rana, info.difficolta, &timer);
+                rana = morteRana(finestraGioco, &vite, rana, info.difficolta, &timer);
             pthread_mutex_unlock(&mutex);
             // se ricevo dal thread della rana l'id pausa allora faccio partite la funzione pausa
             // che blocca tutti gli altri thread con un mutex
@@ -376,19 +376,25 @@ bool areaGioco(Avvio info)
                 {
                     stampaNemico(finestraGioco, tronchino.coordinate);
                     time(&fine_proiettile);
+
+                    // guardo quanto tempo è passato
                     delayProiettileNemico = fine_proiettile - inizio_proiettile[i];
-                    if (proiettileNemico[i].coordinate.x == (FUORI_MAPPA - 2) && delayProiettileNemico > 2)
+                  
+                    pthread_mutex_lock(&mutex);
+                    if (proiettileNemico[i].coordinate.x <= FUORI_MAPPA && delayProiettileNemico > 2)
                     {
+
                         time(&inizio_proiettile[i]);
                         system("ffplay -nodisp ../file_audio/sparo.mp3 2> /dev/null &");
 
-                        pthread_mutex_lock(&mutex);
+                        // inizializzo le coordinate del proiettile
                         proiettileNemico[i].coordinate.x = tronco[i].coordinate.x + LARGHEZZA_TRONCHI / 2;
                         proiettileNemico[i].coordinate.y = tronco[i].coordinate.y + ALTEZZA_CORSIE;
                         proiettileNemico[i].difficolta = info.difficolta;
-                        pthread_mutex_unlock(&mutex);
+
                         pthread_create(&threadProiettileNemico[i], NULL, &movimentoProiettileNemico, &proiettileNemico[i]);
                     }
+                    pthread_mutex_unlock(&mutex);
                 }
                 // altrimenti, se non è presente un nemico stampo solamente il tronco
                 else

@@ -74,16 +74,14 @@ void *movimentoProiettileNemico(void *_proiettileNemico)
     bool proiettileFuori = false;
     while (!proiettileFuori)
     {
-
         // il proiettile nemico va verso il basso quindi aumento la y
         pthread_mutex_lock(&mutex);
 
         // se il proiettile raggiunge la fine dello schermo in basso allora lo metto fuori mappa
-        if (proiettileNemico->coordinate.y > ALTEZZA_SCHERMO + (6 * proiettileNemico->difficolta) || proiettileNemico->coordinate.x == FUORI_MAPPA - 2)
+        if (proiettileNemico->coordinate.y > ALTEZZA_SCHERMO + (6 * proiettileNemico->difficolta))
         {
-
-            proiettileNemico->coordinate.x = FUORI_MAPPA - 2;
-            proiettileNemico->coordinate.y = FUORI_MAPPA - 2;
+            proiettileNemico->coordinate.x = (FUORI_MAPPA - 2);
+            proiettileNemico->coordinate.y = (FUORI_MAPPA - 2);
             proiettileFuori = true;
         }
         proiettileNemico->coordinate.y++;

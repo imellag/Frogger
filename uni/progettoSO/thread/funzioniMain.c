@@ -167,7 +167,7 @@ bool pausaeNuovaPartita(WINDOW *finestraGioco, int chiamata)
         mvwprintw(finestraGioco, ALTEZZA_SCRITTE, 43, "Nuova partita");
         mvwprintw(finestraGioco, ALTEZZA_SCRITTE, 84, "Esci dal gioco");
     }
-    
+
     /* in base all'input del mouse la funzione restituisce true o false, che viene poi gestito dalla funzione chiamante
      in base al tipo di chiamata (pausa o nuova partita) */
 
@@ -225,8 +225,8 @@ Oggetto uccidiProiettile(Oggetto proiettile, pthread_t threadProiettile)
 {
 
     pthread_cancel(threadProiettile);
-    proiettile.coordinate.x = FUORI_MAPPA;
-    proiettile.coordinate.y = FUORI_MAPPA;
+    proiettile.coordinate.x = FUORI_MAPPA - 1;
+    proiettile.coordinate.y = FUORI_MAPPA - 1;
 
     return proiettile;
 }
@@ -248,10 +248,10 @@ bool controlloTaneChiuse(bool arrayTane[])
     return buffer;
 }
 
-bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite,bool*partitaInCorso, bool buffer, int punteggio,
-                 int difficolta, bool partitaFinita,pthread_t threadTronchi[],pthread_t threadCamion[],pthread_t threadMacchine[],
-                 pthread_t threadTempo,pthread_t threadRana,pthread_t threadCambioCorsia,bool audio)
-{  
+bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool *partitaInCorso, bool buffer, int punteggio,
+                 int difficolta, bool partitaFinita, pthread_t threadTronchi[], pthread_t threadCamion[], pthread_t threadMacchine[],
+                 pthread_t threadTempo, pthread_t threadRana, pthread_t threadCambioCorsia, bool audio)
+{
     int i;
     bool riniziaPartita = false;
     if (rana.id == q || vite == 0 || buffer == false || partitaFinita)
@@ -268,35 +268,31 @@ bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite,bool*partitaInCor
         werase(finestraGioco);
         wrefresh(finestraGioco);
 
-            riniziaPartita = pausaeNuovaPartita(finestraGioco, 2);
+        riniziaPartita = pausaeNuovaPartita(finestraGioco, 2);
 
-    if (!riniziaPartita)
-    {
-        werase(finestraGioco);
-        wrefresh(finestraGioco);
-        schermataFinale(finestraGioco);
-    }
-    
+        if (!riniziaPartita)
+        {
+            werase(finestraGioco);
+            wrefresh(finestraGioco);
+            schermataFinale(finestraGioco);
+        }
 
+        // cancello tutti i thread creati e se è rimasta la musica in sottofondo
+        if (audio)
+            system("killall ffplay");
 
-    if (audio)
-        system("killall ffplay");
+        for (i = 0; i < NUMERO_TRONCHI + difficolta; i++)
+            pthread_cancel(threadTronchi[i]);
 
-    for (i = 0; i < NUMERO_TRONCHI + difficolta; i++)
-        pthread_cancel(threadTronchi[i]);
+        for (i = 0; i < NUMERO_CAMION; i++)
+            pthread_cancel(threadCamion[i]);
 
-    for (i = 0; i < NUMERO_CAMION; i++)
-        pthread_cancel(threadCamion[i]);
+        for (i = 0; i < NUMERO_MACCHINE; i++)
+            pthread_cancel(threadMacchine[i]);
 
-    for (i = 0; i < NUMERO_MACCHINE; i++)
-        pthread_cancel(threadMacchine[i]);
-
-    pthread_cancel(threadTempo);
-    pthread_cancel(threadRana);
-    pthread_cancel(threadCambioCorsia);
-
-
-        
+        pthread_cancel(threadTempo);
+        pthread_cancel(threadRana);
+        pthread_cancel(threadCambioCorsia);
     }
 
     return riniziaPartita;
@@ -324,18 +320,18 @@ void inizializzaArray(Oggetto tronco[], Oggetto proiettileNemico[], Oggetto proi
 {
     int i;
 
-    /* i proiettili non vengono messi alle stesse coordinate degli altri oggetti per evitare che si generino delle collisioni 
+    /* i proiettili non vengono messi alle stesse coordinate degli altri oggetti per evitare che si generino delle collisioni
      quando non sono rappresentati a schermo */
     for (i = 0; i < MAX_TRONCHI; i++)
     {
         tronco[i].coordinate.x = FUORI_MAPPA;
         tronco[i].coordinate.y = FUORI_MAPPA;
 
-        proiettileNemico[i].coordinate.x = FUORI_MAPPA - 2;
-        proiettileNemico[i].coordinate.y = FUORI_MAPPA - 2;
+        proiettileNemico[i].coordinate.x = (FUORI_MAPPA - 2);
+        proiettileNemico[i].coordinate.y = (FUORI_MAPPA - 2);
 
-        proiettilinoNemico[i].coordinate.x = FUORI_MAPPA - 2;
-        proiettilinoNemico[i].coordinate.y = FUORI_MAPPA - 2;
+        proiettilinoNemico[i].coordinate.x = (FUORI_MAPPA - 2);
+        proiettilinoNemico[i].coordinate.y = (FUORI_MAPPA - 2);
     }
 
     for (i = 0; i < MAX_CAMION; i++)
