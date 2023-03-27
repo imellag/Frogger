@@ -36,14 +36,13 @@ int main()
     dimensioneFinestra(maxx, maxy);
     do
     {
-        riniziaPartita = false;
         refresh();
         info.colore.g = 890;
         info.audio = false;
-         info = menuIniziale();
+        info = menuIniziale();
         colori(info);
         riniziaPartita = areaGioco(info);
-
+      
     } while (riniziaPartita);
 
     endwin();

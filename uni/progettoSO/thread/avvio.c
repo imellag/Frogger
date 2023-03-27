@@ -7,28 +7,23 @@ wchar_t *frogger[ALTEZZA_SPRITE] = {
     L"█████╗░░██████╔╝██║░░██║██║░░██╗░██║░░██╗░█████╗░░██████╔╝██║",
     L"██╔══╝░░██╔══██╗██║░░██║██║░░╚██╗██║░░╚██╗██╔══╝░░██╔══██╗╚═╝",
     L"██║░░░░░██║░░██║╚█████╔╝╚██████╔╝╚██████╔╝███████╗██║░░██║██╗",
-    L"╚═╝░░░░░╚═╝░░╚═╝░╚════╝░░╚═════╝░░╚═════╝░╚══════╝╚═╝░░╚═╝╚═╝"
-};
+    L"╚═╝░░░░░╚═╝░░╚═╝░╚════╝░░╚═════╝░░╚═════╝░╚══════╝╚═╝░░╚═╝╚═╝"};
 
 wchar_t *effettiSonori[2] = {
     L"█▀▀ █▀▀ █▀▀ █▀▀ ▀█▀ ▀█▀ █   █▀ █▀█ █▄░█ █▀█ █▀█ █",
-    L"██▄ █▀░ █▀░ ██▄ ░█░ ░█░ █   ▄█ █▄█ █░▀█ █▄█ █▀▄ █"
-};
+    L"██▄ █▀░ █▀░ ██▄ ░█░ ░█░ █   ▄█ █▄█ █░▀█ █▄█ █▀▄ █"};
 
 wchar_t *coloreRana[2] = {
     L"█▀▀ █▀█ █░░ █▀█ █▀█ █▀▀   █▀▄ █▀▀ █░░ █░░ ▄▀█   █▀█ ▄▀█ █▄░█ ▄▀█",
-    L"█▄▄ █▄█ █▄▄ █▄█ █▀▄ ██▄   █▄▀ ██▄ █▄▄ █▄▄ █▀█   █▀▄ █▀█ █░▀█ █▀█"
-};
+    L"█▄▄ █▄█ █▄▄ █▄█ █▀▄ ██▄   █▄▀ ██▄ █▄▄ █▄▄ █▀█   █▀▄ █▀█ █░▀█ █▀█"};
 
 wchar_t *indietro[2] = {
     L"█ █▄░█ █▀▄ █ █▀▀ ▀█▀ █▀█ █▀█",
-    L"█ █░▀█ █▄▀ █ ██▄ ░█░ █▀▄ █▄█"
-};
+    L"█ █░▀█ █▄▀ █ ██▄ ░█░ █▀▄ █▄█"};
 
 wchar_t *comandi[2] = {
     L"█▀▀ █▀█ █▀▄▀█ ▄▀█ █▄░█ █▀▄ █ ▀",
-    L"█▄▄ █▄█ █░▀░█ █▀█ █░▀█ █▄▀ █ ▄"
-};
+    L"█▄▄ █▄█ █░▀░█ █▀█ █░▀█ █▄▀ █ ▄"};
 
 Avvio menuIniziale()
 {
@@ -55,9 +50,7 @@ Avvio menuIniziale()
     init_pair(COLORE_VERDE_NERO, COLOR_GREEN, COLOR_BLACK);
     init_pair(COLORE_NERO_VERDE, COLOR_BLACK, COLOR_GREEN);
 
-
     stampaComandi(finestraIniziale);
-
     wattron(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
 
     // stampa nome con scritta di caricamento
@@ -387,7 +380,7 @@ void stampaComandi(WINDOW *finestraIniziale)
     mvwprintw(finestraIniziale, 24, LARGHEZZA_SCHERMO / 2 - 12, "Spara: Barra spaziatrice");
     mvwprintw(finestraIniziale, 25, LARGHEZZA_SCHERMO / 2 - 4, "Pausa: P");
     mvwprintw(finestraIniziale, 26, LARGHEZZA_SCHERMO / 2 - 8, "Esci dal gioco: Q");
-    mvwprintw(finestraIniziale, 27, LARGHEZZA_SCHERMO / 2 - 22, "Per muoverti nel menù usa l'input del mouse");
+    mvwprintw(finestraIniziale, 27, LARGHEZZA_SCHERMO / 2 - 27, "Per muoverti nel menù usa il click sinistro del mouse");
     mvwprintw(finestraIniziale, 30, LARGHEZZA_SCHERMO / 2 - 19, "Premi un tasto per iniziare a giocare");
 
     wrefresh(finestraIniziale);

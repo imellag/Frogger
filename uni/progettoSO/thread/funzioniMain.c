@@ -248,14 +248,15 @@ bool controlloTaneChiuse(bool arrayTane[])
     return buffer;
 }
 
-bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int punteggio,
-                 int difficolta, bool partitaFinita)
+bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite,bool*partitaInCorso, bool buffer, int punteggio,
+                 int difficolta, bool partitaFinita,pthread_t threadTronchi[],pthread_t threadCamion[],pthread_t threadMacchine[],
+                 pthread_t threadTempo,pthread_t threadRana,pthread_t threadCambioCorsia,bool audio)
 {  
     int i;
-    bool partitaInCorso = true;
+    bool riniziaPartita = false;
     if (rana.id == q || vite == 0 || buffer == false || partitaFinita)
     {
-        partitaInCorso = false;
+        (*partitaInCorso) = false;
         werase(finestraGioco);
 
         if (vite == 0 || partitaFinita)
@@ -267,10 +268,38 @@ bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int
         werase(finestraGioco);
         wrefresh(finestraGioco);
 
+            riniziaPartita = pausaeNuovaPartita(finestraGioco, 2);
+
+    if (!riniziaPartita)
+    {
+        werase(finestraGioco);
+        wrefresh(finestraGioco);
+        schermataFinale(finestraGioco);
+    }
+    
+
+
+    if (audio)
+        system("killall ffplay");
+
+    for (i = 0; i < NUMERO_TRONCHI + difficolta; i++)
+        pthread_cancel(threadTronchi[i]);
+
+    for (i = 0; i < NUMERO_CAMION; i++)
+        pthread_cancel(threadCamion[i]);
+
+    for (i = 0; i < NUMERO_MACCHINE; i++)
+        pthread_cancel(threadMacchine[i]);
+
+    pthread_cancel(threadTempo);
+    pthread_cancel(threadRana);
+    pthread_cancel(threadCambioCorsia);
+
+
         
     }
 
-    return partitaInCorso;
+    return riniziaPartita;
 }
 
 void creaColoriRandom(int difficolta)

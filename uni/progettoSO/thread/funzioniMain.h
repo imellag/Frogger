@@ -39,8 +39,9 @@ void schermataFinale(WINDOW *finestraGioco);
 bool controlloTaneChiuse(bool arrayTane[]);
 
 // gestisce le casistiche di fine partita
-bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int punteggio,
-                 int difficolta, bool partitaFinita);
+bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite,bool*partitaInCorso, bool buffer, int punteggio,
+                 int difficolta, bool partitaFinita,pthread_t threadTronchi[],pthread_t threadCamion[],pthread_t threadMacchine[],
+                 pthread_t threadTempo,pthread_t threadRana,pthread_t threadCambioCorsia,bool audio);
 
 
 

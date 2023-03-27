@@ -636,39 +636,24 @@ bool areaGioco(Avvio info)
             /* uscita dal gioco nel caso in cui viene premuta la q, finiscono le vite, finisce il tempo
             oppure vengono chiuse tutte le tane. Nel caso di vittoria o sconfitta
             viene stampata una schermata finale diversa */
-            partitaInCorso = finePartita(finestraGioco, rana, vite, buffer, punteggio, info.difficolta, partitaFinita);
+            riniziaPartita = finePartita(finestraGioco, rana, vite,&partitaInCorso, buffer, punteggio, info.difficolta,
+             partitaFinita,threadTronchi,threadCamion,threadMacchine,threadTempo,threadRana,threadCambioCorsia,info.audio);
             buffer = false;
         }
     }
 
-    riniziaPartita = pausaeNuovaPartita(finestraGioco, 2);
-
-    if (!riniziaPartita)
-    {
-        werase(finestraGioco);
-        wrefresh(finestraGioco);
-        schermataFinale(finestraGioco);
-    }
-
-    if (info.audio)
-        system("killall ffplay");
-
-    for (i = 0; i < NUMERO_TRONCHI + info.difficolta; i++)
-        pthread_cancel(threadTronchi[i]);
-
-    for (i = 0; i < NUMERO_CAMION; i++)
-        pthread_cancel(threadCamion[i]);
-
-    for (i = 0; i < NUMERO_MACCHINE; i++)
-        pthread_cancel(threadMacchine[i]);
-
-    pthread_cancel(threadTempo);
-    pthread_cancel(threadRana);
-    pthread_cancel(threadCambioCorsia);
 
     pthread_mutex_destroy(&mutex);
     delwin(finestraGioco);
+
+    if(riniziaPartita)
+            execl("/proc/self/exe", "", (char *)NULL);
+
+
+   
+    
     // rinizia la partita
-    execl("/proc/self/exe", NULL);
+
     return riniziaPartita;
+   
 }

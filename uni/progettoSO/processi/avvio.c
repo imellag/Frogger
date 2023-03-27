@@ -397,7 +397,7 @@ void stampaComandi(WINDOW *finestraIniziale)
     mvwprintw(finestraIniziale, 24, LARGHEZZA_SCHERMO / 2 - 12, "Spara: Barra spaziatrice");
     mvwprintw(finestraIniziale, 25, LARGHEZZA_SCHERMO / 2 - 4, "Pausa: P");
     mvwprintw(finestraIniziale, 26, LARGHEZZA_SCHERMO / 2 - 8, "Esci dal gioco: Q");
-    mvwprintw(finestraIniziale, 27, LARGHEZZA_SCHERMO / 2 - 22, "Per muoverti nel menù usa l'input del mouse");
+    mvwprintw(finestraIniziale, 27, LARGHEZZA_SCHERMO / 2 - 27, "Per muoverti nel menù usa il click sinistro del mouse");
     mvwprintw(finestraIniziale, 30, LARGHEZZA_SCHERMO / 2 - 19, "Premi un tasto per iniziare a giocare");
 
     wrefresh(finestraIniziale);
