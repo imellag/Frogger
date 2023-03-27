@@ -75,6 +75,8 @@ bool areaGioco(Avvio info)
     finestraGioco = newwin(ALTEZZA_SCHERMO + (info.difficolta * NUMERO_CORSIE * 2),
                            LARGHEZZA_SCHERMO - 1, INIZIO_ALTEZZA_FINESTRA, INIZIO_LARGHEZZA_FINESTRA);
 
+    // cosa d
+
     rana.coordinate.x = 0;
     rana.coordinate.y = POSIZIONE_INIZIALE_RANA_Y + info.difficolta * NUMERO_CORSIE * 2;
     rana.difficolta = info.difficolta;
@@ -635,10 +637,8 @@ bool areaGioco(Avvio info)
             oppure vengono chiuse tutte le tane. Nel caso di vittoria o sconfitta
             viene stampata una schermata finale diversa */
             partitaInCorso = finePartita(finestraGioco, rana, vite, buffer, punteggio, info.difficolta, partitaFinita);
-             buffer = false;
+            buffer = false;
         }
-
-       
     }
 
     riniziaPartita = pausaeNuovaPartita(finestraGioco, 2);
@@ -650,9 +650,10 @@ bool areaGioco(Avvio info)
         schermataFinale(finestraGioco);
     }
 
-    system("killall ffplay");
+    if (info.audio)
+        system("killall ffplay");
 
-   for (i = 0; i < NUMERO_TRONCHI + info.difficolta; i++)
+    for (i = 0; i < NUMERO_TRONCHI + info.difficolta; i++)
         pthread_cancel(threadTronchi[i]);
 
     for (i = 0; i < NUMERO_CAMION; i++)
@@ -661,12 +662,13 @@ bool areaGioco(Avvio info)
     for (i = 0; i < NUMERO_MACCHINE; i++)
         pthread_cancel(threadMacchine[i]);
 
-    hread_cancel(threadTempo);
+    pthread_cancel(threadTempo);
     pthread_cancel(threadRana);
     pthread_cancel(threadCambioCorsia);
 
     pthread_mutex_destroy(&mutex);
     delwin(finestraGioco);
-
+    // rinizia la partita
+    execl("/proc/self/exe", NULL);
     return riniziaPartita;
 }

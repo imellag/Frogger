@@ -321,10 +321,10 @@ bool controlloTaneChiuse(bool arrayTane[])
 }
 
 bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer, int punteggio,
-                 int difficolta, Oggetto tempo, Oggetto macchina[], Oggetto camion[], Oggetto tronco[], bool *partitaInCorso, bool partitaFinita)
+                 int difficolta, Oggetto tempo, Oggetto macchina[], Oggetto camion[], Oggetto tronco[], bool *partitaInCorso, bool partitaFinita, bool audio)
 {
-    /* se anche solo una delle condizioni di fine della partita viene rispettata si entra nell'if, che poi stampa la scritta giusta in base a 
-     quale di queste condizioni è vera. viene poi chiesto se si vuole fare una nuova partita e in base al valore restituito si prosegue. 
+    /* se anche solo una delle condizioni di fine della partita viene rispettata si entra nell'if, che poi stampa la scritta giusta in base a
+     quale di queste condizioni è vera. viene poi chiesto se si vuole fare una nuova partita e in base al valore restituito si prosegue.
      i processi vengono killati indipendentemente da questo dato che vengono ricreati all'avvio della partita */
     int i;
     bool riniziaPartita;
@@ -364,7 +364,8 @@ bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer
 
         kill(ranocchio.pid, SIGKILL);
 
-        system("killall ffplay");
+        if (audio)
+            system("killall ffplay");
     }
 
     return riniziaPartita;
@@ -432,7 +433,7 @@ void creaColoriRandom(int difficolta)
 
 void inizializzaArray(Oggetto tronco[], Oggetto camion[], Oggetto macchina[], Oggetto proiettile[], Oggetto proiettileNemico[])
 {
-    /* i proiettili non vengono messi alle stesse coordinate degli altri oggetti per evitare che si generino delle collisioni 
+    /* i proiettili non vengono messi alle stesse coordinate degli altri oggetti per evitare che si generino delle collisioni
      quando non sono rappresentati a schermo */
     int i;
 

@@ -481,7 +481,7 @@ bool areaGioco(Avvio info)
         /* uscita dal gioco nel caso in cui viene premuta la q, finiscono le vite, finisce il tempo
         oppure vengono chiuse tutte le tane. Nel caso di vittoria o sconfitta
         viene stampata una schermata finale diversa */
-        riniziaPartita = finePartita(finestraGioco, ranocchio, vite, buffer, punteggio, info.difficolta, tempo, macchinina, camioncino, tronchino, &partitaInCorso, partitaFinita);
+        riniziaPartita = finePartita(finestraGioco, ranocchio, vite, buffer, punteggio, info.difficolta, tempo, macchinina, camioncino, tronchino, &partitaInCorso, partitaFinita, info.audio);
         buffer = false;
     }
 

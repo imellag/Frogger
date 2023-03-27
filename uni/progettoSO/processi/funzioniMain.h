@@ -43,7 +43,7 @@ void schermataFinale(WINDOW *finestraGioco);
 bool controlloTaneChiuse(bool arrayTane[]);
 
 // gestisce le casistiche di fine partita
-bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer, int punteggio, int difficolta, Oggetto tempo, Oggetto macchina[], Oggetto camion[], Oggetto tronco[], bool *partitaInCorso, bool partitaFinita);
+bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer, int punteggio, int difficolta, Oggetto tempo, Oggetto macchina[], Oggetto camion[], Oggetto tronco[], bool *partitaInCorso, bool partitaFinita, bool audio);
 
 // controlla se l'inizio della corsia generata casualmente è occupato da un altro veicolo
 bool corsiaOccupata(Oggetto macchinina[], Oggetto camioncino[], int corsia, int difficolta);

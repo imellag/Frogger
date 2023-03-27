@@ -38,8 +38,9 @@ int main()
     {
         riniziaPartita = false;
         refresh();
-
-        info = menuIniziale();
+        info.colore.g = 890;
+        info.audio = false;
+         info = menuIniziale();
         colori(info);
         riniziaPartita = areaGioco(info);
 

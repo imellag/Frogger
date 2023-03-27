@@ -18,6 +18,7 @@ void *movimentoRana(void *_rana)
 
         timeout(1);
         inputMovimento = getch();
+
         pthread_mutex_lock(&mutex);
         move = true;
         switch (inputMovimento)
@@ -72,6 +73,7 @@ void *movimentoRana(void *_rana)
             break;
         }
         pthread_mutex_unlock(&mutex);
+
     }
 
     return NULL;

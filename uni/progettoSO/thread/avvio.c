@@ -55,6 +55,7 @@ Avvio menuIniziale()
     init_pair(COLORE_VERDE_NERO, COLOR_GREEN, COLOR_BLACK);
     init_pair(COLORE_NERO_VERDE, COLOR_BLACK, COLOR_GREEN);
 
+
     stampaComandi(finestraIniziale);
 
     wattron(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
