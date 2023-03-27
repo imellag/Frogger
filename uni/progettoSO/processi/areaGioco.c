@@ -429,8 +429,7 @@ bool areaGioco(Avvio info)
                 else
                     stampaTronco(finestraGioco, tronchino[i].coordinate);
 
-                /* mi prendo i pid dei tronchi per poi utilizzare questo array per
-                 killare correttamente i vari processi tronchi */
+                
             }
             // la rana  prova a entrare in una tana già chiusa
             if (ranocchio.coordinate.y == INIZIO_TANE)

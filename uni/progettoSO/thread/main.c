@@ -34,16 +34,13 @@ int main()
 
     getmaxyx(stdscr, maxy, maxx);
     dimensioneFinestra(maxx, maxy);
-    do
-    {
-        refresh();
-        info.colore.g = 890;
-        info.audio = false;
-        info = menuIniziale();
-        colori(info);
-        riniziaPartita = areaGioco(info);
-      
-    } while (riniziaPartita);
+
+    refresh();
+    info.colore.g = 890;
+    info.audio = false;
+    info = menuIniziale();
+    colori(info);
+    riniziaPartita = areaGioco(info);
 
     endwin();
 

@@ -238,6 +238,9 @@ bool areaGioco(Avvio info)
                     time(&inizioSparo);
                 }
             }
+
+            if (rana.coordinate.y == INIZIO_TANE)
+              rana = morteRana(finestraGioco, &vite, rana, info.difficolta, &timer);
             pthread_mutex_unlock(&mutex);
             // se ricevo dal thread della rana l'id pausa allora faccio partite la funzione pausa
             // che blocca tutti gli altri thread con un mutex
@@ -636,24 +639,21 @@ bool areaGioco(Avvio info)
             /* uscita dal gioco nel caso in cui viene premuta la q, finiscono le vite, finisce il tempo
             oppure vengono chiuse tutte le tane. Nel caso di vittoria o sconfitta
             viene stampata una schermata finale diversa */
-            riniziaPartita = finePartita(finestraGioco, rana, vite,&partitaInCorso, buffer, punteggio, info.difficolta,
-             partitaFinita,threadTronchi,threadCamion,threadMacchine,threadTempo,threadRana,threadCambioCorsia,info.audio);
+            riniziaPartita = finePartita(finestraGioco, rana, vite, &partitaInCorso, buffer, punteggio, info.difficolta,
+                                         partitaFinita, threadTronchi, threadCamion, threadMacchine, threadTempo, threadRana, threadCambioCorsia, info.audio);
             buffer = false;
         }
     }
 
-
     pthread_mutex_destroy(&mutex);
     delwin(finestraGioco);
 
-    if(riniziaPartita)
-            execl("/proc/self/exe", "", (char *)NULL);
-
-
-   
-    
     // rinizia la partita
+    if (riniziaPartita)
+    {
+        endwin();
+        execl("/proc/self/exe", "", (char *)NULL);
+    }
 
     return riniziaPartita;
-   
 }
