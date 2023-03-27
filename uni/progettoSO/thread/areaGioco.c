@@ -374,7 +374,9 @@ bool areaGioco(Avvio info)
                 ne creo il thread */
                 if (nemico[i])
                 {
+
                     stampaNemico(finestraGioco, tronchino.coordinate);
+                    // prendo il tempo
                     time(&fine_proiettile);
 
                     // guardo quanto tempo è passato
