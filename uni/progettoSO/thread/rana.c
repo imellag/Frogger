@@ -94,6 +94,7 @@ void *funzProiettile(void *_proiettile)
         coordinateProiettile = proiettile->proiettile.coordinate;
         pthread_mutex_unlock(&mutex);
 
+        // cont
         if (controlloLimitiProiettile(coordinateProiettile))
         {
             pthread_mutex_lock(&mutex);
