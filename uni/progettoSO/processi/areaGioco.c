@@ -41,7 +41,7 @@ bool areaGioco(Avvio info)
     bool arrayTane[NUMERO_TANE] = {false};
     bool nemico[MAX_TRONCHI] = {false};
 
-    Oggetto macchinina[MAX_MACCHINE], camioncino[MAX_CAMION], tronchino[MAX_TRONCHI];
+    Oggetto macchinina[NUMERO_MACCHINE], camioncino[NUMERO_CAMION], tronchino[MAX_TRONCHI];
     WINDOW *finestraGioco;
 
     bool hitProiettile[MAX_TRONCHI];

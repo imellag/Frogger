@@ -13,12 +13,10 @@ int main()
 {
     srand(time(NULL));
 
+    // creo la variabile delle impostazioni dell'utente e inizializzo la difficoltà a facile
     Avvio info;
-    info.difficolta=0;
-    info.audio=true;
-    info.colore.g=999;
-     info.colore.b=1;
-      info.colore.r=1;
+    info.difficolta = EASY;
+
     int maxx, maxy;
 
     bool riniziaPartita = false;
@@ -26,15 +24,17 @@ int main()
 
     setlocale(LC_ALL, "");
 
+    // configuro l'ambiente per poter utilizzare ncurses
+    initscr();
+    noecho();
+    curs_set(false);
+    cbreak();
+    start_color();
+    keypad(stdscr, true);
+
     do
     {
-        // configuro l'ambiente per poter utilizzare ncurses
-        initscr();
-        noecho();
-        curs_set(false);
-        cbreak();
-        start_color();
-        keypad(stdscr, true);
+
         refresh();
         getmaxyx(stdscr, maxy, maxx);
 
@@ -44,6 +44,8 @@ int main()
         riniziaPartita = areaGioco(info);
 
     } while (riniziaPartita);
+
+    endwin();
 
     return EXIT_SUCCESS;
 }

@@ -73,7 +73,7 @@ Avvio menuIniziale()
 
     wattroff(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO));
 
-    wclear(finestraIniziale);
+    werase(finestraIniziale);
     wrefresh(finestraIniziale);
     stampaIniziale(finestraIniziale);
 
@@ -94,7 +94,7 @@ Avvio menuIniziale()
                 { // click sinistro
                     if (event.x > INIZIO_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.x < FINE_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.y > 29 + INIZIO_ALTEZZA_FINESTRA && event.y < 34 + INIZIO_ALTEZZA_FINESTRA)
                     { // USCITA
-                        wclear(finestraIniziale);
+                        werase(finestraIniziale);
 
                         mvwprintw(finestraIniziale, ALTEZZA_SCHERMO / 2, LARGHEZZA_SCHERMO / 2 - 7, "Uscita in corso");
                         wrefresh(finestraIniziale);
@@ -103,7 +103,7 @@ Avvio menuIniziale()
                     }
                     if (event.x > INIZIO_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.x < FINE_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.y > 15 + INIZIO_ALTEZZA_FINESTRA && event.y < 20 + INIZIO_ALTEZZA_FINESTRA)
                     { // nuova partita
-                        wclear(finestraIniziale);
+                        werase(finestraIniziale);
                         wattron(finestraIniziale, COLOR_PAIR(COLORE_NERO_VERDE));
 
                         for (i = 0; i < 3; i++)
@@ -148,7 +148,7 @@ Avvio menuIniziale()
                     }
                     else if (event.x > INIZIO_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.x < FINE_RETTANGOLO_AVVIO + INIZIO_LARGHEZZA_FINESTRA && event.y > 22 + INIZIO_ALTEZZA_FINESTRA && event.y < 27 + INIZIO_ALTEZZA_FINESTRA)
                     { // impostazioni
-                        wclear(finestraIniziale);
+                        werase(finestraIniziale);
                         info = impostazioni(finestraIniziale, info);
                         stampaIniziale(finestraIniziale);
                         wrefresh(finestraIniziale);
@@ -165,7 +165,7 @@ Avvio impostazioni(WINDOW *finestraIniziale, Avvio info)
     int input, i;
 
     while (true)
-    { // fare dei define per tutti questi magic numbers
+    {
 
         stampaSprite(finestraIniziale, info);
 
@@ -178,7 +178,7 @@ Avvio impostazioni(WINDOW *finestraIniziale, Avvio info)
             {
                 if (event.x < 30 + INIZIO_LARGHEZZA_FINESTRA && event.y > 30 + INIZIO_ALTEZZA_FINESTRA) // tasto "indietro"
                 {
-                    wclear(finestraIniziale);
+                    werase(finestraIniziale);
                     return info;
                 }
                 // audio on / off
@@ -391,7 +391,7 @@ void stampaComandi(WINDOW *finestraIniziale)
 
     wrefresh(finestraIniziale);
     getch();
-    wclear(finestraIniziale);
+    werase(finestraIniziale);
 
     wattroff(finestraIniziale, COLOR_PAIR(COLORE_VERDE_NERO) | A_BOLD);
 }

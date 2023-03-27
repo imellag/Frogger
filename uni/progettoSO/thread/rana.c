@@ -81,6 +81,7 @@ void *funzProiettile(void *_proiettile)
 
     Coordinate coordinateProiettile;
     // inizializzazione del proiettile, parte dalle coordinate della rana e gli viene assegnato un id
+    // che corrisponde alla sua posizione nell'array dei proiettili
     pthread_mutex_lock(&mutex);
     proiettile->proiettile.id = PROIETTILE0 + proiettile->numeroProiettile;
     proiettile->proiettile.coordinate.x = proiettile->rana.coordinate.x + 2;

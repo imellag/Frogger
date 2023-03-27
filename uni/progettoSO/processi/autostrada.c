@@ -2,6 +2,10 @@
 #include "autostrada.h"
 #include "funzioniGenerali.h"
 
+// define utilizzate come massimo e minimo nella generazione casuale del colore dei veicoli
+#define MINIMO_COLORE 350
+#define MASSIMO_COLORE 1000
+
 // sprite dei veicoli verso destra e verso sinistra
 char spriteMacchine[ALTEZZA_RANA][LARGHEZZA_MACCHINA] = {" /^\\_", "| __ |", "o   o"};
 char spriteMacchineContrario[ALTEZZA_RANA][LARGHEZZA_MACCHINA] = {" _/^\\", "| __ |", " o   o"};
@@ -14,7 +18,7 @@ void funzVeicoli(int p[], int gameDifficulty, int pVeicoli[])
     int i;
 
     // pid delle macchine
-    pid_t macchina[MAX_MACCHINE + MAX_CAMION];
+    pid_t macchina[NUMERO_MACCHINE + NUMERO_CAMION];
 
     // direzione della macchina(se -1 va da destra verso sinistra se 1 il contrario)
     int spostamento;
@@ -217,16 +221,11 @@ Colore coloreVeicolo()
 {
     Colore rgb;
 
-    /* mi assicuro che il colore non sia troppo simile a quello
+    /* mi assicuro che il colore non sia troppo chiaro e non sia troppo simile a quello
     dell'autostrada per evitare che la macchina sia invisibile */
-    do
-    {
-        rgb.r = rand() % 1000;
-        rgb.g = rand() % 1000;
-        rgb.b = rand() % 1000;
-    } while (rgb.r > 150 && rgb.r < 350 &&
-             rgb.g > 150 && rgb.g < 350 &&
-             rgb.b > 150 && rgb.b < 350);
+    rgb.r = MINIMO_COLORE + rand() % (MASSIMO_COLORE - MINIMO_COLORE);
+    rgb.g = MINIMO_COLORE + rand() % (MASSIMO_COLORE - MINIMO_COLORE);
+    rgb.b = MINIMO_COLORE + rand() % (MASSIMO_COLORE - MINIMO_COLORE);
 
     return rgb;
 }

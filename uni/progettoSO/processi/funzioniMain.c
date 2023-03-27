@@ -32,7 +32,7 @@ wchar_t *scrittaFinale[2] = {
 void dimensioneFinestra(int maxx, int maxy)
 {
     clear();
-    while (maxy < ALTEZZA_SCHERMO + ALTEZZA_CORSIE*2 +15 || maxx < LARGHEZZA_SCHERMO)
+    while (maxy < ALTEZZA_SCHERMO + ALTEZZA_CORSIE * 2 + 15 || maxx < LARGHEZZA_SCHERMO)
     {
         erase();
         mvwprintw(stdscr, maxy / 2, maxx / 2 - 17, "Ingrandisci lo schermo per giocare! Premere Ctrl -"); // -17 per centrare la scritta
@@ -107,7 +107,7 @@ Oggetto morteRana(WINDOW *finestraGioco, int *vite, int pRana[], Oggetto ranocch
     (*tempo) = TEMPO_INIZIALE - (difficolta * 10);
     (*vite)--;
     posizioneRana = posizioneInizialeRana(pRana, ranocchio, difficolta);
-    wclear(finestraGioco);
+    werase(finestraGioco);
     return posizioneRana;
 }
 
@@ -119,7 +119,7 @@ void stampaTempo(WINDOW *finestraGioco, int tempo)
         if (i <= tempo)
         {
             wattron(finestraGioco, COLOR_PAIR(COLORE_NEMICI_TRONCO));
-            mvwprintw(finestraGioco, 2,i, " ");
+            mvwprintw(finestraGioco, 2, i, " ");
             wattroff(finestraGioco, COLOR_PAIR(COLORE_NEMICI_TRONCO));
         }
         else
@@ -318,7 +318,7 @@ bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer
     if (ranocchio.id == q || vite == 0 || buffer == false || partitaFinita)
     {
         (*partitaInCorso) = false;
-        wclear(finestraGioco);
+        werase(finestraGioco);
 
         if (vite == 0 || partitaFinita)
             gameOver(finestraGioco, punteggio);
@@ -326,17 +326,30 @@ bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer
         else if (buffer == false)
             vittoria(finestraGioco, punteggio);
 
-        wclear(finestraGioco);
+        werase(finestraGioco);
         wrefresh(finestraGioco);
 
         riniziaPartita = pausaeNuovaPartita(finestraGioco, 2);
 
         if (!riniziaPartita)
         {
-            wclear(finestraGioco);
+            werase(finestraGioco);
             wrefresh(finestraGioco);
             schermataFinale(finestraGioco);
         }
+
+        for (i = 0; i < NUMERO_MACCHINE; i++)
+            kill(macchina[i].pid, SIGKILL);
+
+        for (i = 0; i < NUMERO_CAMION; i++)
+            kill(camion[i].pid, SIGKILL);
+
+        for (i = 0; i < NUMERO_TRONCHI + difficolta; i++)
+            kill(tronco[i].pid, SIGKILL);
+
+        kill(tempo.pid, SIGKILL);
+
+        kill(ranocchio.pid, SIGKILL);
 
         system("killall ffplay");
     }
@@ -416,13 +429,13 @@ void inizializzaArray(Oggetto tronco[], Oggetto camion[], Oggetto macchina[], Og
         proiettileNemico[i].coordinate.y = FUORI_MAPPA - 2;
     }
 
-    for (i = 0; i < MAX_CAMION; i++)
+    for (i = 0; i < NUMERO_CAMION; i++)
     {
         camion[i].coordinate.x = FUORI_MAPPA;
         camion[i].coordinate.y = FUORI_MAPPA;
     }
 
-    for (i = 0; i < MAX_MACCHINE; i++)
+    for (i = 0; i < NUMERO_MACCHINE; i++)
     {
         macchina[i].coordinate.x = FUORI_MAPPA;
         macchina[i].coordinate.y = FUORI_MAPPA;

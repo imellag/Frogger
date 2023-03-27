@@ -13,8 +13,9 @@ int main()
 {
     srand(time(NULL));
 
+    // creo la variabile delle impostazioni dell'utente e inizializzo la difficoltà a facile
     Avvio info;
-    info.difficolta=0;
+    info.difficolta = EASY;
     int maxx, maxy;
 
     bool riniziaPartita = false;

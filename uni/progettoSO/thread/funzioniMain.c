@@ -31,7 +31,7 @@ wchar_t *scrittaFinale[2] = {
 void dimensioneFinestra(int maxx, int maxy)
 {
     clear();
-    while (maxy < ALTEZZA_SCHERMO + ALTEZZA_CORSIE*2 +15 || maxx < LARGHEZZA_SCHERMO)
+    while (maxy < ALTEZZA_SCHERMO + ALTEZZA_CORSIE * 2 + 15 || maxx < LARGHEZZA_SCHERMO)
     {
         erase();
         mvwprintw(stdscr, maxy / 2, maxx / 2 - 17, "Ingrandisci lo schermo per giocare! Premere Ctrl -"); // -17 per centrare la scritta
@@ -106,7 +106,7 @@ Oggetto morteRana(WINDOW *finestraGioco, int *vite, Oggetto rana, int difficolta
     (*tempo) = TEMPO_INIZIALE - (difficolta * 10);
     (*vite)--;
     posizioneRana = posizioneInizialeRana(rana, difficolta);
-    wclear(finestraGioco);
+    werase(finestraGioco);
     return posizioneRana;
 }
 
@@ -127,21 +127,6 @@ void stampaTempo(WINDOW *finestraGioco, int tempo)
             mvwprintw(finestraGioco, 2, 0 + i, " ");
             wattroff(finestraGioco, COLOR_PAIR(COLORE_NERO));
         }
-    }
-}
-
-void creaProiettile(Oggetto rana, int *offset)
-{
-    pid_t pidProiettile;
-
-    pidProiettile = fork();
-    if (pidProiettile < 0)
-        perror("error");
-
-    else if (pidProiettile == 0)
-    {
-        //  funzProiettile();
-        exit(0);
     }
 }
 
@@ -260,14 +245,14 @@ bool controlloTaneChiuse(bool arrayTane[])
 bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int punteggio,
                  int difficolta, bool *partitaInCorso, bool partitaFinita, pthread_t threadRana, pthread_t threadProiettile[],
                  pthread_t threadTronchi[], pthread_t threadMacchine[],
-                  pthread_t threadCamion[], pthread_t threadTempo, pthread_t threadCambioCorsia)
+                 pthread_t threadCamion[], pthread_t threadTempo, pthread_t threadCambioCorsia)
 {
     int i;
     bool riniziaPartita;
     if (rana.id == q || vite == 0 || buffer == false || partitaFinita)
     {
         (*partitaInCorso) = false;
-        wclear(finestraGioco);
+        werase(finestraGioco);
 
         if (vite == 0 || partitaFinita)
             gameOver(finestraGioco, punteggio);
@@ -275,32 +260,19 @@ bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int
         else if (buffer == false)
             vittoria(finestraGioco, punteggio);
 
-        wclear(finestraGioco);
+        werase(finestraGioco);
         wrefresh(finestraGioco);
 
         riniziaPartita = pausaeNuovaPartita(finestraGioco, 2);
 
         if (!riniziaPartita)
         {
-            wclear(finestraGioco);
+            werase(finestraGioco);
             wrefresh(finestraGioco);
             schermataFinale(finestraGioco);
         }
 
-        for (i = 0; i < NUMERO_TRONCHI + difficolta; i++)
-            pthread_cancel(threadTronchi[i]);
-
-        for (i = 0; i < NUMERO_CAMION; i++)
-            pthread_cancel(threadCamion[i]);
-
-        for (i = 0; i < NUMERO_MACCHINE; i++)
-            pthread_cancel(threadMacchine[i]);
-
-
-        pthread_cancel(threadTempo);
-        pthread_cancel(threadRana);
-         pthread_cancel(threadCambioCorsia);
-         system("killall ffplay");
+        system("killall ffplay");
     }
 
     return riniziaPartita;
@@ -424,7 +396,6 @@ void inizializzaVeicolo(parametriVeicolo veicolo, int difficolta, int direzioneC
         veicolo.veicolo.coordinate.x = LARGHEZZA_CAMION + LARGHEZZA_SCHERMO;
     veicolo.veicolo.difficolta = difficolta;
 }
-
 
 void *delayCambioCorsia(void *_flagCambioCorsia)
 {
