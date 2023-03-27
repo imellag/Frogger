@@ -6,8 +6,7 @@ wchar_t *spriteSconfitta[ALTEZZA_SPRITE] = {
     L"███████║███████║██║  ██████╔╝█████╗░░██████╔╝╚█████╗░██║░░██║██║",
     L"██╔══██║██╔══██║██║  ██╔═══╝░██╔══╝░░██╔══██╗░╚═══██╗██║░░██║╚═╝",
     L"██║░░██║██║░░██║██║  ██║░░░░░███████╗██║░░██║██████╔╝╚█████╔╝██╗",
-    L"╚═╝░░╚═╝╚═╝░░╚═╝╚═╝  ╚═╝░░░░░╚══════╝╚═╝░░╚═╝╚═════╝░░╚════╝░╚═╝",
-};
+    L"╚═╝░░╚═╝╚═╝░░╚═╝╚═╝  ╚═╝░░░░░╚══════╝╚═╝░░╚═╝╚═════╝░░╚════╝░╚═╝"};
 
 wchar_t *spriteVittoria[ALTEZZA_SPRITE] = {
     L"██╗░░██╗░█████╗░██╗  ██╗░░░██╗██╗███╗░░██╗████████╗░█████╗░██╗",
@@ -15,26 +14,25 @@ wchar_t *spriteVittoria[ALTEZZA_SPRITE] = {
     L"███████║███████║██║  ╚██╗░██╔╝██║██╔██╗██║░░░██║░░░██║░░██║██║",
     L"██╔══██║██╔══██║██║  ░╚████╔╝░██║██║╚████║░░░██║░░░██║░░██║╚═╝",
     L"██║░░██║██║░░██║██║  ░░╚██╔╝░░██║██║░╚███║░░░██║░░░╚█████╔╝██╗",
-    L"╚═╝░░╚═╝╚═╝░░╚═╝╚═╝  ░░░╚═╝░░░╚═╝╚═╝░░╚══╝░░░╚═╝░░░░╚════╝░╚═╝",
-};
+    L"╚═╝░░╚═╝╚═╝░░╚═╝╚═╝  ░░░╚═╝░░░╚═╝╚═╝░░╚══╝░░░╚═╝░░░░╚════╝░╚═╝"};
 
 wchar_t *continua[2] = {
     L"█░█ █░█ █▀█ █   █▀▀ █▀█ █▄░█ ▀█▀ █ █▄░█ █░█ ▄▀█ █▀█ █▀▀ ▀█",
-    L"▀▄▀ █▄█ █▄█ █   █▄▄ █▄█ █░▀█ ░█░ █ █░▀█ █▄█ █▀█ █▀▄ ██▄ ░▄",
-};
+    L"▀▄▀ █▄█ █▄█ █   █▄▄ █▄█ █░▀█ ░█░ █ █░▀█ █▄█ █▀█ █▀▄ ██▄ ░▄"};
 
 wchar_t *scrittaFinale[2] = {
     L"█▀▀ █▀█ ▄▀█ ▀█ █ █▀▀   █▀█ █▀▀ █▀█   ▄▀█ █░█ █▀▀ █▀█   █▀▀ █ █▀█ █▀▀ ▄▀█ ▀█▀ █▀█ █",
-    L"█▄█ █▀▄ █▀█ █▄ █ ██▄   █▀▀ ██▄ █▀▄   █▀█ ▀▄▀ ██▄ █▀▄   █▄█ █ █▄█ █▄▄ █▀█ ░█░ █▄█ ▄",
-};
+    L"█▄█ █▀▄ █▀█ █▄ █ ██▄   █▀▀ ██▄ █▀▄   █▀█ ▀▄▀ ██▄ █▀▄   █▄█ █ █▄█ █▄▄ █▀█ ░█░ █▄█ ▄"};
 
 void dimensioneFinestra(int maxx, int maxy)
 {
     clear();
+    // la dimensione necessaria è pari alla dimensione occupata dalle corsie in difficoltà massima,
+    // dove sono presenti 5 corsie di autostrada e 5 corsie di fiume
     while (maxy < ALTEZZA_SCHERMO + ALTEZZA_CORSIE * 2 + 15 || maxx < LARGHEZZA_SCHERMO)
     {
         erase();
-        mvwprintw(stdscr, maxy / 2, maxx / 2 - 17, "Ingrandisci lo schermo per giocare! Premere Ctrl -"); // -17 per centrare la scritta
+        mvwprintw(stdscr, maxy / 2, maxx / 2 - 25, "Ingrandisci lo schermo per giocare! Premere Ctrl -"); // -25 per centrare la scritta
         getmaxyx(stdscr, maxy, maxx);
         refresh();
     }
@@ -43,6 +41,7 @@ void dimensioneFinestra(int maxx, int maxy)
     mvwprintw(stdscr, ALTEZZA_SCHERMO / 2, LARGHEZZA_SCHERMO / 2 - 32, "Per evitare problemi non diminuire la dimensione della finestra!");
     mvwprintw(stdscr, ALTEZZA_SCHERMO / 2 + 1, LARGHEZZA_SCHERMO / 2 - 7, "Buona fortuna!");
     refresh();
+    sleep(2);
     clear();
     refresh();
 }
@@ -78,12 +77,11 @@ void gameOver(WINDOW *finestraGioco, int punteggio)
     wattroff(finestraGioco, COLOR_PAIR(COLORE_VERDE_NERO));
 
     wrefresh(finestraGioco);
-    sleep(3);
+    sleep(5);
 }
 
 void vittoria(WINDOW *finestraGioco, int punteggio)
 {
-
     int i;
 
     wattron(finestraGioco, COLOR_PAIR(COLORE_VERDE_NERO | A_BOLD));
@@ -101,7 +99,6 @@ void vittoria(WINDOW *finestraGioco, int punteggio)
 
 Oggetto morteRana(WINDOW *finestraGioco, int *vite, Oggetto rana, int difficolta, int *tempo)
 {
-
     Oggetto posizioneRana;
     (*tempo) = TEMPO_INIZIALE - (difficolta * 10);
     (*vite)--;
@@ -112,6 +109,9 @@ Oggetto morteRana(WINDOW *finestraGioco, int *vite, Oggetto rana, int difficolta
 
 void stampaTempo(WINDOW *finestraGioco, int tempo)
 {
+    /* i secondi rimanenti vengono stampati rossi, mentre i secondi già passati vengono stampati neri.
+     questo perché il tempo viene stampato in alto nello schermo, fuori dall'area di gioco, e fare una clear
+     creerebbe problemi per gli altri oggetti stampati in questa parte dello schermo, come il punteggio e le vite */
     int i;
     for (i = 0; i < TEMPO_INIZIALE; i++)
     {
@@ -132,6 +132,10 @@ void stampaTempo(WINDOW *finestraGioco, int tempo)
 
 bool pausaeNuovaPartita(WINDOW *finestraGioco, int chiamata)
 {
+#define ALTEZZA_SCRITTE 23
+#define PAUSA 1
+#define NUOVA_PARTITA 2
+
     int i, j, input = 0;
 
     MEVENT event;
@@ -153,23 +157,25 @@ bool pausaeNuovaPartita(WINDOW *finestraGioco, int chiamata)
     for (i = 0; i < 2; i++)
         stampaRettangolo(finestraGioco, 21, 31 + (LARGHEZZA_RETTANGOLO * i + 6 * i));
 
-    if (chiamata == 1)
+    if (chiamata == PAUSA)
     {
-        mvwprintw(finestraGioco, 23, 48, "Si");
-        mvwprintw(finestraGioco, 23, 90, "No");
+        mvwprintw(finestraGioco, ALTEZZA_SCRITTE, 48, "Si");
+        mvwprintw(finestraGioco, ALTEZZA_SCRITTE, 90, "No");
     }
-    else if (chiamata == 2)
+    else if (chiamata == NUOVA_PARTITA)
     {
-        mvwprintw(finestraGioco, 23, 43, "Nuova partita");
-        mvwprintw(finestraGioco, 23, 84, "Esci dal gioco");
+        mvwprintw(finestraGioco, ALTEZZA_SCRITTE, 43, "Nuova partita");
+        mvwprintw(finestraGioco, ALTEZZA_SCRITTE, 84, "Esci dal gioco");
     }
+    
+    /* in base all'input del mouse la funzione restituisce true o false, che viene poi gestito dalla funzione chiamante
+     in base al tipo di chiamata (pausa o nuova partita) */
 
     wattroff(finestraGioco, COLOR_PAIR(COLORE_NERO_VERDE));
     wrefresh(finestraGioco);
     pthread_mutex_lock(&mutex);
     while (true)
     {
-
         input = getch();
 
         wrefresh(finestraGioco);
@@ -243,15 +249,13 @@ bool controlloTaneChiuse(bool arrayTane[])
 }
 
 bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int punteggio,
-                 int difficolta, bool *partitaInCorso, bool partitaFinita, pthread_t threadRana, pthread_t threadProiettile[],
-                 pthread_t threadTronchi[], pthread_t threadMacchine[],
-                 pthread_t threadCamion[], pthread_t threadTempo, pthread_t threadCambioCorsia)
-{
+                 int difficolta, bool partitaFinita)
+{  
     int i;
-    bool riniziaPartita;
+    bool partitaInCorso = true;
     if (rana.id == q || vite == 0 || buffer == false || partitaFinita)
     {
-        (*partitaInCorso) = false;
+        partitaInCorso = false;
         werase(finestraGioco);
 
         if (vite == 0 || partitaFinita)
@@ -263,81 +267,23 @@ bool finePartita(WINDOW *finestraGioco, Oggetto rana, int vite, bool buffer, int
         werase(finestraGioco);
         wrefresh(finestraGioco);
 
-        riniziaPartita = pausaeNuovaPartita(finestraGioco, 2);
-
-        if (!riniziaPartita)
-        {
-            werase(finestraGioco);
-            wrefresh(finestraGioco);
-            schermataFinale(finestraGioco);
-        }
-
-        system("killall ffplay");
+        
     }
 
-    return riniziaPartita;
-}
-
-bool CorsiaOccupata(parametriVeicolo macchina[], parametriVeicolo camion[], int corsia, int difficolta)
-{
-    bool flag = false;
-    int i;
-
-    for (i = 0; i < NUMERO_MACCHINE + difficolta; i++)
-    {
-        if (macchina[i].veicolo.velocita < 0)
-        {
-            if (macchina[i].veicolo.coordinate.x >= LARGHEZZA_SCHERMO && macchina[i].veicolo.coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
-            {
-                flag = true;
-                break;
-            }
-        }
-        else
-        {
-            if (macchina[i].veicolo.coordinate.x <= 0 && macchina[i].veicolo.coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
-            {
-                flag = true;
-                break;
-            }
-        }
-    }
-    if (!flag)
-    {
-        for (i = 0; i < NUMERO_CAMION + difficolta; i++)
-        {
-            if (camion[i].veicolo.velocita < 0)
-            {
-                if (camion[i].veicolo.coordinate.x >= LARGHEZZA_SCHERMO && camion[i].veicolo.coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
-                {
-                    flag = true;
-                    break;
-                }
-            }
-            else
-            {
-                if (camion[i].veicolo.coordinate.x <= 0 && camion[i].veicolo.coordinate.y == (INIZIO_AUTOSTRADA + corsia * 3 + difficolta * 3))
-                {
-                    flag = true;
-                    break;
-                }
-            }
-        }
-    }
-
-    return flag;
+    return partitaInCorso;
 }
 
 void creaColoriRandom(int difficolta)
 {
+    // ogni colore viene assegnato all'id del veicolo
     int i;
     Colore bufferColori;
-    for (i = 0; i < NUMERO_MACCHINE + difficolta; i++)
+    for (i = 0; i < NUMERO_MACCHINE; i++)
     {
         bufferColori = coloreVeicolo();
         init_color(COLORE_MACCHINA0 + i, bufferColori.r, bufferColori.g, bufferColori.b);
     }
-    for (i = 0; i < NUMERO_CAMION + difficolta; i++)
+    for (i = 0; i < NUMERO_CAMION; i++)
     {
         bufferColori = coloreVeicolo();
         init_color(COLORE_CAMION0 + i, bufferColori.r, bufferColori.g, bufferColori.b);
@@ -349,6 +295,8 @@ void inizializzaArray(Oggetto tronco[], Oggetto proiettileNemico[], Oggetto proi
 {
     int i;
 
+    /* i proiettili non vengono messi alle stesse coordinate degli altri oggetti per evitare che si generino delle collisioni 
+     quando non sono rappresentati a schermo */
     for (i = 0; i < MAX_TRONCHI; i++)
     {
         tronco[i].coordinate.x = FUORI_MAPPA;
@@ -408,4 +356,6 @@ void *delayCambioCorsia(void *_flagCambioCorsia)
         pthread_mutex_unlock(&mutex);
         usleep(40000);
     }
+
+    return NULL;
 }

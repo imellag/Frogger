@@ -30,7 +30,7 @@ int controlloLimitiRana(Coordinate entita, int gameDifficulty)
             flag = 6;
     }
 
-    else if (entita.x < 0 || entita.x >= LARGHEZZA_SCHERMO || entita.y <= 6 ||
+    else if (entita.x < -1 || entita.x >= LARGHEZZA_SCHERMO || entita.y <= 6 ||
              entita.y > ALTEZZA_SCHERMO - ALTEZZA_RANA + gameDifficulty * 6)
         flag = 6;
 
@@ -77,7 +77,7 @@ int controlloLimitiProiettile(Coordinate entita)
 int controlloLimitiTronco(Coordinate entita)
 {
     bool flag = false;
-    if (entita.x < 0 || entita.x >= LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI)
+    if (entita.x <= 0 || entita.x >= LARGHEZZA_SCHERMO - LARGHEZZA_TRONCHI)
         flag = true;
 
     return flag;
@@ -121,6 +121,8 @@ void *orologio(void *_tempo)
         pthread_mutex_unlock(&mutex);
         sleep(1);
     }
+
+    return NULL;
 }
 
 Oggetto posizioneInizialeRana(Oggetto rana, int gameDifficulty)
@@ -151,12 +153,12 @@ void colori(Avvio info)
 {
     init_color(COLORE_RANA, info.colore.r, info.colore.g, info.colore.b); // 19/227/5
     init_color(COLORE_MARCIAPIEDE, 388, 270, 102);                        // 99/69/26
-    init_color(COLORE_AUTOSTRADA, 259, 259, 259);                         // grigio (per ora), sarebbe 66/66/66 in rgb, convertito 259 /259/259
+    init_color(COLORE_AUTOSTRADA, 259, 259, 259);                         // grigio, sarebbe 66/66/66 in rgb, convertito 259 /259/259
     init_color(COLORE_TRONCHI, 459, 298, 102);                            // 117/76/26
     init_color(COLORE_TANA, 541, 271, 0);
-    init_color(COLORE_NEMICI, 875, 313, 273); // 224, 80, 70
-    init_color(COLORE_FIUME, 59, 699, 996);   // 15,179,255
-    init_color(COLORE_PRATO, 114, 569, 251);  // 29, 145, 64
+    init_color(COLORE_NEMICI, 875, 313, 273);                             // 224, 80, 70
+    init_color(COLORE_FIUME, 59, 699, 996);                               // 15,179,255
+    init_color(COLORE_PRATO, 114, 569, 251);                              // 29, 145, 64
     init_pair(COLORE_NEMICI_TRONCO, COLOR_BLACK, COLORE_NEMICI);
     init_pair(COLORE_SFONDO_MARCIAPIEDE, COLOR_BLACK, COLORE_MARCIAPIEDE);
     init_pair(COLORE_SFONDO_AUTOSTRDA, COLOR_BLACK, COLORE_AUTOSTRADA);

@@ -14,7 +14,7 @@ void *movimentoTronco(void *_tronco)
 
     // gli assegno una velocità random a ciascun tronco in base alla difficolta inserita
     pthread_mutex_lock(&mutex);
-    int tempoRandom = TEMPO_TRONCO_MIN + rand() % (TEMPO_TRONCO_MIN + TEMPO_TRONCO_MAX) - 1000 * tronco->difficolta;
+    int tempoRandom = TEMPO_TRONCO_MIN + rand() % (TEMPO_TRONCO_MIN + TEMPO_TRONCO_MAX) - (2500 * tronco->difficolta);
 
     // anche le coordinate sono casuali
     tronco->coordinate.y = INIZIO_FIUME + tronco->id * ALTEZZA_TRONCHI;
@@ -33,6 +33,8 @@ void *movimentoTronco(void *_tronco)
         pthread_mutex_unlock(&mutex);
         usleep(tempoRandom);
     }
+
+    return NULL;
 }
 
 void stampaTronco(WINDOW *finestraGioco, Coordinate tronco)
@@ -89,4 +91,6 @@ void *movimentoProiettileNemico(void *_proiettileNemico)
 
         usleep(50000);
     }
+
+    return NULL;
 }

@@ -375,8 +375,8 @@ bool areaGioco(Avvio info)
                 }
 
                 // controllo se la rana è salita sul tronco
-                if (tronchino[i].coordinate.x <= ranocchio.coordinate.x &&
-                    (tronchino[i].coordinate.x + LARGHEZZA_TRONCHI) >= ranocchio.coordinate.x &&
+                if (ranocchio.coordinate.x <= tronchino[i].coordinate.x + LARGHEZZA_TRONCHI &&
+                    ranocchio.coordinate.x + LARGHEZZA_RANA >= tronchino[i].coordinate.x &&
                     ranocchio.coordinate.y == tronchino[i].coordinate.y)
                 {
 

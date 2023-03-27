@@ -52,7 +52,7 @@ void funzTronco(int p[], int numeroTronco, int velocita, int gameDifficulty)
 
     // gli assegno un usleep randomica che corrisponde alla velocità con cui andrà il tronco
     //(più è alta la difficoltà e più vanno veloci)
-    int tempoRandom = TEMPO_TRONCO_MIN + rand() % (TEMPO_TRONCO_MIN + TEMPO_TRONCO_MAX) - 2500 * gameDifficulty;
+    int tempoRandom = TEMPO_TRONCO_MIN + rand() % (TEMPO_TRONCO_MIN + TEMPO_TRONCO_MAX) - (2500 * gameDifficulty);
 
     // inzializzo le coordinate e gli altri campi
     tronco.coordinate.y = INIZIO_FIUME + numeroTronco * ALTEZZA_TRONCHI;

@@ -2,10 +2,6 @@
 #include "autostrada.h"
 #include "funzioniGenerali.h"
 
-// define utilizzate come massimo e minimo nella generazione casuale del colore dei veicoli
-#define MINIMO_COLORE 350
-#define MASSIMO_COLORE 1000
-
 // sprite dei veicoli verso destra e verso sinistra
 char spriteMacchine[ALTEZZA_RANA][LARGHEZZA_MACCHINA] = {" /^\\_", "| __ |", "o   o"};
 char spriteMacchineContrario[ALTEZZA_RANA][LARGHEZZA_MACCHINA] = {" _/^\\", "| __ |", " o   o"};
@@ -219,6 +215,10 @@ void stampaCamion(WINDOW *finestraGioco, Oggetto camion, int indice)
 
 Colore coloreVeicolo()
 {
+// define utilizzate come massimo e minimo nella generazione casuale del colore dei veicoli
+#define MINIMO_COLORE 350
+#define MASSIMO_COLORE 1000
+
     Colore rgb;
 
     /* mi assicuro che il colore non sia troppo chiaro e non sia troppo simile a quello

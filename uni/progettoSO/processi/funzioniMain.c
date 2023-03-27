@@ -35,7 +35,7 @@ void dimensioneFinestra(int maxx, int maxy)
     while (maxy < ALTEZZA_SCHERMO + ALTEZZA_CORSIE * 2 + 15 || maxx < LARGHEZZA_SCHERMO)
     {
         erase();
-        mvwprintw(stdscr, maxy / 2, maxx / 2 - 17, "Ingrandisci lo schermo per giocare! Premere Ctrl -"); // -17 per centrare la scritta
+        mvwprintw(stdscr, maxy / 2, maxx / 2 - 25, "Ingrandisci lo schermo per giocare! Premere Ctrl -"); // -25 per centrare la scritta
         getmaxyx(stdscr, maxy, maxx);
         refresh();
     }
@@ -113,6 +113,9 @@ Oggetto morteRana(WINDOW *finestraGioco, int *vite, int pRana[], Oggetto ranocch
 
 void stampaTempo(WINDOW *finestraGioco, int tempo)
 {
+    /* i secondi rimanenti vengono stampati rossi, mentre i secondi già passati vengono stampati neri.
+    questo perché il tempo viene stampato in alto nello schermo, fuori dall'area di gioco, e fare una clear
+    creerebbe problemi per gli altri oggetti stampati in questa parte dello schermo, come il punteggio e le vite */
     int i;
     for (i = 0; i < TEMPO_INIZIALE; i++)
     {
@@ -199,6 +202,10 @@ bool funzPausa(WINDOW *finestraGioco, int difficolta, Oggetto camion[], Oggetto 
 
 bool pausaeNuovaPartita(WINDOW *finestraGioco, int chiamata)
 {
+#define ALTEZZA_SCRITTE 23
+#define PAUSA 1
+#define NUOVA_PARTITA 2
+
     int i, j, input = 0;
 
     MEVENT event;
@@ -220,16 +227,19 @@ bool pausaeNuovaPartita(WINDOW *finestraGioco, int chiamata)
     for (i = 0; i < 2; i++)
         stampaRettangolo(finestraGioco, 21, 31 + (LARGHEZZA_RETTANGOLO * i + 6 * i));
 
-    if (chiamata == 1)
+    if (chiamata == PAUSA)
     {
-        mvwprintw(finestraGioco, 23, 48, "Si");
-        mvwprintw(finestraGioco, 23, 90, "No");
+        mvwprintw(finestraGioco, ALTEZZA_SCRITTE, 48, "Si");
+        mvwprintw(finestraGioco, ALTEZZA_SCRITTE, 90, "No");
     }
-    else if (chiamata == 2)
+    else if (chiamata == NUOVA_PARTITA)
     {
-        mvwprintw(finestraGioco, 23, 43, "Nuova partita");
-        mvwprintw(finestraGioco, 23, 84, "Esci dal gioco");
+        mvwprintw(finestraGioco, ALTEZZA_SCRITTE, 43, "Nuova partita");
+        mvwprintw(finestraGioco, ALTEZZA_SCRITTE, 84, "Esci dal gioco");
     }
+
+    /* in base all'input del mouse la funzione restituisce true o false, che viene poi gestito dalla funzione chiamante
+     in base al tipo di chiamata (pausa o nuova partita) */
 
     wattroff(finestraGioco, COLOR_PAIR(COLORE_NERO_VERDE));
     wrefresh(finestraGioco);
@@ -313,6 +323,9 @@ bool controlloTaneChiuse(bool arrayTane[])
 bool finePartita(WINDOW *finestraGioco, Oggetto ranocchio, int vite, bool buffer, int punteggio,
                  int difficolta, Oggetto tempo, Oggetto macchina[], Oggetto camion[], Oggetto tronco[], bool *partitaInCorso, bool partitaFinita)
 {
+    /* se anche solo una delle condizioni di fine della partita viene rispettata si entra nell'if, che poi stampa la scritta giusta in base a 
+     quale di queste condizioni è vera. viene poi chiesto se si vuole fare una nuova partita e in base al valore restituito si prosegue. 
+     i processi vengono killati indipendentemente da questo dato che vengono ricreati all'avvio della partita */
     int i;
     bool riniziaPartita;
     if (ranocchio.id == q || vite == 0 || buffer == false || partitaFinita)
@@ -402,14 +415,15 @@ bool corsiaOccupata(Oggetto macchinina[], Oggetto camioncino[], int corsia, int 
 
 void creaColoriRandom(int difficolta)
 {
+    // ogni colore viene assegnato all'id del veicolo
     int i;
     Colore bufferColori;
-    for (i = 0; i < NUMERO_MACCHINE + difficolta; i++)
+    for (i = 0; i < NUMERO_MACCHINE; i++)
     {
         bufferColori = coloreVeicolo();
         init_color(COLORE_MACCHINA0 + i, bufferColori.r, bufferColori.g, bufferColori.b);
     }
-    for (i = 0; i < NUMERO_CAMION + difficolta; i++)
+    for (i = 0; i < NUMERO_CAMION; i++)
     {
         bufferColori = coloreVeicolo();
         init_color(COLORE_CAMION0 + i, bufferColori.r, bufferColori.g, bufferColori.b);
@@ -418,6 +432,8 @@ void creaColoriRandom(int difficolta)
 
 void inizializzaArray(Oggetto tronco[], Oggetto camion[], Oggetto macchina[], Oggetto proiettile[], Oggetto proiettileNemico[])
 {
+    /* i proiettili non vengono messi alle stesse coordinate degli altri oggetti per evitare che si generino delle collisioni 
+     quando non sono rappresentati a schermo */
     int i;
 
     for (i = 0; i < MAX_TRONCHI; i++)

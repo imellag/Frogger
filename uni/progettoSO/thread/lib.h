@@ -49,7 +49,6 @@ enum ColorPair
     COLORE_NERO,
     COLORE_SCRITTE_INFO,
     COLORE_RANA_SFONDO
-
 };
 
 // difficoltà di gioco disponibili

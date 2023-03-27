@@ -73,6 +73,8 @@ void *movimentoRana(void *_rana)
         }
         pthread_mutex_unlock(&mutex);
     }
+
+    return NULL;
 }
 
 void *funzProiettile(void *_proiettile)
@@ -94,7 +96,8 @@ void *funzProiettile(void *_proiettile)
         coordinateProiettile = proiettile->proiettile.coordinate;
         pthread_mutex_unlock(&mutex);
 
-        // cont
+        // controllo che il proiettile non sia uscito dallo schermo, e se è cosi ne resetto le coordinate.
+        // altrimenti lo faccio salire
         if (controlloLimitiProiettile(coordinateProiettile))
         {
             pthread_mutex_lock(&mutex);
@@ -109,6 +112,8 @@ void *funzProiettile(void *_proiettile)
 
         usleep(50000);
     }
+
+    return NULL;
 }
 
 void stampaRana(WINDOW *finestraGioco, Coordinate rana, _Bool coloreRanaTronco, int gameDifficulty)

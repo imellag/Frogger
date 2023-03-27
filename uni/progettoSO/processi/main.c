@@ -23,19 +23,23 @@ int main()
 
     setlocale(LC_ALL, "");
 
+    // configuro l'ambiente per poter utilizzare ncurses
+    initscr();
+    noecho();
+    curs_set(false);
+    cbreak();
+    start_color();
+    keypad(stdscr, true);
+    refresh();
+    
+    getmaxyx(stdscr, maxy, maxx);
+    dimensioneFinestra(maxx, maxy);
+
     do
     {
-        // configuro l'ambiente per poter utilizzare ncurses
-        initscr();
-        noecho();
-        curs_set(false);
-        cbreak();
-        start_color();
-        keypad(stdscr, true);
+        riniziaPartita = false;
         refresh();
-        getmaxyx(stdscr, maxy, maxx);
 
-        dimensioneFinestra(maxx, maxy);
         info = menuIniziale();
         colori(info);
         riniziaPartita = areaGioco(info);

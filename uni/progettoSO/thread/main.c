@@ -32,13 +32,13 @@ int main()
     start_color();
     keypad(stdscr, true);
 
+    getmaxyx(stdscr, maxy, maxx);
+    dimensioneFinestra(maxx, maxy);
     do
     {
-
+        riniziaPartita = false;
         refresh();
-        getmaxyx(stdscr, maxy, maxx);
 
-        dimensioneFinestra(maxx, maxy);
         info = menuIniziale();
         colori(info);
         riniziaPartita = areaGioco(info);
